@@ -249,6 +249,9 @@ body.pdpmode .app,body.pdpmode .esm{display:none}body.pdpmode #pdp{display:block
 .dprev.rich{outline:none;max-height:420px}.dprev.rich:focus{box-shadow:0 0 0 2px var(--e-blue)}
 .dprev.pdpd{max-width:760px;max-height:none;margin:0 auto;border:0}
 .code,textarea.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px}
+[data-row="detail"] .seg{display:flex;width:max-content;max-width:100%}
+[data-row="detail"] textarea.einp{display:block;width:100%;max-width:720px;resize:vertical}
+[data-row="detail"] .dprev{width:100%}
 pre.code{white-space:pre-wrap;word-break:break-all;background:var(--soft);border-radius:8px;padding:10px;margin:6px 0 0;max-height:220px;overflow:auto}
 /* done page */
 .esm.isdone .ebar{display:none}
@@ -272,6 +275,60 @@ pre.code{white-space:pre-wrap;word-break:break-all;background:var(--soft);border
 .adb{padding:40px 20px 48px;text-align:center}.adb .hi{font-size:30px;font-weight:800}.adb .ad{font-size:22px;font-weight:700;color:#00A84E;margin-top:6px}
 .glogo.alogo{color:#E2372F}
 @media (max-width:900px){.adt{grid-template-columns:repeat(2,minmax(0,1fr))}.nos .nm{display:none}}
+.omx{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.omr{display:grid;grid-template-columns:190px minmax(0,1fr);gap:10px;align-items:center}
+.omh{display:flex;gap:8px;align-items:center;border:1px solid var(--e-line);background:var(--surface);border-radius:8px;padding:4px 8px;cursor:pointer;text-align:left;font-size:13px;min-width:0;color:inherit}
+.omh span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.omh svg{flex:none}
+button.omh[aria-pressed="true"]{border-color:var(--e-blue);color:var(--e-blue);background:var(--e-blue-bg);font-weight:600}
+.oblock{padding:14px 22px}.oblock+.erow,.erow+.oblock{border-top:1px solid var(--e-bg)}
+.olb{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}.olb .t{font-size:14px;font-weight:600}
+.otbl{border:1px solid var(--e-line);border-radius:8px}.otbl th{background:var(--e-bg);color:var(--e-muted)}
+.otbl td{border-bottom:1px solid var(--e-line);padding:6px 8px}.otbl tr:last-child td{border-bottom:0}
+.otbl .einp{min-height:34px;padding:5px 8px}
+.lockv{display:inline-block;background:var(--e-bg);border-radius:6px;padding:3px 8px;font-size:13px}
+.oblock.is-err .einp.bad{outline:2px solid var(--e-red);outline-offset:-1px}
+.optbar{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:8px}
+.ix2{width:26px;height:26px;border-radius:6px;border:1px solid var(--e-line);background:var(--surface);cursor:pointer;color:var(--e-muted)}.ix2:disabled{opacity:.35;cursor:default}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.dtbl th{background:var(--e-bg)}.dtbl .no{border:0;background:none;color:var(--e-blue);cursor:pointer;padding:0;font-size:13.5px;font-variant-numeric:tabular-nums}
+.popt{margin-top:14px;border-top:1px solid #eee;padding-top:10px}.pol{font-size:13px;color:#555;margin:6px 0}
+.pchip{border:1px solid #ddd;background:#fff;color:#222;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:14px}.pchip[aria-pressed="true"]{border:2px solid #222;padding:7px 13px;font-weight:700}.pchip[data-alt]{color:#999;border-style:dashed}
+@media (max-width:900px){.omr{grid-template-columns:minmax(0,1fr)}.oblock{padding:12px}}
+.dim:has(+ .cmodal){z-index:40}
+.cmodal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:41;background:var(--surface);color:var(--e-ink);border-radius:12px;width:min(760px,calc(100% - 24px));max-height:calc(100% - 40px);display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden}
+.cm-h{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--e-head);color:#fff}.cm-h h2{font-size:17px}
+.cm-x{border:0;background:none;color:#fff;font-size:24px;line-height:1;cursor:pointer;padding:0 4px}
+.cm-note{padding:10px 20px;background:var(--e-blue-bg);color:var(--e-blue);font-size:13px}
+.cm-b{overflow:auto;padding:16px 20px;flex:1;min-height:0}
+.cm-info{display:flex;gap:14px;align-items:flex-start;border:1px solid var(--e-line);border-radius:10px;padding:12px 14px}.cm-info .t{flex:1;min-width:0}.cm-info b{font-size:15px}
+.cm-info dl{display:grid;grid-template-columns:64px minmax(0,1fr);gap:2px 10px;margin:6px 0 0;font-size:12.5px}.cm-info dt{color:var(--e-muted)}.cm-info dd{margin:0}
+.cm-sh{display:flex;gap:12px;align-items:flex-end;justify-content:space-between;margin:18px 0 8px}.cm-sh p{font-size:12.5px;color:var(--e-muted);margin-top:2px}
+.cm-list{border:1px solid var(--e-line);border-radius:10px}
+.cm-row{display:grid;grid-template-columns:76px minmax(0,1fr);gap:14px;padding:14px}.cm-row+.cm-row{border-top:1px solid var(--e-line)}
+.cm-pic{width:76px;height:76px;border:1px solid var(--e-line);border-radius:8px;display:flex;align-items:center;justify-content:center;background:#fff}
+.cm-rh{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}.cm-rh b{font-size:14.5px}
+.cm-chks{display:flex;flex-wrap:wrap;gap:6px}
+.cm-ck{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--e-line);border-radius:6px;padding:6px 10px;cursor:pointer;font-size:13.5px;background:var(--surface)}
+.cm-ck input{margin:0;accent-color:var(--e-blue)}.cm-ck:has(input:checked){border-color:var(--e-blue);background:var(--e-blue-bg);color:var(--e-blue);font-weight:600}
+.cm-ck:focus-within{outline:2px solid var(--e-blue);outline-offset:1px}
+.cm-miss{margin-top:12px;background:var(--e-bg);border-radius:10px;padding:12px 14px;font-size:13px}.cm-miss p{color:var(--e-muted);margin:4px 0 8px}
+.cm-f{border-top:1px solid var(--e-line);padding:12px 20px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.cm-sel{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}.cm-tags{display:flex;gap:6px;flex-wrap:wrap;max-height:64px;overflow:auto}
+.cm-tag{border:1px solid var(--e-blue);color:var(--e-blue);background:var(--e-blue-bg);border-radius:99px;padding:2px 10px;font-size:12.5px;cursor:pointer}
+.cm-btns{display:flex;gap:8px}.ebtn:disabled{opacity:.45;cursor:default}
+.plinks{display:flex;gap:4px;flex-wrap:wrap;margin-top:2px}.plinks .lnk{padding-left:0;margin-right:8px}
+.nguide{margin:0 22px 6px;background:var(--e-bg);border-radius:8px;padding:12px 14px;font-size:13px}.nguide p{color:var(--e-muted);margin-top:4px}.nguide .btns{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.radios{display:flex;gap:20px;flex-wrap:wrap;padding-top:8px;font-size:14px}.radios label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.certbox{margin-top:10px;background:var(--e-bg);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:8px;max-width:680px}
+.certrow{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) auto;gap:8px;align-items:center}.certrow .einp{min-height:38px}.certrow .einp:disabled{opacity:.55}
+.itabs{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px 22px 0}
+@media (max-width:900px){.cm-row{grid-template-columns:56px minmax(0,1fr)}.cm-pic{width:56px;height:56px}.certrow{grid-template-columns:minmax(0,1fr)}}
+.dbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px;padding:10px 12px;background:var(--e-bg);border-radius:8px}.dbar .t{font-weight:600;font-size:13.5px}.dbar .seg button{min-width:72px;padding:7px 12px}
+.dcust{display:grid;grid-template-columns:minmax(0,1fr) 64px;gap:4px;margin-top:4px}
+.dcut{color:var(--e-red);font-size:12px;font-weight:600}
+.wtag{display:inline-block;color:#A35F00;background:#FCEFD6;border-radius:4px;padding:1px 6px;font-size:11.5px;font-weight:600;margin-top:2px;white-space:normal;text-align:left}
+.otbl .einp.sug{background:#F1FAF5;border-color:#9ED7B6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .wtag{background:#3A2A10;color:#F2B04A}:root:not([data-theme="light"]) .otbl .einp.sug{background:#132a20;border-color:#1f4a35}}
 </style>
 </head>
 <body>
@@ -321,7 +378,7 @@ else { db.contents.forEach(mig); const cl=t=>t.replace(/\s?\(예시\)\s?/g,' ').
 let saveT; function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}},250)}
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2000)}
 // indexes (rebuilt on demand)
-let IX=null; function ix(){ if(IX) return IX; const m=a=>{const o={};a.forEach(x=>o[x.id||x.code]=x);return o};
+let IX=null; function ix(){ if(IX) return IX; OPTC={}; const m=a=>{const o={};a.forEach(x=>o[x.id||x.code]=x);return o};
   IX={L:m(db.lines),C:m(db.contents),S:{},K:{},B:m(db.brands),M:m(db.makers),sOf:{},cOf:{}};
   db.stds.forEach(s=>{IX.S[s.code]=s;(IX.sOf[s.cid]=IX.sOf[s.cid]||[]).push(s)});
   db.contents.forEach(c=>{(IX.cOf[c.line]=IX.cOf[c.line]||[]).push(c)});
@@ -395,6 +452,189 @@ function renderHtml(html,c,editable){ let doc; try{doc=new DOMParser().parseFrom
 function serializeRich(el){ const cl=el.cloneNode(true); cl.querySelectorAll('.dimgph').forEach(sp=>{const im=document.createElement('img');im.setAttribute('src',sp.dataset.src);sp.replaceWith(im)}); return cl.innerHTML }
 const htmlImgs=h=>{const out=[];String(h||'').replace(/<img[^>]*src="([^"]+)"/g,(m,u)=>{out.push(u);return m});return out};
 const leafCats=()=>db.cats.filter(k=>k.leaf);
+// ---- 판매옵션 축 (네이버 그룹상품 판매옵션 표 참고). '*' = 검색 분리 축(네이버 옵션명1)
+const AX_DEF={'X0101':'용량|수량','X0102':'맛*|용량|수량','X0103':'맛*|용량|수량','X0104':'중량|수량','X0201':'용량*|수량','X0202':'맛*|용량|수량','X0301':'맛*|용량|수량','X0302':'맛*|용량|수량','00030002000800030000':'용량*|수량','X100101':'길이|수량','X100102':'개당 수량|수량','X100103':'개당 수량|수량','X100201':'용량*|수량','X100202':'향*|용량|수량','X100203':'용량*|수량','X1101':'사이즈|수량','X1102':'색상|수량','X1103':'향*|용량|수량','X1104':'색상|수량','X1201':'용량|수량','X1202':'사이즈|색상','X1203':'사이즈|수량','X1204':'개당 수량|수량','X1301':'색상|수량','X1302':'개당 수량|수량','X1303':'종류*|수량','X1304':'색상|사이즈','X1305':'사이즈*|색상|수량','X1401':'용량|수량','X1402':'용량|수량','X1403':'용량|수량','X1404':'용량|수량','X1405':'용량|수량','X1406':'향*|용량|수량','X1501':'색상|사이즈','X1601':'용량|색상','X1701':'중량|수량'};
+const defAx=k=>AX_DEF[k.code]||(/탄산|청량/.test(k.path||'')?'맛*|용량|수량':'용량|수량');
+const AX_PRESETS=[...new Set(['맛*|용량|수량','용량*|수량','용량|수량'].concat(Object.values(AX_DEF)))];
+const axFmt=x=>String(x).split('|').map(t=>t.endsWith('*')?t.slice(0,-1)+' (검색 분리)':t).join(' › ');
+function axSel(k){const cur=k.oax||defAx(k);const list=AX_PRESETS.includes(cur)?AX_PRESETS:[cur].concat(AX_PRESETS);return `<select class="in" data-kf="oax" aria-label="판매옵션 축">${opt(cur,list.map(x=>[x,axFmt(x)]))}</select>`}
+const S_AX=new Set(['수량','세트 수량','사이즈']);
+function axesOfLine(l){const k=CAT(l&&l.sd)||{};return String(k.oax||defAx(k)).split('|').filter(Boolean).map(t=>{const n=t.replace('*','');return {n,split:t.endsWith('*'),lv:S_AX.has(n)?'s':'c'}})}
+const etcMap=c=>{const o={};String(c.etc||'').split(';').forEach(p=>{const i=p.indexOf('=');if(i>0)o[p.slice(0,i).trim()]=p.slice(i+1).trim()});return o};
+function rawAx(n,c,s){const e=etcMap(c);const ek=Object.keys(e).find(k=>k.includes(n)||n.includes(k));
+  if(n==='수량'||n==='세트 수량') return `${s.q}${s.qu}`;
+  if(n==='사이즈') return s.size||c.model||(ek?e[ek]:'');
+  if(ek) return e[ek];
+  if(/용량|중량/.test(n)) return per(c);
+  if(n==='맛'||n==='향') return c.fl||'';
+  if(n==='종류') return c.fl||Object.values(e)[0]||c.model||'';
+  if(n==='색상') return c.col||'';
+  return '';}
+let OPTC={};
+const OPT_DEP=it=>it.rule==='표준상품명'||it.rule==='용량×수량'||String(it.rule||'').startsWith('표준상품:');
+function optInfo(l){
+  if(!l) return {ax:[],sv:{},fixed:{}}; if(OPTC[l.id]) return OPTC[l.id];
+  const cs=contsOf(l.id).filter(c=>stdsOf(c.id).some(x=>x.status==='사용'));
+  const ax=axesOfLine(l);
+  if(!ax.some(a=>a.lv==='c')&&cs.length>1) ax.unshift({n:'구분',split:false,lv:'c'});
+  if(!ax.some(a=>a.lv==='s')&&cs.some(c=>stdsOf(c.id).length>1)) ax.push({n:'수량',split:false,lv:'s'});
+  const cax=ax.filter(a=>a.lv==='c'), sax=ax.filter(a=>a.lv==='s');
+  const pks=new Set(cs.map(c=>c.pk).filter(Boolean));
+  const cv={}; cs.forEach(c=>{const s0=stdsOf(c.id)[0];const o={};cax.forEach(a=>{let v=a.n==='구분'?'':(rawAx(a.n,c,s0)||'');if(v&&/용량|중량/.test(a.n)){if(pks.size>1&&c.pk)v=c.pk+' '+v;if(c.ct)v+=' '+c.ct}o[a.n]=v});cv[c.id]=o});
+  const lab=c=>cax.map(a=>cv[c.id][a.n]).filter(Boolean).join(' ');
+  const seen={}; cs.forEach(c=>{const k=lab(c);seen[k]=(seen[k]||0)+1});
+  // 축 값만으로 기본상품이 구분되지 않으면 기본상품명으로 보완 (예: 포장형태만 다른 경우)
+  cs.forEach(c=>{const k=lab(c);if(cax.length&&(!k||seen[k]>1)){const a0=cax.find(a=>!cv[c.id][a.n])||cax[cax.length-1];cv[c.id][a0.n]=vLabel(c,l)}});
+  const sv={}; cs.forEach(c=>{const ss=stdsOf(c.id);const labs=ss.map(s=>sax.map(a=>rawAx(a.n,c,s)).join(' '));
+    ss.forEach((s,i)=>{const o=Object.assign({},cv[c.id]);sax.forEach(a=>o[a.n]=rawAx(a.n,c,s)||'');if(sax.length&&labs.filter(x=>x===labs[i]).length>1)o[sax[sax.length-1].n]+=' '+s.su;sv[s.code]=o})});
+  const live=Object.keys(sv).filter(k=>(S(k)||{}).status==='사용'); const fixed={};
+  ax.forEach(a=>{const vs=new Set(live.map(k=>sv[k][a.n]));if(vs.size<=1)fixed[a.n]=[...vs][0]||''});
+  return OPTC[l.id]={ax,sv,fixed};
+}
+const lineOfS=code=>{const s=S(code);const c=s&&C(s.cid);return c?L(c.line):null};
+function optLabel(code){const s=S(code);const oi=optInfo(lineOfS(code));const o=oi.sv[code]||{};return oi.ax.filter(a=>!(a.n in oi.fixed)).map(a=>o[a.n]).filter(Boolean).join(' ')||(s?`${s.q}${s.qu}`:'')}
+const optName=code=>form&&form.opts&&form.opts.length>1?`${form.f.name.v} ${optLabel(code)}`.trim():(form?form.f.name.v:'');
+const jo=(w,a,b)=>{const ch=String(w).charCodeAt(String(w).length-1);return ch>=0xAC00&&ch<=0xD7A3&&(ch-0xAC00)%28?a:b};
+const splitAx=oi=>(oi.ax.find(a=>a.split&&!(a.n in oi.fixed))||{}).n||'';
+
+// ---- 셀러: 표준상품 옵션 (고정) 표
+// ---- 표준상품 구성 선택 모달 (네이버 카탈로그 구매조건 선택 참고)
+let cm=null;
+const ORD_OF=l=>contsOf(l.id).flatMap(c=>stdsOf(c.id).map(x=>x.code));
+function openCm(lid,mode){const l=L(lid);cm={lid,mode,set:mode==='edit'?form.opts.map(o=>o.code):[]};
+  if(mode!=='edit'){const all=contsOf(l.id).flatMap(c=>stdsOf(c.id).filter(x=>x.status==='사용'));if(all.length===1)cm.set=[all[0].code]}
+  drawCm()}
+function closeCm(){cm=null;closeDrawer()}
+function drawCm(){const r=$('#drawerRoot');const pb=r.querySelector('.cm-b');const st=pb?pb.scrollTop:0;r.innerHTML=cmHtml();const nb=r.querySelector('.cm-b');if(nb)nb.scrollTop=st}
+function cmHtml(){
+  const l=L(cm.lid), b=BR(l.brand)||{}, m=MK(b.maker)||{}, k=CAT(l.sd)||{}, oi=optInfo(l), sp=splitAx(oi);
+  const vax=oi.ax.filter(a=>!(a.n in oi.fixed)), cax=vax.filter(a=>a.lv==='c'), sax=vax.filter(a=>a.lv==='s');
+  const cs=contsOf(l.id).filter(c=>stdsOf(c.id).some(x=>x.status==='사용'));
+  const fx=Object.entries(oi.fixed).filter(([,v])=>v); const n=cm.set.length;
+  return `<div class="dim" data-act="cmClose"></div><div class="cmodal" role="dialog" aria-modal="true" aria-label="표준상품 구성 선택">
+  <div class="cm-h"><h2>표준상품 구성 선택</h2><button class="cm-x" data-act="cmClose" aria-label="닫기">×</button></div>
+  <p class="cm-note">고른 구성이 그대로 판매옵션이 돼요. 카테고리·브랜드·제조사·규격은 표준상품 정보로 들어가고, 옵션명과 옵션값은 바꿀 수 없어요.</p>
+  <div class="cm-b">
+   <div class="cm-info">${cs[0]?img(cs[0],'main',60):''}<div class="t"><b>${esc(l.name)}</b>
+    <dl><dt>카테고리</dt><dd>${esc(k.path||'-')}</dd><dt>브랜드</dt><dd>${esc(b.name||'-')}</dd><dt>제조사</dt><dd>${esc(m.name||'-')}</dd><dt>판매옵션</dt><dd>${esc(vax.map(a=>a.n).join(' × ')||'단일 구성')}${fx.length?` <span class="mut">(공통 ${fx.map(([a,v])=>esc(a)+' '+esc(v)).join(', ')})</span>`:''}</dd></dl></div>
+    <button class="ebtn sm" data-act="cmReqFix">정보 수정 요청</button></div>
+   <div class="cm-sh"><div><b>구성 선택</b><p>${sp?`${esc(sp)}${jo(sp,'이','가')} 다른 구성은 G마켓 검색결과에 따로 보여요. `:''}여러 개 고르면 한 그룹으로 묶이고, 구성마다 상품번호가 따로 생겨요.</p></div><button class="ebtn sm" data-act="cmReset">초기화</button></div>
+   <div class="cm-list">${cs.map(c=>{const ss=stdsOf(c.id).filter(x=>x.status==='사용');const s0=oi.sv[ss[0].code]||{};const on=ss.filter(x=>cm.set.includes(x.code)).length;
+     return `<div class="cm-row"><div class="cm-pic">${img(c,'main',64)}</div><div class="cm-r"><div class="cm-rh"><b>${esc(cax.map(a=>s0[a.n]).filter(Boolean).join(' ')||vLabel(c,l))}</b><button class="lnk" data-act="cmRow" data-id="${esc(c.id)}">${on===ss.length?'모두 해제':'모두 선택'}</button></div>
+     <div class="cm-chks">${ss.map(x=>`<label class="cm-ck"><input type="checkbox" data-act="cmTog" data-code="${esc(x.code)}" ${cm.set.includes(x.code)?'checked':''}><span>${esc(sax.map(a=>(oi.sv[x.code]||{})[a.n]).filter(Boolean).join(' ')||x.q+x.qu)}</span></label>`).join('')}</div></div></div>`}).join('')}</div>
+   <div class="cm-miss"><b>원하는 구성이 없나요?</b><p>표준상품에 있는 구성만 고를 수 있어요. 없는 구성은 추가를 요청하거나, 표준상품 없이 직접 입력해서 등록해요.</p><button class="ebtn sm" data-act="cmReqAdd">구성 추가 요청</button></div>
+  </div>
+  <div class="cm-f"><div class="cm-sel"><span class="sm">선택한 구성 <b>${n}</b>/100</span><div class="cm-tags">${cm.set.map(cd=>`<button class="cm-tag" data-act="cmTog" data-code="${esc(cd)}" aria-label="${esc(optLabel(cd))} 빼기">${esc(optLabel(cd))} <span aria-hidden="true">×</span></button>`).join('')||'<span class="sm mut">아직 고른 구성이 없어요</span>'}</div></div>
+   <div class="cm-btns"><button class="ebtn" data-act="cmClose">취소</button><button class="ebtn blue" data-act="cmOk" ${n?'':'disabled'}>${cm.mode==='edit'?`구성 ${n}개로 바꾸기`:n>1?`${n}개 구성으로 등록`:'이 구성으로 등록'}</button></div></div></div>`;
+}
+function cmOk(){if(!cm||!cm.set.length)return;const l=L(cm.lid);const O=ORD_OF(l);const set=cm.set.slice().sort((a,b)=>O.indexOf(a)-O.indexOf(b));
+  if(cm.mode==='edit'){form.opts=set.map(cd=>form.opts.find(o=>o.code===cd)||{code:cd,price:'',stock:''});resync();closeCm();drawSeller();toast(`구성을 ${set.length}개로 바꿨어요`)}
+  else{closeCm();form=buildForm(set);sTried=false;confirmKey=null;drawSeller();$('#emain').scrollTop=0}}
+// ---- 인증정보 (셀러가 직접 선택)
+const CERT_T=['어린이제품 안전인증','어린이제품 안전확인','어린이제품 공급자적합성확인','전기용품 안전인증','전기용품 안전확인','전기용품 공급자적합성확인','생활용품 안전인증','생활용품 안전확인','생활용품 공급자적합성확인','방송통신기자재 적합인증','방송통신기자재 적합등록','위해우려제품 자가검사','친환경 인증','식품 HACCP','건강기능식품 인정','의료기기 허가·신고'];
+function syncCert(){const f=form.f;if(!f.cert)return;const m=form.certMode;f.cert.v=m==='none'?'인증·신고 대상 아님':m==='detail'?'상세페이지 별도표기':m==='target'?(form.certs||[]).filter(c=>c.t&&c.no.trim()).map(c=>`${c.t} ${c.no.trim()}`).join(', '):''}
+function certHtml(){const m=form.certMode||'';const ref=form.f.cert.ref;const cs=form.certs||[];
+  return `<div class="radios" role="radiogroup" aria-label="인증정보">${[['target','인증·신고 대상'],['detail','상세페이지 별도표기'],['none','인증·신고 대상 아님']].map(([k,n])=>`<label><input type="radio" name="certm" data-act="certMode" data-k="${k}" ${m===k?'checked':''}> ${n}</label>`).join('')}</div>
+  ${m==='target'?`<div class="certbox">${cs.map((c,i)=>`<div class="certrow"><select class="einp" data-cert="t" data-i="${i}" aria-label="인증 유형">${opt(c.t,[['','인증 유형 선택']].concat(CERT_T))}</select><input class="einp" data-cert="no" data-i="${i}" placeholder="인증번호" value="${esc(c.no)}" ${c.t?'':'disabled'} aria-label="인증번호">${i===cs.length-1?`<button class="ebtn sm" data-act="certAdd" aria-label="인증 추가">+</button>`:`<button class="ix2" data-act="certDel" data-i="${i}" aria-label="인증 삭제">×</button>`}</div>`).join('')}</div>`:''}
+  <p class="ehint" style="color:var(--e-muted)">ⓘ 인증정보는 법적 표시 항목이라 판매자가 실제 상품을 확인해 직접 골라요.${ref?` 참고로 표준상품에는 ‘${esc(ref)}’로 등록돼 있어요.`:''}</p>`}
+// ---- 기본상품별 이미지
+function initImgs(fm){fm.cimg=fm.cimg||{};const cids=[...new Set(fm.opts.map(o=>S(o.code).cid))];
+  cids.forEach(cid=>{if(!fm.cimg[cid]){const c=C(cid);const im=c.img||'',ims=(c.imgs||[]).join('\n');fm.cimg[cid]={img:im,imgs:ims,simg:im,simgs:ims}}});
+  if(!fm.icid||!cids.includes(fm.icid)){fm.icid=cids[0];const x=fm.cimg[fm.icid];fm.f.img.v=x.img;fm.f.img.std=x.simg;fm.f.imgs.v=x.imgs;fm.f.imgs.std=x.simgs}}
+function saveImgTab(){if(!form||!form.cimg||!form.icid)return;const x=form.cimg[form.icid];x.img=form.f.img.v;x.imgs=form.f.imgs.v}
+function imgTab(cid){saveImgTab();form.icid=cid;const x=form.cimg[cid];form.f.img.v=x.img;form.f.img.std=x.simg;form.f.imgs.v=x.imgs;form.f.imgs.std=x.simgs;drawSeller()}
+
+function syncPrice(fm){const ps=fm.opts.map(o=>String(o.price||'').replace(/\D/g,''));fm.f.price.v=ps.every(Boolean)?ps.join(','):''}
+function resync(){saveImgTab();const t=baseForm(form.opts.map(o=>o.code));Object.keys(t.f).forEach(k=>{const a=form.f[k],b=t.f[k];if(!a)return;a.ph=b.ph;if(a.type==='seller'||k==='img'||k==='imgs')return;if(a.v===a.std)a.v=b.v;a.std=b.std});form.code=t.code;form.tpl=t.tpl;form.line=t.line;initImgs(form);syncPrice(form)}
+const num=v=>+String(v==null?'':v).replace(/\D/g,'')||0;
+function discOf(o){const p=num(o.price);if(!p)return {p:0,d:0,sale:0,lab:'',err:''};
+  let t,v; if(o.dm==='n'){t='none'}else if(o.dm==='c'){t=o.dt||'rate';v=num(o.dv)}else{t=form.disc.type;v=num(form.disc.v)}
+  let d=0,err='';
+  if(t==='rate'&&v){if(v>=100)err='정률 할인은 99%까지예요';else d=Math.floor(p*v/100/10)*10}
+  else if(t==='amt'&&v){if(v>=p)err='할인이 판매가보다 커요';else d=v}
+  return {p,d,sale:p-d,lab:d?(t==='rate'?v+'%':d.toLocaleString()+'원'):'',err}}
+function warnsOf(){const w={},byC={};form.opts.forEach((o,i)=>{const s=S(o.code);const r=discOf(o);(byC[s.cid]=byC[s.cid]||[]).push({i,q:s.q,qu:s.qu,u:r.sale&&s.q?r.sale/s.q:0})});
+  Object.values(byC).forEach(arr=>arr.filter(x=>x.u).forEach(x=>{const y=arr.filter(y=>y.u&&y.q<x.q&&y.u<x.u-0.01).sort((a,b)=>a.u-b.u)[0];if(y)w[x.i]=`${y.q}${y.qu}보다 ${x.qu}당 가격이 비싸요`}));return w}
+const gdLabel=()=>form.disc.type==='none'||!num(form.disc.v)?'그룹 할인 (없음)':`그룹 할인 (${num(form.disc.v).toLocaleString()}${form.disc.type==='rate'?'%':'원'})`;
+function saleCell(o,r,warn){const s=S(o.code);
+  if(!r.p) return '<span class="mut">-</span>';
+  return `<b>${r.sale.toLocaleString()}원</b>${r.d?` <span class="dcut">-${esc(r.lab)}</span>`:''}<br><span class="sm mut">${esc(s.qu)}당 ${Math.round(r.sale/s.q).toLocaleString()}원</span>${r.err?`<br><span class="wtag">${esc(r.err)}</span>`:''}${warn?`<br><span class="wtag">단가 확인: ${esc(warn)}</span>`:''}`}
+function refreshDerived(){if(!form||!form.opts)return;const w=warnsOf();form.opts.forEach((o,i)=>{const el=$(`[data-sale="${i}"]`);if(el)el.innerHTML=saleCell(o,discOf(o),w[i])});
+  $$('[data-odm] option[value="g"]').forEach(op=>op.textContent=gdLabel());
+  const pw=$('#pwarn');if(pw){const n=Object.keys(w).length;pw.innerHTML=n?`<span class="wtag">단가가 뒤집힌 구성 ${n}개가 있어요. 큰 구성일수록 개당 가격이 같거나 싸야 자연스러워요.</span>`:''}}
+function optTableHtml(){
+  const f=form.f, l=L(form.line), oi=optInfo(l), axs=oi.ax.filter(a=>!(a.n in oi.fixed)), sp=splitAx(oi);
+  const fx=Object.entries(oi.fixed).filter(([,v])=>v);
+  const filled=!!f.price.v, err=sTried&&!filled; const w=warnsOf(); const dt=form.disc.type;
+  return `<div class="oblock${err?' is-err':''}" data-row="price">
+   <div class="olb"><span class="req t">구성·판매가</span><span class="badge b-lock">🔒 옵션명·옵션값은 표준상품 기준으로 고정</span>${filled?BADGE.seller:''}</div>
+   <p class="sm" style="color:var(--e-muted);margin-bottom:10px">옵션명 <b style="color:var(--e-ink)">${axs.map(a=>esc(a.n)).join(' × ')||'단일 구성'}</b>${fx.length?`, 고정 속성 ${fx.map(([n,v])=>esc(n)+' '+esc(v)).join(', ')}`:''}${sp?`. 검색결과는 ${esc(sp)} 기준으로 나뉘어 보여요`:''}</p>
+   <div class="dbar"><span class="t">즉시할인</span><span class="seg">${[['none','설정안함'],['rate','정률'],['amt','정액']].map(([k,n])=>`<button data-act="gdType" data-k="${k}" aria-pressed="${dt===k}">${n}</button>`).join('')}</span>
+    ${dt!=='none'?`<span style="display:flex;gap:6px;align-items:center"><input class="einp" data-gdisc="1" inputmode="numeric" value="${esc(form.disc.v)}" placeholder="${dt==='rate'?'예: 10':'예: 1000'}" style="max-width:110px;min-height:38px" aria-label="그룹 할인 값"><span>${dt==='rate'?'%':'원'}</span></span>`:''}
+    <span class="sm" style="color:var(--e-muted)">모든 구성에 걸리고, 필요한 구성만 따로 바꿀 수 있어요</span></div>
+   <div class="tw otbl"><table><thead><tr>${axs.map(a=>`<th>${esc(a.n)}</th>`).join('')}<th>옵션 상품명</th><th>판매가 (원)</th><th>할인</th><th>할인가 · 수수료 기준</th><th>재고</th><th><span class="sr">삭제</span></th></tr></thead><tbody>
+   ${form.opts.map((o,i)=>{const s=S(o.code),v=oi.sv[o.code]||{};const bad=sTried&&!/\d/.test(o.price);const dm=o.dm||'g';
+     return `<tr>${axs.map(a=>`<td class="nowrap"><span class="lockv">${esc(v[a.n]||'-')}</span></td>`).join('')}
+     <td class="sm" style="min-width:160px"><span data-oname="${esc(o.code)}">${esc(optName(o.code))}</span><br><span style="color:var(--e-muted)">${esc(s.sp)}</span></td>
+     <td style="min-width:110px"><input class="einp${bad?' bad':''}${o.sug?' sug':''}" data-op="price" data-i="${i}" inputmode="numeric" placeholder="숫자만" value="${esc(o.price)}" aria-label="${esc(optLabel(o.code))} 판매가" ${o.sug?'title="단가로 채운 값이에요. 확인해 주세요"':''}></td>
+     <td style="min-width:150px"><select class="einp" data-odm="${i}" aria-label="${esc(optLabel(o.code))} 할인">${opt(dm,[['g',gdLabel()],['c','따로 설정'],['n','할인 없음']])}</select>${dm==='c'?`<div class="dcust"><input class="einp" data-odv="${i}" inputmode="numeric" value="${esc(o.dv||'')}" placeholder="값" aria-label="할인 값"><select class="einp" data-odt="${i}" aria-label="할인 단위">${opt(o.dt||'rate',[['rate','%'],['amt','원']])}</select></div>`:''}</td>
+     <td class="num" style="min-width:140px" data-sale="${i}">${saleCell(o,discOf(o),w[i])}</td>
+     <td style="min-width:90px"><input class="einp" data-op="stock" data-i="${i}" inputmode="numeric" placeholder="99,999" value="${esc(o.stock)}" aria-label="${esc(optLabel(o.code))} 재고"></td>
+     <td><button class="ix2" data-act="opDel" data-i="${i}" aria-label="${esc(optLabel(o.code))} 옵션 빼기" ${form.opts.length<2?'disabled':''}>×</button></td></tr>`}).join('')}</tbody></table></div>
+   <div id="pwarn" style="margin-top:6px">${Object.keys(w).length?`<span class="wtag">단가가 뒤집힌 구성 ${Object.keys(w).length}개가 있어요. 큰 구성일수록 개당 가격이 같거나 싸야 자연스러워요.</span>`:''}</div>
+   <div class="optbar"><span style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><input class="einp" id="opAll" inputmode="numeric" placeholder="판매가 한 번에 넣기" style="max-width:160px;min-height:36px"><button class="ebtn sm" data-act="opAll">모든 구성에 넣기</button><button class="ebtn sm" data-act="opFill" title="같은 기본상품 안에서 이미 넣은 판매가의 개당 가격으로 빈 칸을 채워요">단가로 빈 칸 채우기</button></span><button class="ebtn sm" data-act="cmEdit">구성 바꾸기</button></div>
+   <p class="ehint">ⓘ 판매가는 구성마다 따로 넣어요. 하나만 넣고 ‘단가로 빈 칸 채우기’를 누르면 같은 용량의 다른 구성이 개당 가격 기준으로 채워져요. 수수료는 할인가(판매가 − 셀러 할인) 기준이에요.</p></div>`;
+}
+function opFill(){const byC={};form.opts.forEach(o=>{const s=S(o.code);(byC[s.cid]=byC[s.cid]||[]).push(o)});let n=0,skip=0;
+  Object.values(byC).forEach(arr=>{const ref=arr.filter(o=>num(o.price)).sort((a,b)=>S(a.code).q-S(b.code).q)[0];const empty=arr.filter(o=>!num(o.price));if(!empty.length)return;if(!ref){skip+=empty.length;return}
+    const u=num(ref.price)/S(ref.code).q;empty.forEach(o=>{o.price=String(Math.round(u*S(o.code).q/10)*10);o.sug=true;n++})});
+  syncPrice(form);drawSeller();
+  toast(n?`${n}개를 개당 가격으로 채웠어요. 값을 확인해 주세요${skip?` (판매가가 하나도 없는 용량 ${skip}개는 직접 넣어 주세요)`:''}`:skip?'같은 용량에서 판매가를 하나 먼저 넣어 주세요':'채울 빈 칸이 없어요')}
+function addPanelHtml(){const l=L(form.line);const oi=optInfo(l);const have=new Set(form.opts.map(o=>o.code));
+  const cax=oi.ax.filter(a=>a.lv==='c'&&!(a.n in oi.fixed)), sax=oi.ax.filter(a=>a.lv==='s'&&!(a.n in oi.fixed));
+  const rows=contsOf(l.id).map(c=>{const ss=stdsOf(c.id).filter(x=>x.status==='사용'&&!have.has(x.code));if(!ss.length)return '';const s0=oi.sv[ss[0].code]||{};
+    return `<div class="omr"><span class="omh" style="cursor:default">${img(c,'main',28)}<span>${esc(cax.map(a=>s0[a.n]).filter(Boolean).join(' ')||vLabel(c,l))}</span></span><div class="chiprow" style="margin:0">${ss.map(x=>`<button class="ochip" data-act="opAdd" data-code="${esc(x.code)}">+ ${esc(sax.map(a=>(oi.sv[x.code]||{})[a.n]).filter(Boolean).join(' ')||x.q+x.qu)}</button>`).join('')}</div></div>`}).join('');
+  return `<div class="picker" style="border:1px solid var(--e-line);border-radius:8px;margin-top:10px"><p class="pl">${esc(l.name)}의 다른 표준상품</p><div class="omx">${rows||'<span class="sm" style="color:var(--e-muted)">더 넣을 구성이 없어요</span>'}</div><p class="sm" style="color:var(--e-muted)">다른 상품그룹의 상품은 옵션으로 묶을 수 없어요. 따로 등록해 주세요.</p></div>`}
+function registerOpts(){
+  saveImgTab();
+  const bad=form.opts.findIndex(o=>discOf(o).err);if(bad>=0){toast(`${optLabel(form.opts[bad].code)}: ${discOf(form.opts[bad]).err}`);const r=$('[data-row="price"]');r&&r.scrollIntoView({behavior:'smooth',block:'center'});return}
+  const f=form.f, c0=cnt(), tot=Object.keys(f).length, l=L(form.line), oi=optInfo(l), sp=splitAx(oi), repC=S(form.opts[0].code).cid;
+  db.gseq=(db.gseq||0)+1; const gid='GR'+String(db.gseq).padStart(4,'0'); const ggno=String(Math.floor(1e8+Math.random()*9e8)), gano='AG'+String(Math.floor(Math.random()*9e7)).padStart(8,'0');
+  const edited=Object.keys(f).filter(k=>stOf(f[k])==='edit').map(k=>f[k].label);
+  const ORD=contsOf(l.id).flatMap(c=>stdsOf(c.id).map(x=>x.code));
+  const items=form.opts.map((o,i)=>{const s=S(o.code), c=C(s.cid);
+    if(form.link!=='해제') s.match=(s.match||0)+1;
+    const snap={}; Object.keys(f).forEach(k=>snap[k]={v:f[k].v,label:f[k].label,notice:!!f[k].notice});
+    snap.name.v=optName(o.code); snap.spec.v=[c.pk,c.ct,per(c),`${s.q}${s.qu}`,s.su].filter(Boolean).join(' / '); snap.price={v:o.price,label:'판매가'};
+    {const ci=form.cimg&&form.cimg[s.cid];if(ci){snap.img.v=ci.img;snap.imgs.v=ci.imgs}}
+    db.pseq=(db.pseq||0)+1;
+    return {id:'P'+String(db.pseq).padStart(4,'0'),at:Date.now(),ord:ORD.indexOf(o.code),code:o.code,sp:s.sp,cid:s.cid,name:snap.name.v,price:+String(o.price).replace(/\D/g,'')||0,sale:discOf(o).sale,dlab:discOf(o).lab,stock:String(o.stock||'').replace(/\D/g,'')||'99999',total:tot,auto:c0.auto,seller:c0.seller+c0.edit,def:c0.def,link:form.link,edited,
+      gno:String(2000000000+Math.floor(Math.random()*9e8)),ano:'A'+String(Math.floor(Math.random()*9e9)).padStart(9,'0'),snap,tpl:form.tpl,gid,ggno,gano,gname:f.name.v,idx:i,rep:i===0,olab:optLabel(o.code),ov:Object.assign({},oi.sv[o.code]||{}),split:sp}});
+  db.products.unshift(...items);
+  save(); form=null; sq=''; pickL=pickC=pickS=null; pickSet=[]; sTried=false; confirmKey=null; doneP=items[0]; drawSeller(); $('#emain').scrollTop=0;
+}
+function adsHtml(){const ads=[['G마켓 AI Product Ads','최소한의 운영으로 성과에 집중해요'],['AI매출업','고객 취향에 맞춰 노출할 수 있어요'],['옥션 부가서비스','고정 비용으로 노출 기회를 높일 수 있어요'],['파워클릭','주목도 높은 곳에 노출할 수 있어요']];
+  return `<div class="esec adtabs"><div class="adt">${ads.map(([t,d],i)=>`<button data-act="adTab" data-i="${i}" aria-pressed="${adTab===i}"><b>${t}</b><span>${d}</span></button>`).join('')}</div>
+   <div class="adb"><p class="hi">test4plan 님,</p><p class="ad">${esc(ads[adTab][0])}로 방금 등록한 상품을 알려 보세요.</p><p class="mut sm" style="margin-top:8px">광고 영역은 실제 ESM 완료 화면의 자리만 표시했어요.</p></div></div>`}
+function doneGroupHtml(p,sib){
+  const c=p.cid?C(p.cid):null; const pseudo=c||{name:p.name,pk:'박스',line:'',icopy:'Y'}; const v=k=>(p.snap[k]||{}).v||'';
+  const cards=p.split?[...new Set(sib.map(x=>x.ov[p.split]))]:[];
+  return `<div class="esec done"><div class="done-h"><span class="chk" aria-hidden="true">✓</span><h2>상품 등록이 완료되었습니다!</h2><p style="color:var(--e-muted);margin-top:6px">옵션 ${sib.length}개가 각각 상품으로 등록됐어요.</p></div>
+   <div class="done-b"><div class="done-p"><div class="im">${urlImg(v('img'),pseudo,72)}</div><div class="nos"><div><b style="font-size:17px">${esc(p.gname)}</b></div>
+     <div class="sm" style="color:var(--e-muted)">그룹번호 <span class="g">G</span>${esc(p.ggno)} <span class="a" style="margin-left:6px">A</span>${esc(p.gano)}</div></div></div>
+    <div class="tw" style="width:100%;max-width:720px;border:1px solid var(--e-line);border-radius:8px"><table class="dtbl"><thead><tr><th>옵션</th><th>G마켓 상품번호</th><th>옥션 상품번호</th><th class="num">판매가</th><th class="num">할인가</th><th class="num">재고</th></tr></thead><tbody>
+     ${sib.map(x=>`<tr><td>${esc(x.olab||x.name)}</td><td><button class="no" data-act="openPdp" data-id="${esc(x.id)}" data-site="G">${esc(x.gno)} <span aria-hidden="true">↗</span></button></td><td><button class="no" data-act="openPdp" data-id="${esc(x.id)}" data-site="A">${esc(x.ano)} <span aria-hidden="true">↗</span></button></td><td class="num">${(x.price||0).toLocaleString()}원</td><td class="num">${x.sale&&x.sale<x.price?`${x.sale.toLocaleString()}원 <span class="dcut">-${esc(x.dlab)}</span>`:'-'}</td><td class="num">${Number(x.stock).toLocaleString()}</td></tr>`).join('')}</tbody></table></div>
+    <p class="sm" style="color:var(--e-muted);max-width:640px;text-align:center;line-height:1.6">${cards.length>1?`G마켓 검색결과에는 ${esc(p.split)} 기준으로 ${cards.length}개(${cards.map(esc).join(', ')})로 나뉘어 보이고`:'G마켓 검색결과에는 한 상품으로 보이고'}, 상세에서는 옵션을 바꿔 가며 볼 수 있어요. 주문·정산·재고는 상품번호마다 따로 관리돼요.</p>
+    <div class="done-btns"><button class="ebtn blue" data-act="mAgain">추가 등록하기</button><button class="ebtn" data-act="mResults">조회/수정</button></div>
+    <div class="done-sum">표준상품 <b>${sib.length}개</b> ${p.link==='해제'?'연결 해제':'연결'} <span class="dv"></span> 셀러 입력 <b>${p.seller}개</b> + 옵션별 판매가 <span class="dv"></span> <button class="lnk" data-act="copy" data-u="${esc(pdpUrl(p))}">PDP 링크 복사</button></div></div></div>${adsHtml()}`;
+}
+function pdpOptHtml(p){
+  if(!p.gid) return ''; const sib=(db.products||[]).filter(x=>x.gid===p.gid).sort((a,b)=>a.idx-b.idx); if(sib.length<2) return '';
+  const ks=Object.keys(p.ov||{}).filter(k=>new Set(sib.map(x=>x.ov[k])).size>1); if(!ks.length) return '';
+  return `<div class="popt">${ks.map(k=>{const ordOf=v=>Math.min(...sib.filter(x=>x.ov[k]===v).map(x=>x.ord==null?x.idx:x.ord));const vals=[...new Set(sib.map(x=>x.ov[k]))].sort((a,b)=>ordOf(a)-ordOf(b));return `<p class="pol">${esc(k)}</p><div class="chiprow">${vals.map(v=>{const ok=sib.some(x=>x.ov[k]===v&&ks.every(k2=>k2===k||x.ov[k2]===p.ov[k2]));return `<button class="pchip" data-act="pdpOpt" data-k="${esc(k)}" data-v="${esc(v)}" aria-pressed="${p.ov[k]===v}" ${ok?'':'data-alt="1"'}>${esc(v)}</button>`}).join('')}</div>`}).join('')}
+   <p class="sm" style="color:#888">옵션을 바꾸면 상품번호가 바뀌어요. 옵션마다 따로 등록된 상품이에요.</p></div>`;
+}
+
 const opt=(v,list)=>list.map(x=>{const val=Array.isArray(x)?x[0]:x;const t=Array.isArray(x)?x[1]:x;return `<option value="${esc(val)}"${String(val)===String(v)?' selected':''}>${esc(t)}</option>`}).join('');
 function copy(t){try{navigator.clipboard.writeText(t).then(()=>toast('URL을 복사했어요'),()=>toast('복사하지 못했어요. 직접 선택해 주세요'))}catch(e){toast('복사하지 못했어요. 직접 선택해 주세요')}}
 const urlRow=(k,u)=>`<div class="url"><span class="k">${k}</span><code title="${esc(u)}">${esc(u||'-')}</code>${u?`<button class="btn sm" data-act="copy" data-u="${esc(u)}">복사</button>`:''}</div>`;
@@ -492,10 +732,11 @@ function drawGroup(){
    <div class="f"><label>품번 (공통 식별)</label><input class="in" data-lf="pn" value="${esc(l.pn||'')}"></div>
    <div class="f s4"><label>SD카테고리</label><select class="in" data-lf="sd">${opt(l.sd,catOpts(null,true))}</select></div>
    <div class="f s4"><label>검색어 (셀러가 이렇게 검색해도 찾아져요)</label><input class="in" data-lf="syn" value="${esc(l.syn||'')}"></div></div>
-   <p class="sm mut" style="margin-top:8px">고시 템플릿 ${esc((db.ntpl[et.code]||{}).name||'-')}${et.from&&et.from.code!==l.sd?` (‘${esc(et.from.name)}’에서 상속)`:''}. SD카테고리에서 정해져요.${l.note?' '+esc(l.note):''}</p></div>
+   <p class="sm mut" style="margin-top:8px">고시 템플릿 ${esc((db.ntpl[et.code]||{}).name||'-')}${et.from&&et.from.code!==l.sd?` (‘${esc(et.from.name)}’에서 상속)`:''}. SD카테고리에서 정해져요.${l.note?' '+esc(l.note):''}</p>
+   <p class="sm" style="margin-top:6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span class="mut">판매옵션 축</span>${(()=>{const oi=optInfo(l);return oi.ax.map(a=>`<span class="tag ${a.split?'t-info':'t-mut'}">${esc(a.n)}${a.split?' (검색 분리)':''}${a.n in oi.fixed?' 고정':''}</span>`).join('')})()}<span class="mut">SD카테고리에서 정해져요. 셀러는 이 값을 고르기만 하고 바꿀 수 없어요.</span></p></div>
   <div class="card pad" style="margin-top:12px"><div class="ttl"><h3>기본상품 ${cs.length}개</h3><button class="btn sm" data-act="addCont">기본상품 추가</button></div>
   ${cs.map(c=>{const ss=stdsOf(c.id);return `<div class="bp"><div class="bph">${img(c,'main',48)}<div class="t"><b>${esc(c.name)}</b><div class="specs">${[c.pk,c.ct,has(c.vol)?+c.vol+c.vu:'',has(c.wt)?+c.wt+c.wu:'',c.fl,c.col,c.model].filter(Boolean).map(x=>`<span>${esc(x)}</span>`).join('')}</div></div>${stTag(nStatus(c).st)}<button class="btn sm" data-act="editCont" data-id="${esc(c.id)}">기본상품 편집</button></div>
-  <div class="tw" style="border-radius:0"><table><thead><tr><th>표준상품코드</th><th>EPIN</th><th>표준상품명</th><th class="num">구성 수량</th><th>수량 단위</th><th>판매단위</th><th>총량</th><th>바코드</th><th>포장 유형</th><th class="num">매칭</th></tr></thead><tbody>${ss.map(s=>`<tr class="click" data-act="openStd" data-code="${esc(s.code)}"><td><b style="font-weight:600">${esc(s.sp)}</b></td><td class="mut">${esc(s.code)}</td><td>${esc(s.name)}</td><td class="num">${s.q}</td><td>${esc(s.qu)}</td><td>${esc(s.su)}</td><td>${esc(total(c,s))}</td><td class="mut sm">${esc(s.bc||'없음')}</td><td class="sm">${esc(s.ptype)}</td><td class="num">${s.match||0}</td></tr>`).join('')||'<tr><td colspan="10" class="mut">표준상품이 없어요. 기본상품 편집에서 추가해요.</td></tr>'}</tbody></table></div></div>`}).join('')||'<p class="mut">기본상품이 없어요. 기본상품을 추가해 보세요.</p>'}</div>`;
+  <div class="tw" style="border-radius:0"><table><thead><tr><th>표준상품코드</th><th>EPIN</th><th>표준상품명</th><th>옵션값</th><th class="num">구성 수량</th><th>수량 단위</th><th>판매단위</th><th>총량</th><th>바코드</th><th>포장 유형</th><th class="num">매칭</th></tr></thead><tbody>${ss.map(s=>`<tr class="click" data-act="openStd" data-code="${esc(s.code)}"><td><b style="font-weight:600">${esc(s.sp)}</b></td><td class="mut">${esc(s.code)}</td><td>${esc(s.name)}</td><td class="sm nowrap">${esc(optLabel(s.code))}</td><td class="num">${s.q}</td><td>${esc(s.qu)}</td><td>${esc(s.su)}</td><td>${esc(total(c,s))}</td><td class="mut sm">${esc(s.bc||'없음')}</td><td class="sm">${esc(s.ptype)}</td><td class="num">${s.match||0}</td></tr>`).join('')||'<tr><td colspan="11" class="mut">표준상품이 없어요. 기본상품 편집에서 추가해요.</td></tr>'}</tbody></table></div></div>`}).join('')||'<p class="mut">기본상품이 없어요. 기본상품을 추가해 보세요.</p>'}</div>`;
 }
 function editCont(cid){
   const c=C(cid); const ss=stdsOf(cid);
@@ -648,10 +889,11 @@ function viewMaster(){
   if(mtab==='cat'){
     const rows=[];const walk=(p)=>children(p).forEach(k=>{rows.push(k);walk(k.code)});walk('');
     el.innerHTML=`<div class="card pad" style="margin-bottom:12px"><b>고시 템플릿은 상위 분류에 한 번만 지정하면 돼요</b><p class="mut sm" style="margin-top:4px">SD카테고리는 원래 대·중·소·세 계층이라 그대로 보여줘요. 예를 들어 ‘가공식품’에 가공식품 템플릿을 지정하면 우유, 라면, 콜라 같은 하위 분류가 모두 물려받아요. 다른 템플릿이 필요한 하위 분류(물티슈 → 화장품 등)만 따로 지정하세요.</p></div>
-    <div class="card tw" style="max-height:calc(100vh - 320px)"><table><thead><tr><th>SD카테고리코드</th><th>카테고리</th><th>고시 템플릿 지정</th><th>적용되는 템플릿</th><th>표준상품 적용</th><th class="num">상품그룹</th><th>데이터</th></tr></thead><tbody>
+    <div class="card pad" style="margin-bottom:12px"><b>판매옵션 축은 카테고리마다 정해요</b><p class="mut sm" style="margin-top:4px">셀러가 옵션으로 고를 수 있는 속성과 순서예요. 네이버 그룹상품 판매옵션 표(2026.10)를 참고해 기본값을 넣었어요. ‘검색 분리’ 축은 값마다 검색결과에 따로 보여요. 예: 생수는 2L와 500mL가 따로 보이고, 6병·12병은 한 상품 안에서 골라요.</p></div>
+    <div class="card tw" style="max-height:calc(100vh - 320px)"><table><thead><tr><th>SD카테고리코드</th><th>카테고리</th><th>고시 템플릿 지정</th><th>적용되는 템플릿</th><th>판매옵션 축</th><th>표준상품 적용</th><th class="num">상품그룹</th><th>데이터</th></tr></thead><tbody>
     ${rows.map(k=>{const e=effTpl(k.code);return `<tr data-code="${esc(k.code)}"><td class="mut sm">${esc(k.code)}</td><td style="padding-left:${10+(k.level-1)*16}px">${k.leaf?esc(k.name):'<b style="font-weight:600">'+esc(k.name)+'</b>'}</td>
     <td><select class="in" data-kf="ntpl"><option value="">(상위에서 상속)</option>${opt(k.ntpl,Object.entries(db.ntpl).map(([c,v])=>[c,v.name]))}</select></td>
-    <td>${e.code?esc(db.ntpl[e.code].name):'<span class="mut">-</span>'}${e.from&&e.from.code!==k.code?` <span class="mut sm">← ${esc(e.from.name)}</span>`:''}</td><td>${k.leaf?`<select class="in" data-kf="apply">${opt(k.apply,['적용','조건부','미적용'])}</select>`:'-'}</td><td class="num">${lineCount(k.code)||''}</td><td>${kindTag(k.kind)}</td></tr>`}).join('')}</tbody></table></div>
+    <td>${e.code?esc(db.ntpl[e.code].name):'<span class="mut">-</span>'}${e.from&&e.from.code!==k.code?` <span class="mut sm">← ${esc(e.from.name)}</span>`:''}</td><td>${k.leaf?axSel(k):'-'}</td><td>${k.leaf?`<select class="in" data-kf="apply">${opt(k.apply,['적용','조건부','미적용'])}</select>`:'-'}</td><td class="num">${lineCount(k.code)||''}</td><td>${kindTag(k.kind)}</td></tr>`}).join('')}</tbody></table></div>
     <p class="mut sm" style="margin-top:8px">실제 SD 코드는 공유받은 EPIN 추출본에 있는 12개예요. X로 시작하는 코드는 예시라 SD 전체 목록으로 바꿔야 해요.</p>`;
   } else if(mtab==='tpl'){
     const t=db.ntpl[selT];
@@ -665,35 +907,38 @@ function viewMaster(){
 
 // ---------- 6. ESM+ 상품등록
 let sq='', form=null, sTried=false, confirmKey=null;
-const POL={name:'edit',img:'edit',imgs:'edit',detail:'edit',cat:'lock',brand:'lock',maker:'lock',spec:'lock',cert:'lock'};
+const POL={name:'edit',img:'edit',imgs:'edit',detail:'edit',cat:'lock',brand:'lock',maker:'lock',spec:'lock'};
 const SELLER_DEF='상세페이지 참조 (제품 별도 표기)';
 function F(key,v,o){return Object.assign({key,v:v==null?'':String(v),std:v==null?'':String(v),type:'auto',req:true},o||{})}
-function buildForm(code){
+function baseForm(codes){
+  codes=[].concat(codes); const code=codes[0], nOpt=codes.length;
   const s=S(code), c=C(s.cid), l=L(c.line), b=BR(l.brand)||{}, m=MK(b.maker)||{}, k=CAT(l.sd)||{};
   const ns=noticeOf(c,s); const cert=ns.find(x=>/인증|신고|허가/.test(x.it.n)&&x.val);
   const f={
     site:F('site','G마켓, 옥션',{type:'def',st:'sell',label:'판매사이트'}),
     price:F('price','',{type:'seller',st:'sell',label:'판매가'}), stock:F('stock','',{type:'seller',st:'more',label:'재고수량',req:false}),
-    name:F('name',s.name,{st:'info',label:'상품명'}), cat:F('cat',k.path,{st:'info',label:'카테고리'}),
+    name:F('name',nOpt>1?l.name:s.name,{st:'info',label:'상품명'}), cat:F('cat',k.path,{st:'info',label:'카테고리'}),
     img:F('img',c.img,{st:'info',label:'대표이미지'}), imgs:F('imgs',(c.imgs||[]).join('\n'),{st:'info',label:'추가이미지',req:false}),
     detail:F('detail',c.dhtml||'',{st:'info',label:'상세설명'}),
     brand:F('brand',b.name,{st:'info',label:'브랜드'}), maker:F('maker',m.name,{st:'info',label:'제조사'}),
-    spec:F('spec',[c.pk,c.ct,per(c),`${s.q}${s.qu}`,s.su].filter(Boolean).join(' / '),{st:'info',label:'규격·구성'}),
-    cert:F('cert',cert?cert.val:'인증대상 아님',{st:'info',label:'인증정보'}),
+    spec:F('spec',nOpt>1?`옵션별 자동입력 (${nOpt}개)`:[c.pk,c.ct,per(c),`${s.q}${s.qu}`,s.su].filter(Boolean).join(' / '),{st:'info',label:'규격·구성'}),
+    cert:F('cert','',{type:'seller',st:'info',label:'인증정보',ref:cert?cert.val:'인증대상 아님'}),
     ship:F('ship','기본 배송 템플릿: CJ택배, 무료배송, 당일발송',{type:'def',st:'ship',label:'배송'}),
     ret:F('ret','기본 반품지 (판매자 주소), 반품배송비 3,000원',{type:'def',st:'ship',label:'반품/교환'}),
     method:F('method','신상품, 미성년자 구매 가능, 선물하기 설정',{type:'def',st:'ship',label:'판매방식'}),
     tax:F('tax','과세상품',{type:'def',st:'ship',label:'부가세'})};
-  ns.forEach(x=>{ if(x.src==='셀러') f['n:'+x.it.c]=F('n:'+x.it.c,SELLER_DEF,{type:'def',st:'info',label:x.it.n,notice:true,req:false}); else f['n:'+x.it.c]=F('n:'+x.it.c,x.val,{st:'info',label:x.it.n,notice:true,lock:true,req:x.it.req}) });
-  return {code,f,link:'유지',tpl:(tplOfC(c)||{}).name||'',dmode:c.dtype==='image'?'image':'html'};
+  ns.forEach(x=>{ const ph=x.src==='셀러'?'제품에 표기된 내용을 확인해 입력':(nOpt>1&&OPT_DEP(x.it)?'옵션마다 달라요. ‘상품상세 참조’를 권장해요':(x.val?'참고: '+x.val:'제품 표기를 확인해 입력')); f['n:'+x.it.c]=F('n:'+x.it.c,'',{type:'seller',st:'info',label:x.it.n,notice:true,req:x.src==='셀러'?true:x.it.req,ph}) });
+  delete f.stock;
+  return {code,f,link:'유지',tpl:(tplOfC(c)||{}).name||'',dmode:c.dtype==='image'?'image':'html',line:l.id};
 }
+function buildForm(codes){const b=baseForm(codes);b.opts=[].concat(codes).map(cd=>({code:cd,price:'',stock:''}));b.disc={type:'none',v:''};b.certMode='target';b.certs=[{t:'',no:''}];initImgs(b);syncPrice(b);return b}
 function manualForm(){
   const sv=(k,label,o)=>F(k,'',Object.assign({type:'seller',st:'info',label},o||{}));
   const f={site:F('site','G마켓, 옥션',{type:'def',st:'sell',label:'판매사이트'}),price:F('price','',{type:'seller',st:'sell',label:'판매가'}),stock:F('stock','',{type:'seller',st:'more',label:'재고수량',req:false}),
     name:F('name',sq.trim(),{type:'seller',st:'info',label:'상품명'}),bc:sv('bc','바코드',{req:false}),cat:sv('cat','카테고리'),img:sv('img','대표이미지'),imgs:sv('imgs','추가이미지',{req:false}),detail:sv('detail','상세설명'),brand:sv('brand','브랜드'),maker:sv('maker','제조사'),spec:sv('spec','규격·구성',{req:false}),cert:sv('cert','인증정보'),
     ship:F('ship','기본 배송 템플릿: CJ택배, 무료배송, 당일발송',{type:'def',st:'ship',label:'배송'}),ret:F('ret','기본 반품지 (판매자 주소), 반품배송비 3,000원',{type:'def',st:'ship',label:'반품/교환'}),method:F('method','신상품, 미성년자 구매 가능, 선물하기 설정',{type:'def',st:'ship',label:'판매방식'}),tax:F('tax','과세상품',{type:'def',st:'ship',label:'부가세'})};
-  db.ntpl['N-FOOD'].items.forEach(it=>{f['n:'+it.c]=it.loc==='셀러'?F('n:'+it.c,SELLER_DEF,{type:'def',st:'info',label:it.n,notice:true,req:false}):sv('n:'+it.c,it.n,{notice:true,req:it.req})});
-  return {code:null,manual:true,request:true,f,link:'없음',tpl:'가공식품 (상품군 선택)',dmode:'editor'};
+  db.ntpl['N-FOOD'].items.forEach(it=>{f['n:'+it.c]=sv('n:'+it.c,it.n,{notice:true,req:it.loc==='셀러'?true:it.req,ph:'제품 표기를 확인해 입력'})});
+  return {code:null,manual:true,request:true,f,link:'없음',tpl:'가공식품 (상품군 선택)',dmode:'editor',certMode:'target',certs:[{t:'',no:''}]};
 }
 function stOf(x){ if(x.type==='def') return x.v===x.std?'def':(x.v?'seller':''); if(!x.v) return ''; if(x.type==='seller') return 'seller'; return x.v===x.std?'auto':'edit'; }
 const BADGE={auto:'<span class="badge b-auto">표준상품</span>',edit:'<span class="badge b-edit">수정함</span>',seller:'<span class="badge b-seller">셀러 입력</span>',def:'<span class="badge b-def">기본값</span>'};
@@ -710,8 +955,8 @@ function cnt(){const ks=Object.keys(form.f);const c={auto:0,edit:0,seller:0,def:
 function fieldRow(k,inner,hint){
   const x=form.f[k]; if(!x) return ''; const s=stOf(x); const lock=isLocked(k,x);
   const cls=(s==='auto'?'is-auto':s==='edit'?'is-edit':'')+(sTried&&x.req&&x.type!=='def'&&!x.v?' is-err':'');
-  const body=lock?`<div class="ro"><span>${esc(x.v)}</span><span class="lockic" aria-label="잠김">🔒 표준상품 정보</span></div>${confirmKey===k?`<div class="confirm"><b>이 항목은 표준상품 정보라 잠겨 있어요.</b><br>수정하면 표준상품 연결이 해제되고, 이 상품은 표준상품 매칭 상품으로 집계되지 않아요. 연결이 해제되면 표준상품 정보가 바뀌어도 이 상품에는 반영되지 않아요.<div class="btns"><button class="ebtn sm blue" data-act="unlock" data-k="${k}">연결 해제하고 수정</button><button class="ebtn sm" data-act="unlockNo">취소</button></div></div>`:''}`:inner;
-  return `<div class="erow ${cls}" data-row="${k}"><div class="lb"><span class="${x.req&&x.type!=='def'?'req':''}">${esc(x.label)}</span></div><div>${body}${hint&&!lock?`<p class="ehint">ⓘ ${hint}</p>`:''}</div><div class="ac" data-badge="${k}">${s?BADGE[s]:''}${lock?`<button class="lnk" data-act="askUnlock" data-k="${k}">수정</button>`:''}</div></div>`;
+  const body=lock?`<div class="ro"><span>${esc(x.v)}</span><span class="lockic" aria-label="잠김">🔒 표준상품 정보</span></div>`:inner;
+  return `<div class="erow ${cls}" data-row="${k}"><div class="lb"><span class="${x.req&&x.type!=='def'?'req':''}">${esc(x.label)}</span></div><div>${body}${hint&&!lock?`<p class="ehint">ⓘ ${hint}</p>`:''}</div><div class="ac" data-badge="${k}">${s?BADGE[s]:''}</div></div>`;
 }
 const I=(k,attrs)=>`<input class="einp" data-fk="${k}" value="${esc(form.f[k]?form.f[k].v:'')}" ${attrs||''}>`;
 function drawSeller(){
@@ -726,33 +971,36 @@ function drawSeller(){
   if(!active){ $('#emain').innerHTML=h+`<div class="esec" style="margin-top:16px;padding:36px 22px;text-align:center;color:var(--e-muted)">상품을 찾으면 등록 항목이 열려요.</div>`; drawRail(); bindSq(); return; }
   // stage 2 셀러 입력
   const sellNotice=Object.keys(f).filter(k=>f[k].notice&&f[k].type==='seller'&&f[k].st==='sell');
-  h+=`<section class="stage" id="st-sell"><div class="stage-h"><b>2</b><h2>판매 정보</h2><span>셀러가 꼭 입력해야 하는 건 판매가 하나예요</span></div><div class="esec seller">
+  h+=`<section class="stage" id="st-sell"><div class="stage-h"><b>2</b><h2>판매 정보</h2><span>${form.opts?'옵션별 판매가만 넣으면 돼요':'셀러가 꼭 입력해야 하는 건 판매가 하나예요'}</span></div><div class="esec seller">
    <div class="erow"><div class="lb"><span class="req">판매사이트</span></div><div style="display:flex;gap:22px;align-items:center;padding-top:8px;flex-wrap:wrap"><label><input type="checkbox" checked> G마켓 test4plan</label><label><input type="checkbox" checked> 옥션 gsid1</label></div><div class="ac">${BADGE.def}</div></div>
-   ${fieldRow('price',`<div style="display:flex;gap:8px;align-items:center;max-width:280px"><input class="einp" data-fk="price" inputmode="numeric" placeholder="숫자만 입력해주세요" value="${esc(f.price.v)}"><span>원</span></div>`)}
+   ${form.opts?optTableHtml():fieldRow('price',`<div style="display:flex;gap:8px;align-items:center;max-width:280px"><input class="einp" data-fk="price" inputmode="numeric" placeholder="숫자만 입력해주세요" value="${esc(f.price.v)}"><span>원</span></div>`)}
    </div></section>`;
   // stage 3 상품 정보
   const infoNotice=Object.keys(f).filter(k=>f[k].notice&&f[k].st==='info');
-  h+=`<section class="stage" id="st-info"><div class="stage-h"><b>3</b><h2>상품 정보</h2><span>${form.code?'표준상품에서 자동으로 채웠어요. 확인만 하세요':'직접 입력해 주세요'}</span></div>
+  h+=`<section class="stage" id="st-info"><div class="stage-h"><b>3</b><h2>상품 정보</h2><span>${form.code?'표준상품으로 채웠어요. 고시·인증만 직접 확인해 넣어요':'직접 입력해 주세요'}</span></div>
    <div class="esec"><div class="esh"><h3>상품명·카테고리</h3><span class="sum">${esc(f.cat.v?f.cat.v.split(' > ').slice(-1)[0]:'')}</span></div>
-    ${fieldRow('name',I('name','maxlength="100"'),'프로모션 문구는 추가 설정에서 따로 넣어요. 상품명을 바꿔도 표준상품 연결은 유지돼요.')}
+    ${fieldRow('name',I('name','maxlength="100"'),form.opts&&form.opts.length>1?'그룹 상품명이에요. 옵션별 상품명은 ‘그룹 상품명 + 옵션값’으로 자동으로 만들어져요.':'프로모션 문구는 추가 설정에서 따로 넣어요. 상품명을 바꿔도 표준상품 연결은 유지돼요.')}
     ${fieldRow('cat',form.code?I('cat'):`<select class="einp" data-fk="cat">${opt(f.cat.v,[['','카테고리 선택']].concat(leafCats().map(k=>[k.path,k.path])))}</select>`,'SD카테고리 기준으로 G마켓·옥션 카테고리에 매핑돼요.')}</div>
    ${imgDetailHtml(c)}
-   <div class="esec"><div class="esh"><h3>상품 주요정보·인증</h3><span class="sum">브랜드 (${esc(f.brand.v||'설정안함')})</span></div>${fieldRow('brand',I('brand'))}${fieldRow('maker',I('maker'))}${fieldRow('spec',I('spec'))}${f.bc?fieldRow('bc',I('bc','placeholder="바코드를 넣으면 표준상품 등록 요청이 빨라져요"')):''}${fieldRow('cert',I('cert'))}</div>
-   <details class="esec" ${form.manual||sTried?'open':''}><summary><h3>상품정보 제공고시</h3><span class="sum">${esc(form.tpl)}, ${infoNotice.length}개 항목 ${form.code?'자동입력':''}</span><span class="chev" aria-hidden="true">▾</span></summary>
+   <div class="esec"><div class="esh"><h3>상품 주요정보·인증</h3><span class="sum">브랜드 (${esc(f.brand.v||'설정안함')})</span></div>${fieldRow('brand',I('brand'))}${fieldRow('maker',I('maker'))}${fieldRow('spec',I('spec'))}${f.bc?fieldRow('bc',I('bc','placeholder="바코드를 넣으면 표준상품 등록 요청이 빨라져요"')):''}${fieldRow('cert',certHtml())}</div>
+   <details class="esec" open><summary><h3>상품정보 제공고시</h3><span class="sum">${esc(form.tpl)}, ${infoNotice.filter(k=>f[k].v).length} / ${infoNotice.length}개 입력</span><span class="chev" aria-hidden="true">▾</span></summary>
+    <div class="nguide"><b>상품정보 제공고시는 판매자가 직접 확인해서 넣어요</b><p>법적 표시 의무가 판매자에게 있어서, 표준상품 정보를 대신 채우지 않아요. 칸 안의 회색 글씨는 참고용이에요.</p>
+     <div class="btns"><button class="ebtn sm blue" data-act="nAllRef">전체 ‘상품상세 참조’로 입력</button>${infoNotice.some(k=>f[k].v)?'<button class="ebtn sm" data-act="nClear">모두 비우기</button>':''}</div>
+     <p class="sm" style="color:var(--e-muted);margin-top:6px">‘상품상세 참조’를 쓰면 상세설명에 그 정보가 실제로 들어 있어야 해요.</p></div>
     <div class="erow"><div class="lb"><span class="req">상품군</span></div><div class="ro">${esc(form.tpl)} ${form.code?'<span class="lockic">🔒 SD카테고리로 결정</span>':''}</div><div class="ac"></div></div>
-    ${infoNotice.map(k=>fieldRow(k,I(k),f[k].type==='def'?'셀러가 입력하는 선택 항목이에요. 비워 두면 ‘상세페이지 참조’로 등록돼요.':'')).join('')}</details></section>`;
+    ${infoNotice.map(k=>fieldRow(k,I(k,`placeholder="${esc(f[k].ph||'')}"`))).join('')}</details></section>`;
   // stage 4
   h+=`<section class="stage" id="st-ship"><div class="stage-h"><b>4</b><h2>배송·판매방식</h2><span>셀러 기본값이 적용돼요</span></div><div class="esec">
    ${['ship','ret','method','tax'].map(k=>`<div class="erow"><div class="lb"><span class="req">${esc(f[k].label)}</span></div><div class="ro">${esc(f[k].v)}</div><div class="ac">${BADGE.def}<button class="lnk" data-act="sTemp2">변경</button></div></div>`).join('')}</div></section>`;
   // stage 5
   h+=`<section class="stage" id="st-more"><div class="stage-h"><b>5</b><h2>추가 설정</h2><span>필요할 때만 열어요</span></div><details class="esec"><summary><h3>재고수량, 할인, 판매기간, 옵션 등 13개 항목</h3><span class="sum">기본값으로 등록돼요</span><span class="chev" aria-hidden="true">▾</span></summary>
-   ${fieldRow('stock',`<div style="display:flex;gap:8px;align-items:center;max-width:280px"><input class="einp" data-fk="stock" inputmode="numeric" placeholder="비워 두면 99,999개" value="${esc(f.stock.v)}"><span>개</span></div>`,'선택 항목이에요. 비워 두면 재고 99,999개로 등록돼요.')}
-   ${[['프로모션 문구','<input class="einp" placeholder="최대 한글 50자 (상품명 포함)">'],['판매자 관리코드','<input class="einp" placeholder="판매자 관리코드를 입력해주세요">'],['할인','<span class="seg"><button>설정함</button><button aria-pressed="true">설정안함</button></span>'],['판매기간','<span class="seg"><button aria-pressed="true">설정함</button><button>설정안함</button></span> <span class="seg"><button>15일</button><button>30일</button><button>60일</button><button aria-pressed="true">90일</button></span>'],['옵션','<span class="seg"><button>설정함</button><button aria-pressed="true">설정안함</button></span>'],['스타배송','<span class="seg"><button>스타배송 판매</button><button aria-pressed="true">일반 판매</button></span>'],['추가구성','<span class="seg"><button>설정함</button><button aria-pressed="true">설정안함</button></span>'],['구매혜택','사은품·덤 설정안함'],['최대구매수량','설정안함'],['예약판매','설정안함'],['노출채널','G마켓·옥션 노출, 제휴사이트 노출'],['제주/도서산간 배송','설정함']].map(([a,b])=>`<div class="erow"><div class="lb">${a}</div><div style="padding-top:6px">${b}</div><div class="ac"></div></div>`).join('')}</details></section>`;
+   ${!f.stock?'':fieldRow('stock',`<div style="display:flex;gap:8px;align-items:center;max-width:280px"><input class="einp" data-fk="stock" inputmode="numeric" placeholder="비워 두면 99,999개" value="${esc(f.stock.v)}"><span>개</span></div>`,'선택 항목이에요. 비워 두면 재고 99,999개로 등록돼요.')}
+   ${[['프로모션 문구','<input class="einp" placeholder="최대 한글 50자 (상품명 포함)">'],['판매자 관리코드','<input class="einp" placeholder="판매자 관리코드를 입력해주세요">'],['할인',form.opts?'<span class="ro" style="padding:0">판매 정보의 구성 표에서 설정해요</span>':'<span class="seg"><button>설정함</button><button aria-pressed="true">설정안함</button></span>'],['판매기간','<span class="seg"><button aria-pressed="true">설정함</button><button>설정안함</button></span> <span class="seg"><button>15일</button><button>30일</button><button>60일</button><button aria-pressed="true">90일</button></span>'],['옵션',form.opts?`<span class="ro" style="padding:0">표준상품 옵션 ${form.opts.length}개 <span class="lockic">🔒 판매 정보에서 관리해요. 직접 입력·추천옵션은 쓰지 않아요</span></span>`:'<span class="seg"><button>설정함</button><button aria-pressed="true">설정안함</button></span>'],['스타배송','<span class="seg"><button>스타배송 판매</button><button aria-pressed="true">일반 판매</button></span>'],['추가구성','<span class="seg"><button>설정함</button><button aria-pressed="true">설정안함</button></span>'],['구매혜택','사은품·덤 설정안함'],['최대구매수량','설정안함'],['예약판매','설정안함'],['노출채널','G마켓·옥션 노출, 제휴사이트 노출'],['제주/도서산간 배송','설정함']].map(([a,b])=>`<div class="erow"><div class="lb">${a}</div><div style="padding-top:6px">${b}</div><div class="ac"></div></div>`).join('')}</details></section>`;
   $('#emain').innerHTML=h; drawRail(); bindSq();
 }
 
 // ---- 상품 찾기: 상품그룹 단위 검색 + 옵션 조합 선택
-let pickL=null,pickC=null,pickS=null,bcq='';
+let pickL=null,pickC=null,pickS=null,bcq='',pickSet=[];
 const norm=t=>String(t||'').toLowerCase().replace(/\s+/g,'');
 function groupHay(l){const b=BR(l.brand)||{};return norm(l.name+l.syn+b.name+contsOf(l.id).map(c=>c.name).join(''))}
 function searchGroups(q){q=norm(q);if(!q)return [];const out=[];
@@ -762,18 +1010,17 @@ function fuzzy(q){const toks=String(q||'').trim().split(/\s+/).filter(t=>t.lengt
   return db.lines.map(l=>{const h=groupHay(l);let sc=toks.filter(t=>h.includes(norm(t))).length*3+grams.filter(g=>h.includes(g)).length;return {l,sc}}).filter(x=>x.sc>=4).sort((a,b)=>b.sc-a.sc).slice(0,5).map(x=>x.l)}
 const vLabel=(c,l)=>{const n=c.name.startsWith(l.name)?c.name.slice(l.name.length).trim():c.name;return n||[c.pk,per(c),c.fl,c.col].filter(Boolean).join(' ')}
 function bestContent(l,q){const cs=contsOf(l.id);const nq=norm(q);return (cs.find(c=>nq&&norm(c.name).includes(nq))||cs.find(c=>nq&&nq.includes(norm(vLabel(c,l))))||cs[0]||{}).id}
-function groupCard(l,q){const cs=contsOf(l.id);const b=BR(l.brand)||{};const k=CAT(l.sd)||{};const ns=cs.reduce((a,c)=>a+stdsOf(c.id).length,0);const open=pickL===l.id;
-  let h=`<div class="gcard${open?' open':''}"><button class="ghead" data-act="pickL" data-id="${esc(l.id)}">${cs[0]?img(cs[0],'main',48):''}<span class="n"><b>${esc(l.name)}</b><small>${esc(b.name||'')} / ${esc(k.path||'')}</small><small>${cs.length>1?`용량·형태 ${cs.length}종, `:''}구성 ${ns}종</small></span><span class="ebtn sm">${open?'접기':'선택'}</span></button>`;
-  if(open){const cc=C(pickC)||cs[0];const ss=cc?stdsOf(cc.id).filter(x=>x.status==='사용'):[];const sel=S(pickS);
-    h+=`<div class="picker">${cs.length>1?`<p class="pl">용량·형태</p><div class="chiprow">${cs.map(c=>`<button class="ochip" data-act="pickC" data-id="${esc(c.id)}" aria-pressed="${cc&&c.id===cc.id}">${esc(vLabel(c,l))}</button>`).join('')}</div>`:''}
-    <p class="pl">구성</p><div class="chiprow">${ss.map(x=>`<button class="ochip" data-act="pickS" data-code="${esc(x.code)}" aria-pressed="${sel&&sel.code===x.code}">${x.q}${esc(x.qu)} <small>${esc(x.su)}</small></button>`).join('')||'<span class="sm" style="color:var(--e-muted)">판매 중인 구성이 없어요</span>'}</div>
-    <div class="pickbar">${sel&&sel.cid===(cc&&cc.id)?`<span>선택: <b>${esc(sel.name)}</b> <small>${esc(sel.sp)}</small></span><button class="ebtn blue" data-act="pick" data-code="${esc(sel.code)}">이 상품으로 등록</button>`:'<span style="color:var(--e-muted)">구성을 골라 주세요</span>'}</div></div>`}
-  return h+'</div>'}
+function groupCard(l,q){const cs=contsOf(l.id);const b=BR(l.brand)||{};const k=CAT(l.sd)||{};const oi=optInfo(l);const ns=cs.reduce((a,c)=>a+stdsOf(c.id).filter(x=>x.status==='사용').length,0);
+  const vax=oi.ax.filter(a=>!(a.n in oi.fixed));
+  return `<div class="gcard"><button class="ghead" data-act="openCm" data-id="${esc(l.id)}">${cs[0]?img(cs[0],'main',48):''}<span class="n"><b>${esc(l.name)}</b><small>${esc(b.name||'')} / ${esc(k.path||'')}</small><small>구성 ${ns}종${vax.length?', '+esc(vax.map(a=>a.n).join(' × ')):''}</small></span><span class="ebtn sm">구성 선택</span></button></div>`}
 function findHtml(s,c){
-  if(s) return `<div class="picked">${img(c,'main',52)}<div class="t"><b>${esc(s.name)}</b><br><small>${esc(s.sp)}, EPIN ${esc(s.code)} ${form.link==='해제'?'연결 해제됨':'연결됨'}</small></div><button class="ebtn sm" data-act="sReset">다른 상품 찾기</button></div>`;
+  if(s){const n=form.opts?form.opts.length:1;const l=L(c.line)||{};
+    return `<div class="picked">${img(c,'main',52)}<div class="t"><b>${esc(n>1?l.name:s.name)}</b><br><small>${n>1?`표준상품 구성 ${n}개`:`${esc(s.sp)}, EPIN ${esc(s.code)}`} ${form.link==='해제'?'연결 해제됨':'연결됨'}</small>
+     <div class="plinks">${form.opts&&form.link!=='해제'?'<button class="lnk" data-act="cmEdit">구성 바꾸기</button>':''}<button class="lnk" data-act="cmReqFix">정보 수정 요청</button>${form.link!=='해제'?'<button class="lnk" data-act="askUnlockAll">연결 해제하고 직접 수정</button>':''}</div></div><button class="ebtn sm" data-act="sReset">다른 상품 찾기</button></div>
+     ${confirmKey==='all'?`<div class="confirm" style="max-width:760px"><b>표준상품 연결을 해제할까요?</b><br>잠긴 항목(카테고리·브랜드·제조사·규격)을 직접 고칠 수 있게 돼요. 대신 이 상품은 표준상품 매칭 상품으로 집계되지 않고, 표준상품 정보가 바뀌어도 반영되지 않아요. 정보가 틀렸다면 ‘정보 수정 요청’을 먼저 권해요.<div class="btns"><button class="ebtn sm blue" data-act="unlockAll">연결 해제하고 수정</button><button class="ebtn sm" data-act="unlockNo">취소</button></div></div>`:''}`}
   if(form.manual) return `<div class="picked" style="background:var(--e-bg)"><div class="t"><b>표준상품 없이 직접 입력 중</b><br><small>${form.request?'등록하면 표준상품 등록 요청도 함께 보내요. 처리되면 이 상품이 표준상품과 연결돼요.':'모든 항목을 셀러가 채워야 해요.'}</small></div><label class="sm" style="display:flex;gap:6px;align-items:center;white-space:nowrap"><input type="checkbox" data-act="reqToggle" ${form.request?'checked':''}> 등록 요청</label><button class="ebtn sm" data-act="sReset">다시 찾기</button></div>`;
   return `<div class="row"><input class="einp" id="sq" placeholder="상품명, 브랜드, 바코드로 찾기. 예: 자작나무 선크림, 서울우유, 신라면" value="${esc(sq)}" autocomplete="off"></div>
-   <p class="ehint">ⓘ 상품을 고른 뒤 용량과 구성(수량)을 선택하면 이미지, 상세설명, 고시까지 자동으로 채워져요.</p><div id="sres">${resultsHtml()}</div>`;
+   <p class="ehint">ⓘ 상품을 고른 뒤 팔 구성을 여러 개 고르면 옵션으로 묶여요. 이미지, 상세설명, 고시까지 자동으로 채워져요.</p><div id="sres">${resultsHtml()}</div>`;
 }
 function resultsHtml(){
   const res=searchGroups(sq);
@@ -790,18 +1037,19 @@ function noResultHtml(fz,alt){
 
 
 function imgDetailHtml(c){
+  if(form.icid)c=C(form.icid);
   const f=form.f; const cc=c||{name:f.name.v||'상품',pk:'박스',line:'',icopy:'Y'};
   const all=[f.img.v].concat(f.imgs.v?f.imgs.v.split('\n'):[]).filter(Boolean);
   const sImg=stOf(f.img)==='edit'||stOf(f.imgs)==='edit'?'edit':(f.img.type==='seller'?(all.length?'seller':''):'auto');
   const sD=stOf(f.detail); const mode=form.dmode||'html';
   const errI=sTried&&!f.img.v?' is-err':'', errD=sTried&&!f.detail.v?' is-err':'';
-  return `<div class="esec"><div class="esh"><h3>상품 이미지</h3><span class="sum">${all.length} / 12장</span></div>
+  return `<div class="esec"><div class="esh"><h3>상품 이미지</h3><span class="sum">${all.length} / 12장</span></div>${form.cimg&&Object.keys(form.cimg).length>1?`<div class="itabs"><span class="sm" style="color:var(--e-muted)">이미지는 구성의 기본상품별로 들어가요</span><span class="seg">${Object.keys(form.cimg).map(cid=>{const cc2=C(cid);const l2=L(cc2.line);const oi2=optInfo(l2);const s0=stdsOf(cid)[0];const lb=oi2.ax.filter(a=>a.lv==='c'&&!(a.n in oi2.fixed)).map(a=>(oi2.sv[s0.code]||{})[a.n]).filter(Boolean).join(' ')||vLabel(cc2,l2);const n2=form.opts.filter(o=>S(o.code).cid===cid).length;return `<button data-act="imgTab" data-cid="${esc(cid)}" aria-pressed="${cid===form.icid}">${esc(lb)} <small>${n2}개</small></button>`}).join('')}</span></div>`:''}
    <div class="erow${errI}" data-row="img"><div class="lb"><span class="req">이미지</span><p class="sm" style="color:var(--e-muted);margin-top:4px">대표 1장 + 추가 11장</p></div><div>
     <div class="igrid">${all.map((u,i)=>`<div class="islot${i===0?' main':''}"><div class="im">${urlImg(u,cc,96,i)}</div>${i===0?'<span class="ib">대표</span>':`<button class="ix mk" data-act="imgMain" data-i="${i}" title="대표로">대표로</button>`}<button class="ix" data-act="imgDel" data-i="${i}" aria-label="이미지 ${i+1} 삭제">×</button></div>`).join('')}
     ${all.length<12?`<div class="islot add"><span>+</span><small>${12-all.length}장 더</small></div>`:''}</div>
     ${all.length<12?`<div style="display:flex;gap:8px;max-width:680px;margin-top:8px"><input class="einp" id="imgAdd" placeholder="이미지호스팅 URL을 붙여 넣으세요"><button class="ebtn" data-act="imgAdd">추가</button></div>`:''}
     <p class="ehint">ⓘ 이미지를 바꾸거나 추가해도 표준상품 연결은 유지돼요.</p></div><div class="ac" data-badge="img">${sImg?BADGE[sImg]:''}</div></div></div>
-  <div class="esec"><div class="esh"><h3>상세설명</h3><span class="sum">${form.code?'표준상품 상세설명 자동입력':'직접 작성'}</span></div>
+  <div class="esec"><div class="esh"><h3>상세설명</h3><span class="sum">${form.code?(form.opts&&form.opts.length>1?'모든 구성에 같은 상세설명이 들어가요':'표준상품 상세설명 자동입력'):'직접 작성'}</span></div>
    <div class="erow${errD}" data-row="detail"><div class="lb"><span class="req">상세설명</span></div><div>
     <span class="seg">${[['editor','에디터 작성'],['image','이미지 업로드'],['html','HTML']].map(([k,n])=>`<button data-act="dmode" data-k="${k}" aria-pressed="${mode===k}">${n}</button>`).join('')}</span>
     ${mode==='html'?`<textarea class="einp code" data-fk="detail" rows="8" style="margin-top:10px">${esc(f.detail.v)}</textarea><p class="pl" style="margin-top:10px">미리보기</p><div class="dprev" id="dprev">${renderHtml(f.detail.v,cc)}</div>`:
@@ -814,7 +1062,7 @@ function setImgs(arr){const f=form.f;f.img.v=arr[0]||'';f.imgs.v=arr.slice(1,12)
 function setDetail(h){const f=form.f;f.detail.v=h;if(form.code&&form.link==='유지'&&h!==f.detail.std)form.link='부분 수정'}
 
 function bindSq(){const b=$('#bcq'); if(b) b.oninput=e=>{bcq=e.target.value}; const i=$('#sq'); if(!i) return;
-  let t=null; const upd=()=>{sq=i.value;pickL=pickC=pickS=null;const r=$('#sres');if(r){r.innerHTML=resultsHtml();const bb=$('#bcq');if(bb)bb.oninput=e=>{bcq=e.target.value}}drawRail()};
+  let t=null; const upd=()=>{sq=i.value;pickL=pickC=pickS=null;pickSet=[];const r=$('#sres');if(r){r.innerHTML=resultsHtml();const bb=$('#bcq');if(bb)bb.oninput=e=>{bcq=e.target.value}}drawRail()};
   i.addEventListener('input',e=>{sq=i.value;if(e.isComposing)return;clearTimeout(t);t=setTimeout(upd,120)});
   i.addEventListener('compositionend',()=>{clearTimeout(t);t=setTimeout(upd,0)});
   i.addEventListener('keyup',e=>{if(e.isComposing)return;clearTimeout(t);t=setTimeout(upd,150)}); }
@@ -831,7 +1079,7 @@ function drawRail(){
   const pct=active?Math.round(filled/Math.max(1,reqKs.length)*100):0;
   let cur=st.find(([id])=>!info(id).done); cur=cur?cur[0]:null;
   const c=cnt(); const tot=Object.keys(f).length||1;
-  const summ={find:active?(form.code?'표준상품 연결':'직접 입력'):'',sell:()=>{const i=stageInfo('sell');return i.miss.length?`${i.miss.length}개 남음`:'완료'},info:()=>{const ks=stageInfo('info').ks;const a=ks.filter(k=>stOf(f[k])==='auto').length;return form.code?`자동 ${a}개`:`${stageInfo('info').miss.length}개 남음`},ship:'기본값',more:'선택'};
+  const summ={find:active?(form.opts?`옵션 ${form.opts.length}개`:form.code?'표준상품 연결':'직접 입력'):'',sell:()=>{const i=stageInfo('sell');return i.miss.length?`${i.miss.length}개 남음`:'완료'},info:()=>{const ks=stageInfo('info').ks;const a=ks.filter(k=>stOf(f[k])==='auto').length;return form.code?`자동 ${a}개`:`${stageInfo('info').miss.length}개 남음`},ship:'기본값',more:'선택'};
   $('#rail').innerHTML=`<div class="rc"><h4>등록 체크리스트<span class="pct">${pct}%</span></h4><div class="pbar"><i style="width:${pct}%"></i></div>
    <div style="margin-top:12px">${st.map(([id,n])=>{const i=info(id);const isCur=id===cur;const sm=typeof summ[id]==='function'?(active?summ[id]():''):summ[id];
     return `<div class="step ${i.done?'done':isCur?'cur':''}"><div class="rail-l"><span class="cir"></span><span class="ln"></span></div><button class="st" data-act="jump" data-id="${id}">${n}<small>${active||id==='find'?esc(sm||''):''}</small></button>
@@ -841,15 +1089,16 @@ function drawRail(){
    <div class="tyrow"><i class="c-seller" style="width:9px;height:9px;border-radius:3px;display:inline-block"></i>셀러 입력<b>${c.seller} / ${c.seller+c.empty}</b></div>
    <div class="tyrow"><i class="c-def" style="width:9px;height:9px;border-radius:3px;display:inline-block"></i>셀러 기본값<b>${c.def}</b></div>
    <div class="tyrow"><i class="c-edit" style="width:9px;height:9px;border-radius:3px;display:inline-block"></i>셀러가 수정<b>${c.edit}</b></div>
-   <p>전체 ${tot}개 중 셀러가 직접 다루는 항목은 <b style="color:var(--e-ink)">${c.seller+c.empty+c.edit}개</b>예요.</p></div>`:''}
+   <p>전체 ${tot}개 중 셀러가 직접 다루는 항목은 <b style="color:var(--e-ink)">${c.seller+c.empty+c.edit}개</b>예요.${form.opts&&form.opts.length>1?` 판매가는 옵션 ${form.opts.length}개에 각각 넣어요.`:''}</p></div>`:''}
   ${form.code?`<div class="rc"><h4>표준상품 연결</h4><div class="link-st" style="margin-top:8px"><span class="d" style="background:${form.link==='유지'?'#12A15A':form.link==='부분 수정'?'#E39A16':'var(--e-red)'}"></span>${form.link==='유지'?'연결 유지':form.link==='부분 수정'?'연결 유지 (이미지·상세 등 수정)':'연결 해제'}</div>
-   <p>${form.link==='해제'?'잠긴 정보를 수정해서 일반 상품으로 등록돼요. 표준상품 매칭 수에 포함되지 않아요.':'표준상품 매칭 상품으로 집계돼요. 상품명·이미지·상세는 바꿔도 연결이 유지되고, 카테고리·브랜드·규격·고시를 바꾸면 해제돼요.'}</p></div>`:''}
-  <div class="rc tips"><h4>Tips</h4><p>${active?(form.code?'판매가만 넣으면 등록할 수 있어요. 재고와 소비기한 같은 항목은 기본값으로 등록되고, 필요하면 바꿀 수 있어요.':'직접 입력 중이에요. 등록 요청을 보내면 다음부터는 자동입력을 쓸 수 있어요.'):'상품명이나 바코드로 표준상품을 먼저 찾아 보세요. 상품을 고르고 용량과 구성만 선택하면 돼요.'}</p></div>`;
+   <p>${form.link==='해제'?'잠긴 정보를 수정해서 일반 상품으로 등록돼요. 표준상품 매칭 수에 포함되지 않아요.':'표준상품 매칭 상품으로 집계돼요. 상품명·이미지·상세는 바꿔도 연결이 유지돼요. 카테고리·브랜드·제조사·규격을 고치려면 위의 ‘연결 해제하고 직접 수정’을 써요.'}</p></div>`:''}
+  <div class="rc tips"><h4>Tips</h4><p>${active?(form.opts?'구성별 판매가, 인증정보, 상품정보 제공고시를 넣으면 등록할 수 있어요. 고시는 ‘상품상세 참조’ 일괄 입력도 돼요. 옵션명·옵션값은 바꿀 수 없고, 등록하면 구성마다 상품번호가 생겨요.':form.code?'판매가만 넣으면 등록할 수 있어요. 재고와 소비기한 같은 항목은 기본값으로 등록되고, 필요하면 바꿀 수 있어요.':'직접 입력 중이에요. 등록 요청을 보내면 다음부터는 자동입력을 쓸 수 있어요.'):'상품명이나 바코드로 표준상품을 먼저 찾아 보세요. 상품을 고르고 팔 구성만 고르면 돼요. 여러 개 고르면 옵션이 돼요.'}</p></div>`;
 }
 function register(){
   if(!form.code&&!form.manual){toast('상품을 먼저 찾아 주세요');return}
   const f=form.f; const miss=Object.keys(f).filter(k=>f[k].req&&f[k].type!=='def'&&!f[k].v);
   if(miss.length){sTried=true;drawSeller();toast(`필수 항목 ${miss.length}개를 채워 주세요`);setTimeout(()=>{const r=$('.is-err');r&&r.scrollIntoView({behavior:'smooth',block:'center'})},50);return}
+  if(form.opts){registerOpts();return}
   const c=cnt(); const tot=Object.keys(f).length;
   if(form.code&&form.link!=='해제'){const s=S(form.code);s.match=(s.match||0)+1}
   db.pseq=(db.pseq||0)+1; const id='P'+String(db.pseq).padStart(4,'0');
@@ -859,12 +1108,13 @@ function register(){
     gno:String(2000000000+Math.floor(Math.random()*9e8)),ano:'A'+String(Math.floor(Math.random()*9e9)).padStart(9,'0'),snap,tpl:form.tpl};
   db.products.unshift(p);
   if(form.manual&&form.request){db.requests=db.requests||[];db.requests.unshift({id:'R'+String(db.requests.length+1).padStart(4,'0'),at:Date.now(),pid:id,name:f.name.v,brand:f.brand.v,maker:f.maker.v,cat:f.cat.v,bc:f.bc?f.bc.v:'',img:f.img.v,imgs:f.imgs.v?f.imgs.v.split('\n'):[],detail:f.detail.v,q:sq,status:'대기'})}
-  save(); form=null; sq=''; pickL=pickC=pickS=null; sTried=false; confirmKey=null; doneP=p; drawSeller(); $('#emain').scrollTop=0;
+  save(); form=null; sq=''; pickL=pickC=pickS=null; pickSet=[]; sTried=false; confirmKey=null; doneP=p; drawSeller(); $('#emain').scrollTop=0;
 }
 
 // ---------- 등록 완료 모달, PDP, 등록 요청
 let doneP=null, adTab=0, pdpSite='G', pdpBack='results';
 function doneHtml(p){
+  const sib=p.gid?(db.products||[]).filter(x=>x.gid===p.gid).sort((a,b)=>a.idx-b.idx):[]; if(sib.length>1) return doneGroupHtml(p,sib);
   const c=p.cid?C(p.cid):null; const pseudo=c||{name:p.name,pk:'박스',line:'',icopy:'Y'}; const v=k=>(p.snap[k]||{}).v||'';
   const ads=[['G마켓 AI Product Ads','최소한의 운영으로 성과에 집중해요'],['AI매출업','고객 취향에 맞춰 노출할 수 있어요'],['옥션 부가서비스','고정 비용으로 노출 기회를 높일 수 있어요'],['파워클릭','주목도 높은 곳에 노출할 수 있어요']];
   return `<div class="esec done"><div class="done-h"><span class="chk" aria-hidden="true">✓</span><h2>상품 등록이 완료되었습니다!</h2></div>
@@ -897,10 +1147,10 @@ function viewPdp(){
   el.innerHTML=`<div class="pdp-top"><b class="glogo ${pdpSite==='A'?'alogo':''}">${pdpSite==='A'?'옥션':'G마켓'}</b><span class="pdp-search">${esc(p.name.slice(0,20))}</span><span class="pdp-note">PDP 미리보기</span><button class="back" data-go="${pdpBack}">${pdpBack==='seller'?'등록 완료 화면으로':'어드민으로 돌아가기'}</button></div>
   <div class="pdp-wrap"><p class="crumb">${esc(v('cat').split(' > ').join(' › '))}</p>
   <div class="pdp-main"><div class="pdp-gal"><div class="pbig">${urlImg(PI[pi],pseudo,420)}</div><div class="thumbs" style="flex-wrap:wrap">${PI.map((u,i)=>`<button data-act="pdpImg" data-k="${i}" aria-pressed="${pi===i}">${urlImg(u,pseudo,58)}</button>`).join('')}</div></div>
-  <div class="pdp-info"><p class="seller">판매자 ${pdpSite==='A'?'gsid1':'test4plan'} <span class="mut">상품번호 ${esc(pdpSite==='A'?p.ano:p.gno)}</span></p><h1>${esc(p.name)}</h1>
-   <p class="price"><b>${(p.price||0).toLocaleString()}</b>원</p>
+  <div class="pdp-info"><p class="seller">판매자 ${pdpSite==='A'?'gsid1':'test4plan'} <span class="mut">상품번호 ${esc(pdpSite==='A'?p.ano:p.gno)}${p.gid?`, 그룹번호 ${esc(pdpSite==='A'?p.gano:p.ggno)}`:''}</span></p><h1>${esc(p.name)}</h1>
+   <p class="price">${p.sale&&p.sale<p.price?`<span style="color:#E2372F;font-weight:700;margin-right:6px">${Math.round((1-p.sale/p.price)*100)}%</span><b>${p.sale.toLocaleString()}</b>원 <s style="color:#999;font-size:14px;margin-left:4px">${p.price.toLocaleString()}원</s>`:`<b>${(p.price||0).toLocaleString()}</b>원`}</p>
    <dl class="pkv"><dt>배송</dt><dd>${esc(ship.replace('기본 배송 템플릿: ',''))}<br><span class="mut sm">내일(목) 도착 예정</span></dd><dt>브랜드</dt><dd>${esc(v('brand'))}</dd><dt>규격</dt><dd>${esc(v('spec')||'-')}</dd><dt>재고</dt><dd>${Number(p.stock).toLocaleString()}개</dd></dl>
-   <div class="qty"><span>${esc(p.name)}</span><span class="qbox">− 1 +</span><b>${(p.price||0).toLocaleString()}원</b></div>
+   ${pdpOptHtml(p)}<div class="qty"><span>${esc(p.name)}</span><span class="qbox">− 1 +</span><b>${(p.sale||p.price||0).toLocaleString()}원</b></div>
    <div class="buy"><button class="bb gray" disabled>장바구니</button><button class="bb blue" disabled>구매하기</button></div>
    ${p.link==='유지'||p.link==='부분 수정'?`<p class="sm mut" style="margin-top:10px">이 상품은 표준상품 ${esc(p.sp)}에 연결돼 있어요. (내부 표시)</p>`:''}</div></div>
   <div class="ptabs">${[['info','상품정보'],['notice','상품정보 제공고시'],['seller','판매자 정보']].map(([k,n])=>`<button data-act="pdpTab" data-k="${k}" aria-pressed="${pdpTab===k}">${n}</button>`).join('')}</div>
@@ -932,7 +1182,7 @@ function viewResults(){
   const p=db.products;
   $('#main').innerHTML=`<div class="head"><div><h1>등록 결과</h1><p>ESM+ 상품등록 미리보기에서 등록한 상품이에요. 연결 유지 상품만 표준상품 매칭 수에 더해져요.</p></div><button class="btn" data-go="seller">상품 등록하기</button></div>
   ${p.length?`<div class="kpis"><div class="card kpi"><small>등록 상품</small><b>${p.length}</b></div><div class="card kpi"><small>평균 셀러 입력</small><b>${(p.reduce((a,x)=>a+x.seller,0)/p.length).toFixed(1)}개</b></div><div class="card kpi"><small>연결 유지</small><b>${p.filter(x=>x.link==='유지'||x.link==='부분 수정').length}</b></div><div class="card kpi"><small>입력 감소</small><b>${Math.round((1-p.reduce((a,x)=>a+x.seller,0)/p.reduce((a,x)=>a+x.total-x.def,0))*100)}%</b></div></div>
-  <div class="card tw"><table><thead><tr><th>등록 시각</th><th>상품명</th><th>표준상품코드</th><th>표준상품 연결</th><th class="num">셀러 입력</th><th class="num">자동</th><th class="num">기본값</th><th>셀러가 수정한 항목</th><th>PDP</th></tr></thead><tbody>${p.map(x=>`<tr><td class="mut">${new Date(x.at).toLocaleString('ko-KR')}</td><td>${esc(x.name)}</td><td>${esc(x.sp||'-')}</td><td>${x.link==='유지'?'<span class="tag t-ok">연결 유지</span>':x.link==='부분 수정'?'<span class="tag t-warn">유지 (부분 수정)</span>':x.link==='해제'?'<span class="tag t-bad">해제</span>':x.link==='요청 중'?'<span class="tag t-warn">등록 요청 중</span>':String(x.link).includes('요청 처리')?'<span class="tag t-ok">연결 (요청 처리)</span>':'<span class="tag t-mut">표준상품 없음</span>'}</td><td class="num">${x.seller}</td><td class="num">${x.auto}</td><td class="num">${x.def||0}</td><td>${esc((x.edited||[]).join(', ')||'-')}</td><td class="nowrap">${x.snap?`<button class="btn sm" data-act="openPdp" data-id="${esc(x.id)}">PDP 보기</button> <button class="btn sm" data-act="copy" data-u="${esc(pdpUrl(x))}">링크</button>`:''}</td></tr>`).join('')}</tbody></table></div>`:`<div class="card pad mut">아직 등록한 상품이 없어요. 상품 등록하기를 눌러 시작해 보세요.</div>`}`;
+  <div class="card tw"><table><thead><tr><th>등록 시각</th><th>상품명</th><th>그룹·옵션</th><th>표준상품코드</th><th>표준상품 연결</th><th class="num">셀러 입력</th><th class="num">자동</th><th class="num">기본값</th><th>셀러가 수정한 항목</th><th>PDP</th></tr></thead><tbody>${p.map(x=>`<tr><td class="mut">${new Date(x.at).toLocaleString('ko-KR')}</td><td>${esc(x.name)}</td><td class="sm">${x.gid?`그룹 ${esc(x.ggno)}<br><span class="mut">${esc(x.olab||'')}</span>`:'<span class="mut">단일</span>'}</td><td>${esc(x.sp||'-')}</td><td>${x.link==='유지'?'<span class="tag t-ok">연결 유지</span>':x.link==='부분 수정'?'<span class="tag t-warn">유지 (부분 수정)</span>':x.link==='해제'?'<span class="tag t-bad">해제</span>':x.link==='요청 중'?'<span class="tag t-warn">등록 요청 중</span>':String(x.link).includes('요청 처리')?'<span class="tag t-ok">연결 (요청 처리)</span>':'<span class="tag t-mut">표준상품 없음</span>'}</td><td class="num">${x.seller}</td><td class="num">${x.auto}</td><td class="num">${x.def||0}</td><td>${esc((x.edited||[]).join(', ')||'-')}</td><td class="nowrap">${x.snap?`<button class="btn sm" data-act="openPdp" data-id="${esc(x.id)}">PDP 보기</button> <button class="btn sm" data-act="copy" data-u="${esc(pdpUrl(x))}">링크</button>`:''}</td></tr>`).join('')}</tbody></table></div>`:`<div class="card pad mut">아직 등록한 상품이 없어요. 상품 등록하기를 눌러 시작해 보세요.</div>`}`;
 }
 
 // ---------- events
@@ -971,13 +1221,13 @@ document.addEventListener('click',e=>{
   else if(a==='dmode'){form.dmode=b.dataset.k;drawSeller()}
   else if(a==='dimgDel'){const l=htmlImgs(form.f.detail.v);l.splice(+b.dataset.i,1);setDetail(l.map((u,i)=>`<img src="${u}" alt="상세이미지 ${i+1}">`).join('\n'));drawSeller()}
   else if(a==='dimgAdd'){const i=$('#dimgAdd');const u=i&&i.value.trim();if(!u){toast('이미지 URL을 넣어 주세요');return}const l=htmlImgs(form.f.detail.v);l.push(u);setDetail(l.map((x,j)=>`<img src="${x}" alt="상세이미지 ${j+1}">`).join('\n'));drawSeller()}
-  else if(a==='pickL'){if(pickL===b.dataset.id){pickL=null}else{const l=L(b.dataset.id);pickL=l.id;pickC=bestContent(l,sq);const ss=stdsOf(pickC);pickS=ss.length===1?ss[0].code:null}drawSeller()}
-  else if(a==='pickC'){pickC=b.dataset.id;const ss=stdsOf(pickC);pickS=ss.length===1?ss[0].code:null;drawSeller()}
-  else if(a==='pickS'){pickS=b.dataset.code;drawSeller()}
+  else if(a==='pickL'){if(pickL===b.dataset.id){pickL=null}else{const l=L(b.dataset.id);pickL=l.id;pickSet=[];const all=contsOf(l.id).flatMap(c=>stdsOf(c.id).filter(x=>x.status==='사용'));if(all.length===1)pickSet=[all[0].code]}drawSeller()}
+  else if(a==='pickRow'){const ss=stdsOf(b.dataset.id).filter(x=>x.status==='사용').map(x=>x.code);const all=ss.every(cd=>pickSet.includes(cd));pickSet=all?pickSet.filter(cd=>!ss.includes(cd)):pickSet.concat(ss.filter(cd=>!pickSet.includes(cd)));drawSeller()}
+  else if(a==='pickS'){const cd=b.dataset.code;pickSet=pickSet.includes(cd)?pickSet.filter(x=>x!==cd):pickSet.concat(cd);drawSeller()}
   else if(a==='noResult'){const el=$('#sres');if(el&&!el.querySelector('.nores')){el.insertAdjacentHTML('beforeend',noResultHtml([],true));b.closest('p').remove()}}
   else if(a==='bcSearch'){const v=norm(bcq);const hit=v&&db.stds.find(x=>norm(x.bc)===v);const el=$('#bcres');if(!el)return;if(hit){const c=C(hit.cid);el.innerHTML=`<div class="picked" style="margin-top:8px">${img(c,'main',40)}<div class="t"><b>${esc(hit.name)}</b><br><small>${esc(hit.sp)}</small></div><button class="ebtn blue sm" data-act="pick" data-code="${esc(hit.code)}">이 상품으로 등록</button></div>`}else el.innerHTML='<p class="sm" style="color:var(--e-muted);margin-top:6px">이 바코드로 등록된 표준상품이 없어요. 3번으로 진행해 주세요.</p>'}
   else if(a==='reqToggle'){form.request=b.checked;drawRail()}
-  else if(a==='openPdp'){pdpId=b.dataset.id;pdpImg=0;pdpSite=b.dataset.site||'G';pdpBack=view==='seller'?'seller':'results';pdpTab='info';closeDrawer();go('pdp')}
+  else if(a==='openPdp'){pdpId=b.dataset.id;pdpImg=0;pdpSite=b.dataset.site||'G';pdpBack=view==='seller'?'seller':(view==='pdp'?pdpBack:'results');pdpTab='info';closeDrawer();go('pdp')}
   else if(a==='pdpImg'){pdpImg=+b.dataset.k;viewPdp()}
   else if(a==='pdpTab'){pdpTab=b.dataset.k;viewPdp()}
   else if(a==='mAgain'){closeDrawer();form=null;doneP=null;go('seller')}
@@ -985,9 +1235,34 @@ document.addEventListener('click',e=>{
   else if(a==='mResults'){closeDrawer();doneP=null;go('results')}
   else if(a==='reqMake') reqMake(b.dataset.id);
   else if(a==='reqReject'){const r=db.requests.find(x=>x.id===b.dataset.id);r.status='반려';save();viewRequests()}
-  else if(a==='pick'){form=buildForm(b.dataset.code);sTried=false;confirmKey=null;drawSeller();$('#emain').scrollTop=0}
+  else if(a==='pick'){const codes=String(b.dataset.codes||b.dataset.code||'').split(',').filter(Boolean);if(!codes.length)return;form=buildForm(codes);sTried=false;confirmKey=null;drawSeller();$('#emain').scrollTop=0}
+  else if(a==='gdType'){form.disc.type=b.dataset.k;if(b.dataset.k==='none')form.disc.v='';drawSeller()}
+  else if(a==='opFill'){opFill()}
+  else if(a==='openCm'){openCm(b.dataset.id,'new')}
+  else if(a==='cmEdit'){if(form&&form.line)openCm(form.line,'edit')}
+  else if(a==='cmClose'){closeCm()}
+  else if(a==='cmTog'){if(!cm)return;const cd=b.dataset.code;if(!cm.set.includes(cd)&&cm.set.length>=100){toast('구성은 100개까지 고를 수 있어요');drawCm();return}cm.set=cm.set.includes(cd)?cm.set.filter(x=>x!==cd):cm.set.concat(cd);drawCm()}
+  else if(a==='cmRow'){const ss=stdsOf(b.dataset.id).filter(x=>x.status==='사용').map(x=>x.code);const all=ss.every(cd=>cm.set.includes(cd));cm.set=all?cm.set.filter(cd=>!ss.includes(cd)):cm.set.concat(ss.filter(cd=>!cm.set.includes(cd))).slice(0,100);drawCm()}
+  else if(a==='cmReset'){cm.set=[];drawCm()}
+  else if(a==='cmOk'){cmOk()}
+  else if(a==='cmReqFix'){toast('정보 수정 요청을 보냈어요 (데모). 운영팀이 확인하고 표준상품을 고쳐요')}
+  else if(a==='cmReqAdd'){toast('구성 추가 요청을 보냈어요 (데모). 추가되면 알림으로 알려 드려요')}
+  else if(a==='askUnlockAll'){confirmKey='all';drawSeller()}
+  else if(a==='unlockAll'){Object.keys(form.f).forEach(k=>{const x=form.f[k];if(POL[k]==='lock'||x.lock)x.unlocked=true});form.link='해제';confirmKey=null;drawSeller();toast('표준상품 연결을 해제했어요. 잠긴 항목을 고칠 수 있어요')}
+  else if(a==='nAllRef'){Object.keys(form.f).filter(k=>form.f[k].notice).forEach(k=>form.f[k].v='상품상세 참조');drawSeller();toast('고시 항목을 모두 ‘상품상세 참조’로 넣었어요')}
+  else if(a==='nClear'){Object.keys(form.f).filter(k=>form.f[k].notice).forEach(k=>form.f[k].v='');drawSeller()}
+  else if(a==='certMode'){form.certMode=b.dataset.k;if(form.certMode==='target'&&!(form.certs||[]).length)form.certs=[{t:'',no:''}];syncCert();drawSeller()}
+  else if(a==='certAdd'){form.certs.push({t:'',no:''});drawSeller()}
+  else if(a==='certDel'){form.certs.splice(+b.dataset.i,1);syncCert();drawSeller()}
+  else if(a==='imgTab'){imgTab(b.dataset.cid)}
+  else if(a==='opRep'){const i=+b.dataset.i;if(i>0){const [o]=form.opts.splice(i,1);form.opts.unshift(o);resync();drawSeller();toast('대표옵션을 바꿨어요. 검색결과와 상세에서 먼저 보여요')}}
+  else if(a==='opDel'){if(form.opts.length<2){toast('옵션은 1개 이상 있어야 해요');return}form.opts.splice(+b.dataset.i,1);resync();drawSeller()}
+  else if(a==='opAdd'){if(form.opts.length>=100){toast('옵션은 100개까지예요');return}form.opts.push({code:b.dataset.code,price:'',stock:''});resync();drawSeller();toast('옵션을 추가했어요')}
+  else if(a==='opAddOpen'){form.addOpen=!form.addOpen;drawSeller()}
+  else if(a==='opAll'){const i=$('#opAll');const v=i&&i.value.replace(/\D/g,'');if(!v){toast('판매가를 숫자로 넣어 주세요');return}form.opts.forEach(o=>{o.price=v;o.sug=false});syncPrice(form);drawSeller();toast(`옵션 ${form.opts.length}개에 판매가를 넣었어요`)}
+  else if(a==='pdpOpt'){const p=(db.products||[]).find(x=>x.id===pdpId);if(!p)return;const sib=db.products.filter(x=>x.gid===p.gid);const k=b.dataset.k,v=b.dataset.v;const t=sib.find(x=>x.ov[k]===v&&Object.keys(p.ov).every(k2=>k2===k||x.ov[k2]===p.ov[k2]))||sib.find(x=>x.ov[k]===v);if(t){pdpId=t.id;pdpImg=0;viewPdp()}}
   else if(a==='sManual'){form=manualForm();sTried=false;drawSeller()}
-  else if(a==='sReset'||a==='sCancel'){form={code:null,f:{}};pickL=pickC=pickS=null;sTried=false;confirmKey=null;drawSeller()}
+  else if(a==='sReset'||a==='sCancel'){form={code:null,f:{}};pickL=pickC=pickS=null;pickSet=[];sTried=false;confirmKey=null;drawSeller()}
   else if(a==='sTemp') toast('임시저장했어요 (데모)');
   else if(a==='sTemp2') toast('배송정보 템플릿 변경은 데모에서 지원하지 않아요');
   else if(a==='sPrev') toast('미리보기는 데모에서 지원하지 않아요');
@@ -1002,12 +1277,18 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#drawerRoot').in
 function onEdit(e){
   const t=e.target;
   if(t.dataset.lf){const l=L(selL);l[t.dataset.lf]=t.value;dirty();if(e.type==='change'){drawTree();drawGlist();drawGroup()}return}
-  if(t.dataset.cf){const cid=t.closest('[data-cid]').dataset.cid;const c=C(cid);const k=t.dataset.cf;if(k==='imgs'){c.imgs=t.value.split(/\n+/).map(x=>x.trim()).filter(Boolean).slice(0,11)}else c[k]=(k==='vol'||k==='wt')?(t.value===''?null:+t.value):t.value;if(k==='dhtml'){const p=$('#dprevEdit');if(p)p.innerHTML=renderHtml(c.dhtml,c)}save();return}
-  if(t.dataset.sf){const s=S(t.closest('tr').dataset.code);const k=t.dataset.sf;s[k]=k==='q'?(parseInt(t.value,10)||1):t.value;save();return}
+  if(t.dataset.cf){OPTC={};const cid=t.closest('[data-cid]').dataset.cid;const c=C(cid);const k=t.dataset.cf;if(k==='imgs'){c.imgs=t.value.split(/\n+/).map(x=>x.trim()).filter(Boolean).slice(0,11)}else c[k]=(k==='vol'||k==='wt')?(t.value===''?null:+t.value):t.value;if(k==='dhtml'){const p=$('#dprevEdit');if(p)p.innerHTML=renderHtml(c.dhtml,c)}save();return}
+  if(t.dataset.sf){OPTC={};const s=S(t.closest('tr').dataset.code);const k=t.dataset.sf;s[k]=k==='q'?(parseInt(t.value,10)||1):t.value;save();return}
   if(t.dataset.nitem){const cid=t.closest('tr').dataset.cid;(db.notice[cid]=db.notice[cid]||{})[t.dataset.nitem]=t.value;t.parentElement.classList.toggle('empty',!t.value);save();if(e.type==='change'){t.closest('tr').children[1].innerHTML=stTag(nStatus(C(cid)).st)}return}
   if(t.dataset.kf){const k=CAT(t.closest('tr').dataset.code);k[t.dataset.kf]=t.value;dirty();viewMaster();toast('카테고리 매핑을 바꿨어요');return}
   if(t.dataset&&t.dataset.rich&&form&&form.f){setDetail(serializeRich(t));const r=t.closest('[data-row]');if(r){r.classList.remove('is-err');const ac=r.querySelector('[data-badge]');const s=stOf(form.f.detail);if(ac)ac.innerHTML=s?BADGE[s]:''}drawRail();return}
-  if(t.dataset.fk&&form&&form.f){const k=t.dataset.fk,x=form.f[k];if(!x)return;x.v=t.value; if(k==='detail'){const p=$('#dprev');if(p)p.innerHTML=renderHtml(x.v,form.code?C(S(form.code).cid):{name:'상품',pk:'박스',line:'',icopy:'Y'})}
+  if(t.dataset.cert&&form){const c=form.certs[+t.dataset.i];if(!c)return;c[t.dataset.cert]=t.value;syncCert();if(t.dataset.cert==='t'){if(e.type==='change')drawSeller()}else{const r=t.closest('[data-row]');if(r&&form.f.cert.v)r.classList.remove('is-err');drawRail()}return}
+  if(form&&form.opts&&t.dataset.gdisc){form.disc.v=t.value;refreshDerived();return}
+  if(form&&form.opts&&t.dataset.odm!=null){const o=form.opts[+t.dataset.odm];o.dm=t.value;if(e.type==='change')drawSeller();return}
+  if(form&&form.opts&&t.dataset.odv!=null){form.opts[+t.dataset.odv].dv=t.value;refreshDerived();return}
+  if(form&&form.opts&&t.dataset.odt!=null){form.opts[+t.dataset.odt].dt=t.value;refreshDerived();return}
+  if(t.dataset.op&&form&&form.opts){const o=form.opts[+t.dataset.i];if(!o)return;o[t.dataset.op]=t.value;if(t.dataset.op==='price'){o.sug=false;t.classList.remove('sug');refreshDerived();t.classList.toggle('bad',sTried&&!/\d/.test(t.value));syncPrice(form);const r=t.closest('[data-row]');if(r&&form.f.price.v)r.classList.remove('is-err')}drawRail();return}
+  if(t.dataset.fk&&form&&form.f){const k=t.dataset.fk,x=form.f[k];if(!x)return;x.v=t.value; if(k==='name'&&form.opts)$$('[data-oname]').forEach(el=>el.textContent=optName(el.dataset.oname)); if(k==='detail'){const p=$('#dprev');if(p)p.innerHTML=renderHtml(x.v,form.code?C(S(form.code).cid):{name:'상품',pk:'박스',line:'',icopy:'Y'})}
     if(form.code&&form.link==='유지'&&x.type==='auto'&&x.v!==x.std&&POL[k]==='edit')form.link='부분 수정';
     const row=t.closest('[data-row]');if(row){const s=stOf(x);row.classList.toggle('is-auto',s==='auto');row.classList.toggle('is-edit',s==='edit');if(x.v)row.classList.remove('is-err');const ac=row.querySelector('[data-badge]');if(ac&&!isLocked(k,x))ac.innerHTML=s?BADGE[s]:''}
     drawRail(); const tys=$$('.types .ty'); if(tys.length){const c=cnt();[c.auto,c.seller+c.empty,c.def,c.edit].forEach((n,i)=>{tys[i].lastChild.textContent=' '+n})}
