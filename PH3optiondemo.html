@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PH3 · Dynamite로 보는 옵션 구조</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --page:#f2f4f7;--card:#fff;--ink:#172033;--sub:#5b6577;--muted:#97a0ae;--line:#e1e5eb;--soft:#f6f7fa;
+  --blue:#2f5bea;--blue-bg:#eaf0ff;--red:#e0392f;--red-bg:#ffeceb;--green:#0d9463;--green-bg:#e3f6ed;--amber:#b86e00;--amber-bg:#fff3da;
+  --box:#d9b98a;--box-bg:#f7eedf;--note:#fff3a8;--rope:#b4572a;--buyer:#e0457b;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --page:#101318;--card:#1b1f27;--ink:#e8ecf2;--sub:#a5aebb;--muted:#6f7886;--line:#2e343e;--soft:#232832;
+  --blue:#6d8dff;--blue-bg:#1d2846;--red:#ff6b61;--red-bg:#3a2120;--green:#45cf95;--green-bg:#163327;--amber:#ffb547;--amber-bg:#3a2d14;
+  --box:#8a7250;--box-bg:#2e281f;--note:#5a5220;--rope:#e08a5a;--buyer:#ff7aa6;
+}}
+:root[data-theme="dark"]{
+  --page:#101318;--card:#1b1f27;--ink:#e8ecf2;--sub:#a5aebb;--muted:#6f7886;--line:#2e343e;--soft:#232832;
+  --blue:#6d8dff;--blue-bg:#1d2846;--red:#ff6b61;--red-bg:#3a2120;--green:#45cf95;--green-bg:#163327;--amber:#ffb547;--amber-bg:#3a2d14;
+  --box:#8a7250;--box-bg:#2e281f;--note:#5a5220;--rope:#e08a5a;--buyer:#ff7aa6;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--page);color:var(--ink);font:15px/1.55 "Noto Sans KR","Apple SD Gothic Neo",sans-serif}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:26px 24px 50px}
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.top .k{color:var(--muted);font-size:13px}
+.ctl{margin-left:auto;display:flex;gap:6px}
+.ctl button{border:1px solid var(--line);background:var(--card);border-radius:8px;min-width:38px;height:36px;padding:0 12px;font-size:14px}
+.ctl .play{background:var(--ink);color:var(--card);border-color:var(--ink);font-weight:700}
+.bar{display:flex;gap:4px;margin-top:16px}
+.bar button{flex:1;height:6px;border:0;border-radius:3px;background:var(--line);padding:0;position:relative;overflow:hidden}
+.bar button.done{background:var(--ink)}
+.bar button.on::after{content:"";position:absolute;inset:0;background:var(--ink);transform-origin:left;transform:scaleX(var(--p,1))}
+.bar button.on.run::after{animation:grow var(--dur) linear forwards}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.head{margin:22px 0 16px;min-height:118px}
+.head .no{font-size:13px;font-weight:700;color:var(--blue)}
+.head h1{font-size:clamp(25px,3.5vw,38px);letter-spacing:-1.2px;line-height:1.22;margin:4px 0 0;font-weight:900}
+.head p{margin:8px 0 0;color:var(--sub);font-size:16px}
+.head>*{animation:rise .5s ease-out both}
+.head p{animation-delay:.1s}
+
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--sub);margin-bottom:10px}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:18px;height:14px;border-radius:3px}
+.stagebox{position:relative;width:100%;aspect-ratio:1000/520;background:var(--card);border:1px solid var(--line);border-radius:22px;overflow:hidden}
+.stage{position:absolute;left:0;top:0;width:1000px;height:520px;transform-origin:0 0}
+.real{margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px;font-size:14px;color:var(--sub);display:flex;gap:10px;min-height:48px}
+.real b{color:var(--ink);flex:none}
+.real:empty{display:none}
+
+.cover{border-radius:8px;display:grid;place-items:center;color:rgba(255,255,255,.9);font-weight:900;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.memo{width:150px;height:62px;background:var(--note);border-radius:4px;box-shadow:0 3px 8px rgba(0,0,0,.12);padding:8px 10px;font-size:14px;font-weight:700;color:#3a3420;transform:rotate(var(--r,0deg))}
+.memo small{display:block;font-weight:500;font-size:12px;color:#6b6240;margin-top:2px}
+.memo.grey{filter:grayscale(1);opacity:.45}
+.track{width:126px;height:150px;border:3px solid var(--box);background:var(--card);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.track b{font-size:14px}.track small{font-size:12px;color:var(--sub)}
+.track .num{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--card);font-size:12px;font-weight:700;border-radius:8px;padding:1px 9px;white-space:nowrap}
+.track.hl{border-color:var(--green)}
+.lrow{width:240px;height:44px;background:var(--card);border:1.5px solid var(--line);border-radius:10px;display:flex;align-items:center;gap:10px;padding:0 12px;font-size:14px;font-weight:700;white-space:nowrap}
+.rec{height:40px;border-radius:20px;background:var(--soft);border:1.5px solid var(--line);padding:0 16px;display:flex;align-items:center;font-weight:900;font-size:16px}
+.rec.zero{background:var(--red-bg);color:var(--red);border-color:var(--red)}
+.rec.fall{animation:recfall 1s 2.4s forwards}
+@keyframes recfall{to{transform:translate(110px,70px) rotate(14deg);opacity:.35}}
+.thread{opacity:0;animation:fade .4s var(--d) forwards}
+.snapline line{animation:snapl .6s var(--d) forwards}.snapline text{animation:out .4s var(--d) forwards}
+@keyframes snapl{0%{stroke:var(--red);stroke-dasharray:5 6}60%{stroke:var(--red);stroke-dasharray:2 30}100%{opacity:0}}
+.minipage{width:280px;border:3px solid var(--box);background:var(--box-bg);border-radius:18px;padding:16px}
+.tryenter{animation:tryenter 1.6s var(--d) both}
+@keyframes tryenter{0%{transform:none}45%{transform:translateX(70px)}55%{transform:translateX(62px) rotate(-2deg)}100%{transform:none}}
+.gate{width:16px;height:330px;border-radius:8px;background:repeating-linear-gradient(180deg,var(--rope) 0 22px,var(--card) 22px 34px);border:2px solid var(--rope)}
+.stop{width:60px;height:60px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center;font-size:28px;font-weight:900}
+.mininum{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--card);font-size:10px;font-weight:700;border-radius:6px;padding:0 5px}
+.cmp.gm{box-shadow:inset 0 0 0 2px var(--red);background:var(--red-bg)}
+.slidein{animation-name:slidein;animation-duration:.8s}@keyframes slidein{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:none}}
+.kickout{animation:kickout 1s var(--d) forwards}@keyframes kickout{0%{opacity:1}100%{opacity:0;transform:translate(90px,60px) rotate(12deg)}}
+.band{font-size:15px;font-weight:900;color:var(--ink);background:var(--soft);border-radius:8px;padding:2px 10px}
+.vs{width:250px;border-radius:14px;padding:10px 14px;font-size:13.5px}
+.vs small{display:block;margin-top:6px;color:var(--sub);font-size:12px}
+.vs.bad{background:var(--red-bg)}.vs.bad b{color:var(--red)}
+.vs.good{background:var(--green-bg)}.vs.good b{color:var(--green)}
+.phase{display:inline-block;font-size:11.5px;border-radius:10px;padding:0 9px;margin-left:6px;color:#fff;vertical-align:1px}
+.phase.p1{background:#b4572a}.phase.p2{background:var(--blue)}
+.codebadge{background:var(--green);color:#fff;font-size:11px;font-weight:700;border-radius:6px;padding:2px 6px;white-space:nowrap}
+.okdot{width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-weight:900}
+.chk{display:flex;justify-content:space-between;align-items:center;background:var(--card);border-radius:8px;padding:5px 10px;margin-bottom:5px;font-size:13.5px}
+.chk b{font-size:12px;border-radius:6px;padding:1px 8px}
+.chk b.yes{background:var(--green-bg);color:var(--green)}
+.chk b.no{background:var(--red);color:#fff}
+.case{width:440px;display:flex;justify-content:space-between;align-items:center;background:var(--soft);border-radius:12px;padding:10px 14px}
+.case b{display:block;font-size:14px}.case small{font-size:12px;color:var(--sub)}
+.pass,.fail{font-size:13px;font-weight:900;border-radius:8px;padding:4px 10px}
+.pass{background:var(--green-bg);color:var(--green)}.fail{background:var(--red-bg);color:var(--red)}
+.pnum{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--card);font-size:11px;font-weight:700;border-radius:8px;padding:2px 8px;white-space:nowrap}
+.stamp{animation-name:stamp;animation-duration:.5s}@keyframes stamp{0%{opacity:0;transform:translateX(-50%) scale(2)}70%{transform:translateX(-50%) scale(.9)}100%{opacity:1;transform:translateX(-50%) scale(1)}}
+.own{font-size:11px;font-weight:700;color:var(--green);background:var(--green-bg);border-radius:6px;padding:1px 6px}
+.lang{position:relative}
+.lang>button{border:1px solid var(--line);background:var(--card);border-radius:8px;height:36px;padding:0 12px;font-size:14px;font-weight:700}
+.langmenu{position:absolute;right:0;top:42px;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.15);padding:4px;display:none;z-index:20;min-width:120px}
+.langmenu.open{display:block}
+.langmenu button{display:block;width:100%;text-align:left;border:0;background:none;padding:8px 12px;border-radius:6px;font-size:14px;height:auto}
+.langmenu button:hover,.langmenu button.on{background:var(--soft);font-weight:700}
+html[lang="zh-CN"] body{font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei","Noto Sans KR",sans-serif}
+html[lang="en"] .head h1{letter-spacing:-.8px}
+/* 공통 오브젝트 */
+.a{position:absolute}
+.an{animation-fill-mode:both;animation-duration:.6s;animation-timing-function:cubic-bezier(.3,.8,.2,1);animation-delay:var(--d,0s)}
+.drop{animation-name:drop}@keyframes drop{from{opacity:0;transform:translateY(-34px) rotate(var(--r,0deg))}to{opacity:1;transform:translateY(0) rotate(var(--r,0deg))}}
+.pop{animation-name:pop}@keyframes pop{0%{opacity:0;transform:scale(.4)}70%{transform:scale(1.08)}100%{opacity:1;transform:scale(1)}}
+.rise{animation-name:rise}@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.fade{animation-name:fade}@keyframes fade{from{opacity:0}to{opacity:1}}
+.out{animation-name:out}@keyframes out{to{opacity:0;transform:scale(.6)}}
+.fly{animation-name:fly;animation-duration:1s}@keyframes fly{0%{opacity:1;transform:rotate(var(--r,0deg))}100%{opacity:0;transform:translate(160px,-220px) rotate(40deg)}}
+.shake{animation-name:shake;animation-duration:.5s}@keyframes shake{0%,100%{transform:rotate(var(--r,0deg))}25%{transform:rotate(calc(var(--r,0deg) - 6deg))}75%{transform:rotate(calc(var(--r,0deg) + 6deg))}}
+.pulse{animation-name:pulse;animation-duration:1.4s;animation-iteration-count:infinite}@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--green) 55%,transparent)}100%{box-shadow:0 0 0 16px transparent}}
+.glow{animation-name:glow;animation-duration:.6s}@keyframes glow{from{opacity:.25;filter:grayscale(1)}to{opacity:1;filter:none}}
+
+.bigbox{border:3px solid var(--box);background:var(--box-bg);border-radius:20px}
+.bigbox .lb{position:absolute;left:0;right:0;top:-15px;text-align:center}
+.bigbox .lb span{background:var(--box);color:#fff;font-weight:700;font-size:13px;border-radius:12px;padding:3px 12px}
+.note{width:104px;height:92px;background:var(--note);border-radius:4px;box-shadow:0 3px 8px rgba(0,0,0,.12);padding:10px 10px;font-size:14px;font-weight:700;color:#3a3420;transform:rotate(var(--r,0deg))}
+.note small{display:block;font-weight:500;font-size:12px;color:#6b6240;margin-top:4px}
+.note .sw{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;margin-right:5px;border:1px solid rgba(0,0,0,.15)}
+.note.grey{filter:grayscale(1);opacity:.45}
+.sbox{width:116px;height:140px;border:3px solid var(--box);background:var(--box-bg);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.sbox b{font-size:14px}
+.sbox small{font-size:12px;color:var(--sub)}
+.sbox .num{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--card);font-size:12px;font-weight:700;border-radius:8px;padding:1px 9px;white-space:nowrap}
+.sbox.hl{border-color:var(--green)}
+.tag{background:var(--card);border:2px solid var(--rope);color:var(--rope);border-radius:10px;padding:5px 11px;font-size:13px;font-weight:700;white-space:nowrap}
+.say{background:var(--ink);color:var(--card);border-radius:14px;padding:9px 14px;font-size:14px;font-weight:500;line-height:1.45;max-width:260px}
+.anno{font-size:15px;font-weight:700;color:var(--sub);display:flex;align-items:center;gap:8px;white-space:nowrap}
+.anno i{font-style:normal;font-size:20px}
+.big{font-size:60px;font-weight:900;letter-spacing:-2px;line-height:1}
+.panel{background:var(--soft);border-radius:16px;padding:16px}
+.panel h4{margin:0 0 10px;font-size:14px;color:var(--sub);font-weight:500}
+.row{padding:7px 10px;border-radius:8px;background:var(--card);margin-bottom:6px;font-size:14px}
+.row.bad{background:var(--red-bg);color:var(--red);font-weight:700}
+.phone{border:9px solid #1d2027;border-radius:32px;background:var(--soft);overflow:hidden}
+.phone .q{margin:14px 12px 10px;border:2px solid var(--buyer);border-radius:20px;padding:6px 12px;font-size:14px;font-weight:700;background:var(--card)}
+.card{display:flex;gap:10px;align-items:center;background:var(--card);border-radius:12px;padding:10px;margin:0 10px 8px}
+.card b{display:block;font-size:13.5px}
+.card span{font-size:12px;color:var(--sub)}
+.card.best{box-shadow:inset 0 0 0 2px var(--green)}
+.ghostc{margin:0 10px 8px;border:2px dashed var(--line);border-radius:12px;padding:12px;font-size:12.5px;color:var(--muted);text-align:center}
+.fchips{display:flex;gap:6px;margin:0 10px 10px}
+.fchips span{font-size:12px;border:1px solid var(--line);border-radius:14px;padding:2px 10px;background:var(--card)}
+.fchips span.on{background:var(--ink);color:var(--card);border-color:var(--ink)}
+.cmp{background:var(--soft);border-radius:18px;padding:16px;height:290px}
+.cmp h4{margin:0;font-size:17px}
+.cmp .sub{font-size:12.5px;color:var(--muted);margin-bottom:10px}
+.cmp ul{margin:12px 0 0;padding:0;list-style:none;font-size:13.5px}
+.cmp li{padding:4px 0 4px 18px;position:relative}
+.cmp li::before{content:"";position:absolute;left:3px;top:12px;width:7px;height:7px;border-radius:50%;background:var(--ink)}
+.cmp.us{box-shadow:inset 0 0 0 2px var(--box)}
+.why{background:var(--ink);color:var(--card);border-radius:14px;padding:12px 16px;font-size:15px;font-weight:700;display:flex;gap:8px;align-items:center}
+.tile{width:200px;height:84px;border-radius:14px;background:var(--soft);border:2px solid var(--line);display:flex;align-items:center;justify-content:center;text-align:center;font-size:14.5px;font-weight:700;padding:8px;line-height:1.35}
+.tile.lit{animation:lit .6s var(--d) both}
+@keyframes lit{from{opacity:.25;transform:scale(.92)}to{opacity:1;transform:none;border-color:var(--green);background:var(--green-bg)}}
+.who{display:flex;flex-direction:column;align-items:center;gap:4px;width:90px;font-size:13px;font-weight:700}
+.ava{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:900}
+.arrow{font-size:22px;color:var(--muted)}
+.block{width:600px;height:70px;border-radius:14px;display:flex;align-items:center;gap:14px;padding:0 18px;color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.18)}
+.block .n{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.25);display:grid;place-items:center;font-weight:900;flex:none}
+.block b{font-size:16px;display:block}
+.block small{font-size:12.5px;opacity:.85}
+.block .lv{margin-left:auto;font-size:12px;font-weight:700;background:rgba(255,255,255,.22);border-radius:6px;padding:2px 8px;white-space:nowrap}
+.pencil{font-size:30px}
+svg.ov{position:absolute;left:0;top:0;width:1000px;height:520px;pointer-events:none;overflow:visible}
+.draw{stroke-dasharray:1600;stroke-dashoffset:1600;animation:draw 1.4s var(--d,0s) ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.drawsnap{stroke-dasharray:1600;stroke-dashoffset:1600;animation:draw 1.4s 1s ease-out forwards,snap .5s 4.6s forwards}
+@keyframes snap{to{stroke:var(--red);stroke-dasharray:14 22;stroke-dashoffset:0;opacity:.7}}
+.boxfade{animation:boxfade .8s var(--d,0s) forwards}
+@keyframes boxfade{to{border-color:transparent;background:transparent}}
+.beam{stroke-dasharray:8 8;animation:march .8s linear infinite}
+@keyframes march{to{stroke-dashoffset:-32}}
+details{margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:16px}
+summary{padding:13px 18px;cursor:pointer;font-weight:700;font-size:14px;list-style:none;display:flex}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"⌄";margin-left:auto;color:var(--muted)}
+details[open] summary::after{content:"⌃"}
+.dl{padding:0 18px 14px;font-size:14px;color:var(--sub)}
+.dl div{padding:7px 0;border-top:1px solid var(--line)}
+.dl div:first-child{border:0}
+.dl b{color:var(--ink)}
+@media (max-width:700px){.wrap{padding:16px 12px 40px}.legend{font-size:12px;gap:10px}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-delay:0s!important;animation-iteration-count:1!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><span class="k">PH3 상품·옵션 구조 개편 · BTS ‘Dynamite’로 보는 이야기 · 숫자는 예시</span>
+    <div class="ctl"><button id="prev" aria-label="이전">‹</button><button id="next" aria-label="다음">›</button><button class="play" id="play">▶ 자동 재생</button><div class="lang"><button id="langBtn" aria-haspopup="true" aria-expanded="false">🌐 <span id="langCur">한국어</span></button><div class="langmenu" id="langMenu"><button data-l="ko">한국어</button><button data-l="en">English</button><button data-l="zh">中文</button></div></div></div></div>
+  <div class="bar" id="bar"></div>
+  <div class="head" id="head" aria-live="polite"></div>
+  <div class="legend">
+    <span><i style="background:var(--box-bg);border:2px solid var(--box)"></i>곡 페이지 = 상품</span>
+    <span><i style="background:var(--card);border:1.5px solid var(--line)"></i>글자 목록 한 줄 = 지금의 옵션</span>
+    <span><i style="background:var(--card);border:2px solid var(--box)"></i>상품번호 카드 = 바뀐 옵션</span>
+    <span><i style="background:transparent;border:2px dashed var(--rope)"></i>묶음 = 그룹</span>
+    <span><i style="background:var(--card);border:2px solid var(--rope)"></i>추천옵션 = 묶음 입장 조건</span>
+  </div>
+  <div class="stagebox" id="stagebox"><div class="stage" id="stage"></div></div>
+  <div class="real" id="real"></div>
+  <details><summary>결정이 필요한 것</summary><div class="dl">
+    <div><b>수정 제한의 선.</b> 오타·표기 정리는 코드를 유지하고, 다른 상품으로 바꾸는 건 막는 기준. 쿠팡(수정 불가·재등록)과 네이버(30일 이내 수정) 중 어디에 가깝게 갈지.</div>
+    <div><b>그룹의 정의와 조건.</b> ‘같은 상품의 변형’만 묶이도록 조건을 바꾸면(대그룹 → 소분류·동일 상품 기준), 지금 연관상품 용도로 쓰는 그룹은 어떻게 할지. 각인 문구·구성 선택처럼 옵션 선택이 꼭 필요한 경우를 어떻게 남길지도.</div>
+    <div><b>집계 단위.</b> 그룹 안 상품에 또 옵션이 있으면 상품 단위로 볼지 옵션 단위로 볼지(A 향수 2,000개 분산 vs B 향수 1,000개 집중). 리뷰는 합산, 인기도는 개별로 볼지도 함께.</div>
+    <div><b>단독형 옵션.</b> 등록 시점에 데이터가 없고 이론상 50⁵ 조합이라, 코드화만으로는 부족해요. 중장기 이전 대상으로 둘지 정해야 해요.</div>
+    <div><b>외부 셀링툴.</b> 등록의 약 90%가 API·자동화라, 툴이 새 구조를 쓰기까지의 유예기간이 전체 일정을 정해요.</div>
+  </div></details>
+</div>
+
+<script>
+const I18N={en:{"PH3 · Dynamite로 보는 옵션 구조": "PH3 · Option structure, explained with ‘Dynamite’", "PH3 상품·옵션 구조 개편 · BTS ‘Dynamite’로 보는 이야기 · 숫자는 예시": "PH3 Product & option structure revamp · Told through BTS ‘Dynamite’ · Numbers are illustrative", "▶ 자동 재생": "▶ Auto play", "지금 우리 옵션은 ‘이름으로만 이어진 목록’이에요": "Today, our options are a list linked only by name", "Dynamite 페이지 안에 버전이 한 줄씩 적혀 있고, 재생 기록은 그 ‘이름 글자’에 매달려 있어요.": "Inside the Dynamite page, each version is one line of text — and its play count hangs on that name text.", "곡 페이지 = 상품": "Song page = product", "글자 목록 한 줄 = 지금의 옵션": "One line of text = today’s option", "상품번호 카드 = 바뀐 옵션": "Card with product ID = new option", "묶음 = 그룹": "Bundle = group", "추천옵션 = 묶음 입장 조건": "Recommended option = entry rule", "Dynamite · 곡 페이지 1개": "Dynamite · 1 song page", "대표 이미지는 원곡 커버": "Main image is the original cover", "버전 선택 ▾": "Choose version ▾", "원곡": "Original", "재생 기록": "Play count", "(예시 수치)": "(illustrative)", "이름 글자로 연결": "linked by name text", "▶ 80만": "▶ 800K", "▶ 50만": "▶ 500K", "▶ 12만": "▶ 120K", "기록은 ‘이름 글자’에 매달려 있어요": "Records hang on the ‘name text’", "실제로는": "In reality", "곡 페이지 = 상품번호 1개, 목록 한 줄 = 옵션. 특히 단독형 옵션은 등록할 때 데이터가 따로 생기지 않고 주문할 때 글자로만 기록돼요. 조합형은 코드가 있지만 수정하면 새로 생겨요.": "Song page = 1 product ID; one line = one option. Single-type options create no data at listing — they are only written down as text when an order comes in. Combination-type options do have codes, but editing them generates new ones.", "결정이 필요한 것": "Decisions needed", "수정 제한의 선.": "Where to draw the edit line.", "오타·표기 정리는 코드를 유지하고, 다른 상품으로 바꾸는 건 막는 기준. 쿠팡(수정 불가·재등록)과 네이버(30일 이내 수정) 중 어디에 가깝게 갈지.": "Keep the code for typo/label fixes; block changes into a different product. Lean toward Coupang (no edits, delete & re-list) or Naver (edits within 30 days)?", "그룹의 정의와 조건.": "Group definition & rules.", "‘같은 상품의 변형’만 묶이도록 조건을 바꾸면(대그룹 → 소분류·동일 상품 기준), 지금 연관상품 용도로 쓰는 그룹은 어떻게 할지. 각인 문구·구성 선택처럼 옵션 선택이 꼭 필요한 경우를 어떻게 남길지도.": "If groups only allow ‘variants of the same product’ (major category → sub-category / same product), what happens to groups used today for related products? And how do we keep cases that truly need an option choice, like engraving text or set composition?", "집계 단위.": "Aggregation unit.", "그룹 안 상품에 또 옵션이 있으면 상품 단위로 볼지 옵션 단위로 볼지(A 향수 2,000개 분산 vs B 향수 1,000개 집중). 리뷰는 합산, 인기도는 개별로 볼지도 함께.": "If a product inside a group has its own options, count by product or by option? (Perfume A: 2,000 sold, spread across options vs. Perfume B: 1,000 sold, all in one option.) Also: merge reviews but keep popularity separate?", "단독형 옵션.": "Single-type options.", "등록 시점에 데이터가 없고 이론상 50⁵ 조합이라, 코드화만으로는 부족해요. 중장기 이전 대상으로 둘지 정해야 해요.": "No data exists at listing, and in theory there are 50⁵ combinations — coding alone isn’t enough. Decide whether they become a mid-to-long-term migration target.", "외부 셀링툴.": "External selling tools.", "등록의 약 90%가 API·자동화라, 툴이 새 구조를 쓰기까지의 유예기간이 전체 일정을 정해요.": "About 90% of listings come via API/automation, so the grace period until tools adopt the new structure sets the overall timeline.", "이전": "Previous", "다음": "Next", "1번째 장면": "Scene 1", "2번째 장면": "Scene 2", "3번째 장면": "Scene 3", "4번째 장면": "Scene 4", "5번째 장면": "Scene 5", "6번째 장면": "Scene 6", "7번째 장면": "Scene 7", "8번째 장면": "Scene 8", "9번째 장면": "Scene 9", "10번째 장면": "Scene 10", "이름을 고치면, 기록과의 연결이 끊어져요": "Edit the name, and the link to its record breaks", "‘Acoustic Remix’를 ‘Acoustic Ver.’로 정리했을 뿐인데, 기록이 0이 됐어요.": "Just tidying ‘Acoustic Remix’ into ‘Acoustic Ver.’ reset the record to 0.", "새 이름으로 새로 연결": "re-linked under the new name", "주인 잃은 기록 50만": "Orphaned record: 500K", "“이름만 정리했을 뿐인데요…”": "“I only tidied up the name…”", "‘라벤더 50ml’(코드 1111, 500건 판매)를 ‘라벤더향 50ml’로 고치면 코드가 9999로 새로 생기고 0건부터 다시 시작해요. 옵션명·값 수정, 그리드 개별 수정 모두 해당돼요.": "Change ‘Lavender 50ml’ (code 1111, 500 sold) to ‘Lavender scent 50ml’ and a new code 9999 is created, starting again from 0. This applies to editing option names/values and to per-row grid edits.", "검색은 곡 페이지 겉면만 봐요": "Search only sees the cover of the song page", "목록은 안쪽에 접혀 있어서, ‘Dynamite acoustic’을 찾아도 원곡만 보여요.": "The list is folded inside, so searching ‘Dynamite acoustic’ shows only the original.", "Dynamite · 겉면": "Dynamite · outside", "버전 3개 ▸ (접혀 있음)": "3 versions ▸ (folded)", "안쪽 목록은 검색이 못 봐요": "Search can’t see the list inside", "원곡 커버 · 버전 3개": "Original cover · 3 versions", "Acoustic Remix는": "Acoustic Remix is", "검색 결과에 없어요": "not in the results", "“어쿠스틱은 없나 보네…”": "“Guess there’s no acoustic…”", "(불만 없이 조용히 떠남)": "(leaves quietly, no complaint)", "옵션이 상품 안에 있어서 색상·사이즈별로 검색되지 않아요. 구매자는 불편을 말하기보다 조용히 다른 상품이나 다른 앱으로 가요. 그래서 VOC에는 잘 안 잡혀요.": "Options live inside the product, so you can’t search by color or size. Buyers don’t complain — they quietly move to another product or app. That’s why it rarely shows up in VOC.", "다른 곳은 이렇게 풀었어요: 버전마다 번호, 같은 곡끼리 ‘그룹’": "Others solved it: a number per version, same-song versions as a ‘group’", "버전 하나하나를 번호 달린 곡으로 세우고, 같은 곡의 버전끼리 묶어요. 이 묶음을 ‘그룹’이라고 불러요.": "Each version becomes its own numbered song, and versions of the same song are bundled. That bundle is called a ‘group’.", "네이버 · 그룹상품": "Naver · Group products", "버전 = 각각 상품 · 그룹 = 같은 곡의 버전": "Version = its own product · Group = versions of one song", "버전마다 상품번호": "A product ID for each version", "판매옵션이 검색·필터·추천에 쓰여요": "Sale options feed search, filters and recommendations", "리뷰는 그룹으로 합쳐 보여줘요": "Reviews are shown combined per group", "쿠팡": "Coupang", "옵션마다 고유번호 · 같은 상품은 한 페이지": "Unique ID per option · same product on one page", "‘Black+225’와 ‘Black+230’이 각각 별도 상품 ID": "‘Black+225’ and ‘Black+230’ each have their own product ID", "판매·리뷰가 옵션 단위로 쌓여요": "Sales & reviews accumulate per option", "같은 상품끼리 한 페이지에 모아요": "Same products gathered on one page", "G마켓 · 지금": "Gmarket · Today", "버전 = 글자 목록 · 그룹 = 뜻이 달라요": "Version = text list · Group = means something else", "┄ 기록": "┄ record", "이름 고치면 기록이 끊겨요": "Rename it and the record breaks", "검색이 안쪽 버전을 못 봐요": "Search can’t see the versions inside", "그룹 기능은 있는데…": "We do have groups, but…", "다음 장면": "next scene", "🔍 찾는 버전으로 바로 가고": "🔍 Straight to the version you want", "📈 기록이 끊기지 않고": "📈 Records never break", "⚖️ 같은 곡끼리만 묶여요": "⚖️ Only same-song versions are bundled", "경쟁사 구조는 공개 자료와 셀러 화면 기준의 추론이에요.": "Competitor structures are inferred from public materials and seller screens.", "네이버는 새 등록 화면까지 만들며 그룹상품을 밀고 있어요. 그룹에 설정한 판매옵션을 검색·필터·추천에 쓰고, 리뷰는 그룹 단위로 합쳐 보여줘요.": "Naver even built a new listing screen to push group products. Sale options set on a group are used for search, filters and recommendations, and reviews are shown combined per group.", "우리도 그룹이 있어요. 그런데 뜻이 달라요": "We have groups too — but ours mean something else", "옵션이 있어도 추천옵션명을 쓰면 묶을 수 있어요. 그런데 입장 조건 어디에도 ‘같은 곡의 버전인가’가 없어서, 연관된 곡이면 다 묶여요.": "Products with options can join a group if they use recommended option names. But no entry rule asks ‘is it a version of the same song?’, so anything related gets bundled.", "그룹 입장 조건": "Group entry rules", "같은 판매자": "Same seller", "✓ 확인": "✓ Checked", "같은 배송조건 · 출고지": "Same shipping terms · ship-from", "유사 카테고리 (대그룹)": "Similar category (major group)", "옵션이 있으면 추천옵션명 사용": "If it has options, uses recommended names", "같은 곡의 버전인가?": "Versions of the same song?", "확인 안 함": "Not checked", "옵션명 ‘발매 요일’ (추천옵션)": "Option name ‘Release day’ (recommended)", "✓ 입장": "✓ Admitted", "옵션명 ‘버전’ (직접입력)": "Option name ‘Version’ (custom input)", "✕ 입장 불가": "✕ Rejected", "추천옵션이 발매 요일 위주라, 버전을 제대로 쓰려면 직접입력해야 해요.": "Recommended options are mostly about release day, so to describe versions properly you have to type them in.", "정작 제대로 쓴 곡이 못 들어와요.": "The song done right is the one left out.", "그러다 보니, 같은 곡이 아니어도 다 묶여요": "So even different songs end up bundled", "다른 곡": "Different song", "상어가족": "Baby Shark", "G마켓에서 실제로 있는 일": "What actually happens on Gmarket", "샴푸": "Shampoo", "여성청결제": "Feminine wash", "한 그룹": "Same group", "정책상 정상": "Allowed by policy", "G마켓 그룹은 ‘상품상세에 연관상품을 묶어 보여주는 기능’이에요. 조건은 같은 판매아이디, 같은 배송조건, 유사 카테고리 대그룹, 옵션이 있다면 추천옵션명 사용(직접입력 불가), 성인은 성인끼리, 최대 100개. ‘같은 상품의 변형인가’는 조건에 없어서 샴푸와 여성청결제가 한 그룹인 건 정책상 정상이에요. 반대로 추천옵션이 발송일 위주라, 색상·사이즈를 직접입력한 상품은 못 들어와요.": "A Gmarket group is defined as ‘a feature that shows related products together on the product page’. Rules: same seller ID, same shipping terms, similar category (major group), recommended option names if options are used (no custom input), adult items only with adult items, up to 100 products. ‘Is it a variant of the same product?’ isn’t a rule, so shampoo and feminine wash in one group is allowed by policy. Conversely, since recommended options are mostly shipping dates, products with custom color/size options can’t get in.", "단기": "Short-term", "먼저, 목록은 그대로 두고 각 줄에 ‘고정 코드’를 박아요": "First: keep the list, but pin a fixed code on each line", "이름을 조금 고쳐도 코드가 그대로라 기록이 이어져요. 대신 아예 다른 곡으로 바꾸는 건 막아요.": "Small name edits keep the same code, so records continue. Turning it into a different song, though, is blocked.", "코드로 연결": "linked by code", "코드 그대로 · 기록 유지": "Same code · record kept", "다른 곡으로 변신 금지": "No turning into another song", "오타·표기 정리는 OK, 다른 상품으로 변신은 NO": "Typo/label fixes OK, turning into another product NO", "추천옵션명·옵션값을 코드화하고, 옵션 수정 제한 정책을 둬요(쿠팡은 수정 불가·삭제 후 재등록, 네이버는 30일 이내만 수정). 이것만으로도 기록 끊김은 멈춰요. 다만 직접입력·단독형 옵션은 코드가 없어 한계가 있어서, 중장기 단계가 필요해요.": "Assign codes to recommended option names and values, and add an option-edit restriction policy (Coupang: no edits, delete & re-list; Naver: edits only within 30 days). This alone stops records from breaking. But custom-input and single-type options have no codes, so a mid-to-long-term step is needed.", "중장기": "Mid-to-long-term", "그다음, 버전마다 상품번호를 따로 주고 같은 곡끼리 묶어요": "Next: a product ID for each version, bundled by song", "버전 하나하나가 상품번호를 가진 독립된 곡이 돼요. 판매·재고·리뷰가 각자 쌓이고, 그룹은 같은 곡의 버전만 묶어요.": "Each version becomes an independent song with its own product ID. Sales, stock and reviews accumulate separately, and a group bundles only versions of the same song.", "Dynamite · 상품번호 1개": "Dynamite · 1 product ID", "상품번호 4901300001": "Product ID 4901300001", "판매·재고·리뷰 각자": "Own sales · stock · reviews", "상품번호 4901300002": "Product ID 4901300002", "상품번호 4901300003": "Product ID 4901300003", "그룹 = 같은 곡 ‘Dynamite’의 버전만": "Group = versions of ‘Dynamite’ only", "상품번호": "Product IDs", "1개": "1", "3개": "3", "추천옵션: 버전 종류 (발매 요일 X)": "Recommended option: version type (not release day)", "곡 페이지": "Song page", "버전 선택": "Choose version", "듣는 사람 화면은 그대로예요": "Listener’s screen stays the same", "뒤에서는 각자 독립된 상품": "Behind it, each is an independent product", "옵션으로 쓰던 것(네이비 M 등)이 각각 상품번호를 가진 독립 상품이 돼요. 쿠팡에서 ‘Black+225’와 ‘Black+230’이 각각 상품 ID를 갖는 것과 같아요. 우리 그룹 안 항목도 이미 독립 상품 구조라, 새로 만드는 게 아니라 그룹의 정의를 ‘같은 상품의 변형’으로 바꿔 고쳐 써요. 구매자 화면은 거의 그대로예요.": "What used to be options (Navy M, etc.) each become an independent product with its own ID — just as Coupang gives ‘Black+225’ and ‘Black+230’ their own product IDs. Items in our groups are already independent products, so we don’t build something new: we fix the existing group by redefining it as ‘variants of the same product’. The buyer’s screen barely changes.", "이제 검색이 안쪽 버전까지 봐요": "Now search sees the versions inside", "‘Dynamite acoustic’을 찾으면 Dynamite 한 칸이 나오고, 누르면 Acoustic이 골라진 채로 열려요.": "Search ‘Dynamite acoustic’ and you get one Dynamite result; tap it and it opens with Acoustic already selected.", "검색 결과 · 1칸": "Results · 1 slot", "Acoustic Remix 일치 · 버전 3개": "Matches Acoustic Remix · 3 versions", "↓ 누르면": "↓ tap", "✕ 버전마다 따로 노출": "✕ Show each version separately", "같은 곡이 결과를 도배해요": "The same song floods the results", "✓ 그룹 한 칸 + 맞는 버전으로": "✓ One group slot + the matching version", "결과는 깔끔, 찾던 버전은 바로": "Clean results, the right version instantly", "“어쿠스틱 있네! 바로 이거”": "“There’s the acoustic! That’s the one”", "버전마다 따로 보여주면 같은 곡이 검색 결과를 도배해요. 그래서 결과는 그룹 한 칸, 대신 검색어에 맞는 옵션(네이비)이 대표로 보이고 선택된 채로 열려요. 네이버 그룹상품과 같은 방향이에요.": "Showing every version separately would flood search results with the same song. So the result is a single group slot, with the option matching the query (e.g., Navy) shown as the main image and pre-selected on open. Same direction as Naver’s group products.", "그러면 줄줄이 좋은 일이 생겨요": "Then good things follow, one after another", "구조 하나를 바꿨을 뿐인데, 셀러·구매자·G마켓 모두에게 이어져요.": "Changing one structure benefits sellers, buyers and Gmarket alike.", "셀": "S", "셀러": "Seller", "고쳐도 기록이 안 끊겨요": "Edits don’t break records", "어떤 색·사이즈가 잘 팔리는지 보여요": "See which colors and sizes sell", "인기 옵션 재고를 미리 준비해요": "Stock popular options in advance", "구": "B", "구매자": "Buyer", "찾던 색으로 바로 들어가요": "Land on the color you searched", "‘인기 옵션’ 표시를 믿을 수 있어요": "Can trust the ‘popular option’ tag", "놓치던 검색이 구매로": "Missed searches turn into purchases", "G마켓": "Gmarket", "같은 상품끼리만 묶여요": "Only the same products are grouped", "인기 태그·추천이 정확해져요": "Popular tags & recommendations get accurate", "광고도 옵션 단위로": "Ads can target options, too", "반팔티로 치면: 네이비 이름을 고쳐도 기록 유지 → 잘 팔리는 색이 보임 → ‘네이비 반팔티’ 검색에 네이비가 바로 노출.": "For a T-shirt: rename Navy and the record stays → you see which color sells → searching ‘navy T-shirt’ shows navy right away.", "그러려면 이 순서로 쌓아요": "Build it in this order", "아래 두 칸은 단기, 위 세 칸은 중장기. 추천옵션이 제대로여야 그룹도 제대로 묶여요.": "Bottom two are short-term, top three mid-to-long-term. Groups only work if recommended options are right.", "[단기] 추천옵션명·옵션값 코드화": "[Short] Code recommended option names & values", "발송일 말고 색상·사이즈를, 고정 코드로 · 카테고리 · 상품": "Color & size, not shipping dates, as fixed codes · Category · Product", "난이도 상": "Difficulty: high", "[단기] 옵션 수정 제한 정책": "[Short] Option-edit restriction policy", "표기 정리는 코드 유지, 다른 상품으로 변신은 금지 · 상품 · 운영정책": "Label fixes keep the code; turning into another product is blocked · Product · Ops policy", "난이도 중": "Difficulty: medium", "[중장기] 그룹 재정의": "[Mid-long] Redefine groups", "연관상품 모음 → 같은 상품의 변형, 조건에 ‘같은 상품인가’ 추가 · 상품 · 운영정책 · 카테고리": "Related-product bundle → variants of one product; add ‘same product?’ to the rules · Product · Ops policy · Category", "[중장기] 옵션 → 그룹 내 상품으로 이전": "[Mid-long] Move options into group products", "판매를 멈추지 않고, 카테고리 단위로 · 상품 · API 파트너": "Without pausing sales, category by category · Product · API partners", "[중장기] 검색·상세 적용": "[Mid-long] Apply to search & PDP", "그룹 한 칸 + 맞는 옵션 대표 노출 · 검색 · 전시": "One group slot + matching option as main image · Search · Display", "①②만으로도 기록 끊김은 멈춰요. ③~⑤는 있는 그룹을 고쳐 쓰는 일이에요.": "①② alone stop records from breaking. ③–⑤ fix the group we already have.", "구매자 눈에 보이는 건": "What buyers actually see", "맨 위 ⑤번뿐": "only ⑤ at the top", "①~④는 땅속 기초 공사": "①–④ are the foundation underground", "화면이 크게 바뀌는 건 ⑤번뿐이에요. ①~④는 눈에 안 보이지만, 이게 없으면 ⑤도 없어요.": "Only ⑤ visibly changes the screen. ①–④ are invisible, but without them there’s no ⑤.", "❚❚ 멈춤": "❚❚ Pause"},zh:{"PH3 · Dynamite로 보는 옵션 구조": "PH3 · 用《Dynamite》看懂选项结构", "PH3 상품·옵션 구조 개편 · BTS ‘Dynamite’로 보는 이야기 · 숫자는 예시": "PH3 商品·选项结构改造 · 以 BTS《Dynamite》为例 · 数字仅为示例", "▶ 자동 재생": "▶ 自动播放", "지금 우리 옵션은 ‘이름으로만 이어진 목록’이에요": "现在，我们的选项是一份“只靠名字连接的列表”", "Dynamite 페이지 안에 버전이 한 줄씩 적혀 있고, 재생 기록은 그 ‘이름 글자’에 매달려 있어요.": "在 Dynamite 页面里，每个版本只是一行文字，播放记录就挂在这行“名字文字”上。", "곡 페이지 = 상품": "歌曲页面 = 商品", "글자 목록 한 줄 = 지금의 옵션": "一行文字 = 现在的选项", "상품번호 카드 = 바뀐 옵션": "带商品编号的卡片 = 改造后的选项", "묶음 = 그룹": "捆绑 = 商品组", "추천옵션 = 묶음 입장 조건": "推荐选项 = 进组条件", "Dynamite · 곡 페이지 1개": "Dynamite · 1 个歌曲页面", "대표 이미지는 원곡 커버": "主图为原版封面", "버전 선택 ▾": "选择版本 ▾", "원곡": "原版", "재생 기록": "播放记录", "(예시 수치)": "（示例数字）", "이름 글자로 연결": "靠名字文字连接", "▶ 80만": "▶ 80万", "▶ 50만": "▶ 50万", "▶ 12만": "▶ 12万", "기록은 ‘이름 글자’에 매달려 있어요": "记录挂在“名字文字”上", "실제로는": "实际情况", "곡 페이지 = 상품번호 1개, 목록 한 줄 = 옵션. 특히 단독형 옵션은 등록할 때 데이터가 따로 생기지 않고 주문할 때 글자로만 기록돼요. 조합형은 코드가 있지만 수정하면 새로 생겨요.": "歌曲页面 = 1 个商品编号，一行 = 一个选项。尤其是“独立型选项”，上架时不会单独生成数据，只在下单时以文字形式记录。“组合型选项”虽然有编码，但一修改就会生成新编码。", "결정이 필요한 것": "需要决策的事项", "수정 제한의 선.": "修改限制的边界。", "오타·표기 정리는 코드를 유지하고, 다른 상품으로 바꾸는 건 막는 기준. 쿠팡(수정 불가·재등록)과 네이버(30일 이내 수정) 중 어디에 가깝게 갈지.": "修正错字、统一写法时保留编码，改成其他商品则禁止。更接近 Coupang（不可修改，需删除后重新上架）还是 Naver（30 天内可修改）？", "그룹의 정의와 조건.": "商品组的定义与条件。", "‘같은 상품의 변형’만 묶이도록 조건을 바꾸면(대그룹 → 소분류·동일 상품 기준), 지금 연관상품 용도로 쓰는 그룹은 어떻게 할지. 각인 문구·구성 선택처럼 옵션 선택이 꼭 필요한 경우를 어떻게 남길지도.": "如果只允许“同一商品的不同规格”成组（大类 → 细分类目/同一商品），现在用于关联商品的商品组怎么处理？像刻字内容、套装组合这类必须选择选项的情况又如何保留？", "집계 단위.": "统计口径。", "그룹 안 상품에 또 옵션이 있으면 상품 단위로 볼지 옵션 단위로 볼지(A 향수 2,000개 분산 vs B 향수 1,000개 집중). 리뷰는 합산, 인기도는 개별로 볼지도 함께.": "商品组内的商品如果还有选项，按商品统计还是按选项统计？（香水 A 卖出 2,000 件但分散在各选项 vs 香水 B 卖出 1,000 件集中在一个选项）另外，评价合并、人气单独计算吗？", "단독형 옵션.": "独立型选项。", "등록 시점에 데이터가 없고 이론상 50⁵ 조합이라, 코드화만으로는 부족해요. 중장기 이전 대상으로 둘지 정해야 해요.": "上架时没有数据，理论上有 50⁵ 种组合，仅靠编码化不够。需要决定是否列为中长期迁移对象。", "외부 셀링툴.": "外部上架工具。", "등록의 약 90%가 API·자동화라, 툴이 새 구조를 쓰기까지의 유예기간이 전체 일정을 정해요.": "约 90% 的商品通过 API/自动化上架，工具适配新结构所需的过渡期决定了整体进度。", "이전": "上一页", "다음": "下一页", "1번째 장면": "第 1 个场景", "2번째 장면": "第 2 个场景", "3번째 장면": "第 3 个场景", "4번째 장면": "第 4 个场景", "5번째 장면": "第 5 个场景", "6번째 장면": "第 6 个场景", "7번째 장면": "第 7 个场景", "8번째 장면": "第 8 个场景", "9번째 장면": "第 9 个场景", "10번째 장면": "第 10 个场景", "이름을 고치면, 기록과의 연결이 끊어져요": "一改名字，和记录的连接就断了", "‘Acoustic Remix’를 ‘Acoustic Ver.’로 정리했을 뿐인데, 기록이 0이 됐어요.": "只是把“Acoustic Remix”统一写成“Acoustic Ver.”，记录就归零了。", "새 이름으로 새로 연결": "以新名字重新连接", "주인 잃은 기록 50만": "失去主人的记录 50万", "“이름만 정리했을 뿐인데요…”": "“我只是整理了一下名字……”", "‘라벤더 50ml’(코드 1111, 500건 판매)를 ‘라벤더향 50ml’로 고치면 코드가 9999로 새로 생기고 0건부터 다시 시작해요. 옵션명·값 수정, 그리드 개별 수정 모두 해당돼요.": "把“薰衣草 50ml”（编码 1111，已售 500 件）改成“薰衣草香 50ml”，就会生成新编码 9999，从 0 件重新开始。修改选项名/选项值、在表格中逐项修改都属于这种情况。", "검색은 곡 페이지 겉면만 봐요": "搜索只看得到歌曲页面的“外观”", "목록은 안쪽에 접혀 있어서, ‘Dynamite acoustic’을 찾아도 원곡만 보여요.": "列表折叠在里面，搜“Dynamite acoustic”也只显示原版。", "Dynamite · 겉면": "Dynamite · 外观", "버전 3개 ▸ (접혀 있음)": "3 个版本 ▸（已折叠）", "안쪽 목록은 검색이 못 봐요": "搜索看不到里面的列表", "원곡 커버 · 버전 3개": "原版封面 · 3 个版本", "Acoustic Remix는": "Acoustic Remix", "검색 결과에 없어요": "不在搜索结果中", "“어쿠스틱은 없나 보네…”": "“看来没有原声版……”", "(불만 없이 조용히 떠남)": "（不抱怨，默默离开）", "옵션이 상품 안에 있어서 색상·사이즈별로 검색되지 않아요. 구매자는 불편을 말하기보다 조용히 다른 상품이나 다른 앱으로 가요. 그래서 VOC에는 잘 안 잡혀요.": "选项藏在商品内部，无法按颜色、尺码搜索。买家不会抱怨，而是默默去看别的商品或别的 App，所以在 VOC（用户反馈）里很少体现。", "다른 곳은 이렇게 풀었어요: 버전마다 번호, 같은 곡끼리 ‘그룹’": "别人是这样解决的：每个版本一个编号，同一首歌的版本组成“商品组”", "버전 하나하나를 번호 달린 곡으로 세우고, 같은 곡의 버전끼리 묶어요. 이 묶음을 ‘그룹’이라고 불러요.": "把每个版本都变成带编号的独立歌曲，再把同一首歌的版本捆在一起，这个捆绑就叫“商品组”。", "네이버 · 그룹상품": "Naver · 商品组", "버전 = 각각 상품 · 그룹 = 같은 곡의 버전": "版本 = 各自独立的商品 · 商品组 = 同一首歌的版本", "버전마다 상품번호": "每个版本都有商品编号", "판매옵션이 검색·필터·추천에 쓰여요": "销售选项用于搜索、筛选和推荐", "리뷰는 그룹으로 합쳐 보여줘요": "评价按商品组合并展示", "쿠팡": "Coupang", "옵션마다 고유번호 · 같은 상품은 한 페이지": "每个选项都有唯一编号 · 同一商品集中在一个页面", "‘Black+225’와 ‘Black+230’이 각각 별도 상품 ID": "“Black+225”和“Black+230”各有独立的商品 ID", "판매·리뷰가 옵션 단위로 쌓여요": "销量和评价按选项累积", "같은 상품끼리 한 페이지에 모아요": "同一商品聚合在一个页面", "G마켓 · 지금": "Gmarket · 现状", "버전 = 글자 목록 · 그룹 = 뜻이 달라요": "版本 = 文字列表 · 商品组 = 含义不同", "┄ 기록": "┄ 记录", "이름 고치면 기록이 끊겨요": "一改名字记录就断", "검색이 안쪽 버전을 못 봐요": "搜索看不到里面的版本", "그룹 기능은 있는데…": "我们也有商品组，但……", "다음 장면": "见下一个场景", "🔍 찾는 버전으로 바로 가고": "🔍 直达想找的版本", "📈 기록이 끊기지 않고": "📈 记录不中断", "⚖️ 같은 곡끼리만 묶여요": "⚖️ 只捆绑同一首歌", "경쟁사 구조는 공개 자료와 셀러 화면 기준의 추론이에요.": "竞品结构根据公开资料和卖家后台推断。", "네이버는 새 등록 화면까지 만들며 그룹상품을 밀고 있어요. 그룹에 설정한 판매옵션을 검색·필터·추천에 쓰고, 리뷰는 그룹 단위로 합쳐 보여줘요.": "Naver 甚至专门做了新的上架页面来推广商品组。商品组中设置的销售选项会用于搜索、筛选和推荐，评价按商品组合并展示。", "우리도 그룹이 있어요. 그런데 뜻이 달라요": "我们也有商品组，但含义不一样", "옵션이 있어도 추천옵션명을 쓰면 묶을 수 있어요. 그런데 입장 조건 어디에도 ‘같은 곡의 버전인가’가 없어서, 연관된 곡이면 다 묶여요.": "即使有选项，只要使用推荐选项名也能成组。但所有进组条件里都没有“是不是同一首歌的版本”，所以只要相关就都能捆在一起。", "그룹 입장 조건": "商品组进组条件", "같은 판매자": "同一卖家", "✓ 확인": "✓ 检查", "같은 배송조건 · 출고지": "相同配送条件 · 发货地", "유사 카테고리 (대그룹)": "相近类目（大类）", "옵션이 있으면 추천옵션명 사용": "有选项时须使用推荐选项名", "같은 곡의 버전인가?": "是否为同一首歌的版本？", "확인 안 함": "不检查", "옵션명 ‘발매 요일’ (추천옵션)": "选项名“发行日”（推荐选项）", "✓ 입장": "✓ 可进组", "옵션명 ‘버전’ (직접입력)": "选项名“版本”（自定义输入）", "✕ 입장 불가": "✕ 无法进组", "추천옵션이 발매 요일 위주라, 버전을 제대로 쓰려면 직접입력해야 해요.": "推荐选项大多是“发行日”这类，想正确写出版本只能自定义输入。", "정작 제대로 쓴 곡이 못 들어와요.": "结果，规范填写的歌反而进不来。", "그러다 보니, 같은 곡이 아니어도 다 묶여요": "结果，不是同一首歌也都被捆在一起", "다른 곡": "不同的歌", "상어가족": "鲨鱼宝宝", "G마켓에서 실제로 있는 일": "Gmarket 的真实案例", "샴푸": "洗发水", "여성청결제": "女性私处洗液", "한 그룹": "同一个商品组", "정책상 정상": "符合现行政策", "G마켓 그룹은 ‘상품상세에 연관상품을 묶어 보여주는 기능’이에요. 조건은 같은 판매아이디, 같은 배송조건, 유사 카테고리 대그룹, 옵션이 있다면 추천옵션명 사용(직접입력 불가), 성인은 성인끼리, 최대 100개. ‘같은 상품의 변형인가’는 조건에 없어서 샴푸와 여성청결제가 한 그룹인 건 정책상 정상이에요. 반대로 추천옵션이 발송일 위주라, 색상·사이즈를 직접입력한 상품은 못 들어와요.": "Gmarket 的商品组定义为“在商品详情页中把关联商品捆绑展示的功能”。条件包括：同一卖家 ID、相同配送条件、相近类目大类、有选项时须使用推荐选项名（不可自定义输入）、成人商品只能与成人商品成组、最多 100 个。由于“是否为同一商品的不同规格”不在条件内，洗发水和女性洗液同在一组是符合政策的。反过来，推荐选项多为发货日，自定义输入颜色、尺码的商品反而无法进组。", "단기": "短期", "먼저, 목록은 그대로 두고 각 줄에 ‘고정 코드’를 박아요": "第一步：列表不动，给每一行钉上“固定编码”", "이름을 조금 고쳐도 코드가 그대로라 기록이 이어져요. 대신 아예 다른 곡으로 바꾸는 건 막아요.": "名字稍作修改，编码不变，记录得以延续。但直接改成另一首歌是禁止的。", "코드로 연결": "靠编码连接", "코드 그대로 · 기록 유지": "编码不变 · 记录保留", "다른 곡으로 변신 금지": "禁止变成别的歌", "오타·표기 정리는 OK, 다른 상품으로 변신은 NO": "改错字、统一写法 OK，变成别的商品 NO", "추천옵션명·옵션값을 코드화하고, 옵션 수정 제한 정책을 둬요(쿠팡은 수정 불가·삭제 후 재등록, 네이버는 30일 이내만 수정). 이것만으로도 기록 끊김은 멈춰요. 다만 직접입력·단독형 옵션은 코드가 없어 한계가 있어서, 중장기 단계가 필요해요.": "对推荐选项名和选项值进行编码化，并制定选项修改限制政策（Coupang 不可修改、需删除后重新上架；Naver 仅 30 天内可修改）。仅这一步就能阻止记录中断。但自定义输入和独立型选项没有编码，存在局限，因此需要中长期方案。", "중장기": "中长期", "그다음, 버전마다 상품번호를 따로 주고 같은 곡끼리 묶어요": "下一步：每个版本单独分配商品编号，同一首歌捆成一组", "버전 하나하나가 상품번호를 가진 독립된 곡이 돼요. 판매·재고·리뷰가 각자 쌓이고, 그룹은 같은 곡의 버전만 묶어요.": "每个版本都成为拥有商品编号的独立歌曲。销量、库存、评价各自累积，商品组只捆绑同一首歌的版本。", "Dynamite · 상품번호 1개": "Dynamite · 1 个商品编号", "상품번호 4901300001": "商品编号 4901300001", "판매·재고·리뷰 각자": "销量·库存·评价各自独立", "상품번호 4901300002": "商品编号 4901300002", "상품번호 4901300003": "商品编号 4901300003", "그룹 = 같은 곡 ‘Dynamite’의 버전만": "商品组 = 仅限《Dynamite》的版本", "상품번호": "商品编号", "1개": "1个", "3개": "3个", "추천옵션: 버전 종류 (발매 요일 X)": "推荐选项：版本类型（不是发行日）", "곡 페이지": "歌曲页面", "버전 선택": "选择版本", "듣는 사람 화면은 그대로예요": "听众看到的画面不变", "뒤에서는 각자 독립된 상품": "背后各自是独立商品", "옵션으로 쓰던 것(네이비 M 등)이 각각 상품번호를 가진 독립 상품이 돼요. 쿠팡에서 ‘Black+225’와 ‘Black+230’이 각각 상품 ID를 갖는 것과 같아요. 우리 그룹 안 항목도 이미 독립 상품 구조라, 새로 만드는 게 아니라 그룹의 정의를 ‘같은 상품의 변형’으로 바꿔 고쳐 써요. 구매자 화면은 거의 그대로예요.": "原来作为选项的内容（如藏青色 M）各自成为拥有商品编号的独立商品，就像 Coupang 给“Black+225”和“Black+230”分别分配商品 ID 一样。我们商品组里的商品本来就是独立商品结构，所以不是从零新建，而是把商品组的定义改为“同一商品的不同规格”来改造现有功能。买家看到的画面几乎不变。", "이제 검색이 안쪽 버전까지 봐요": "现在搜索能看到里面的版本了", "‘Dynamite acoustic’을 찾으면 Dynamite 한 칸이 나오고, 누르면 Acoustic이 골라진 채로 열려요.": "搜“Dynamite acoustic”，结果是一个 Dynamite，点进去时已自动选好 Acoustic。", "검색 결과 · 1칸": "搜索结果 · 1 个", "Acoustic Remix 일치 · 버전 3개": "匹配 Acoustic Remix · 3 个版本", "↓ 누르면": "↓ 点击后", "✕ 버전마다 따로 노출": "✕ 每个版本分别展示", "같은 곡이 결과를 도배해요": "同一首歌刷屏搜索结果", "✓ 그룹 한 칸 + 맞는 버전으로": "✓ 商品组一个位置 + 匹配的版本", "결과는 깔끔, 찾던 버전은 바로": "结果简洁，直达想找的版本", "“어쿠스틱 있네! 바로 이거”": "“有原声版！就是它”", "버전마다 따로 보여주면 같은 곡이 검색 결과를 도배해요. 그래서 결과는 그룹 한 칸, 대신 검색어에 맞는 옵션(네이비)이 대표로 보이고 선택된 채로 열려요. 네이버 그룹상품과 같은 방향이에요.": "如果每个版本分别展示，同一首歌会刷屏搜索结果。所以搜索结果只显示商品组一个位置，与搜索词匹配的选项（如藏青色）作为主图展示，点进去时已默认选中。与 Naver 商品组的方向一致。", "그러면 줄줄이 좋은 일이 생겨요": "接着，好事接连发生", "구조 하나를 바꿨을 뿐인데, 셀러·구매자·G마켓 모두에게 이어져요.": "只改了一个结构，卖家、买家和 Gmarket 都受益。", "셀": "卖", "셀러": "卖家", "고쳐도 기록이 안 끊겨요": "修改不会中断记录", "어떤 색·사이즈가 잘 팔리는지 보여요": "看得到哪些颜色、尺码卖得好", "인기 옵션 재고를 미리 준비해요": "提前备好热门选项的库存", "구": "买", "구매자": "买家", "찾던 색으로 바로 들어가요": "直接进入搜索的颜色", "‘인기 옵션’ 표시를 믿을 수 있어요": "“热门选项”标签值得信赖", "놓치던 검색이 구매로": "流失的搜索变成购买", "G마켓": "Gmarket", "같은 상품끼리만 묶여요": "只有同一商品才会成组", "인기 태그·추천이 정확해져요": "热门标签和推荐更准确", "광고도 옵션 단위로": "广告也能按选项投放", "반팔티로 치면: 네이비 이름을 고쳐도 기록 유지 → 잘 팔리는 색이 보임 → ‘네이비 반팔티’ 검색에 네이비가 바로 노출.": "以短袖 T 恤为例：修改“藏青色”名称记录也不丢 → 能看到哪种颜色卖得好 → 搜“藏青色短袖”直接显示藏青色。", "그러려면 이 순서로 쌓아요": "按这个顺序搭建", "아래 두 칸은 단기, 위 세 칸은 중장기. 추천옵션이 제대로여야 그룹도 제대로 묶여요.": "下面两层是短期，上面三层是中长期。推荐选项做对了，商品组才能正确成组。", "[단기] 추천옵션명·옵션값 코드화": "[短期] 推荐选项名·选项值编码化", "발송일 말고 색상·사이즈를, 고정 코드로 · 카테고리 · 상품": "用颜色、尺码而非发货日，赋予固定编码 · 类目 · 商品", "난이도 상": "难度：高", "[단기] 옵션 수정 제한 정책": "[短期] 选项修改限制政策", "표기 정리는 코드 유지, 다른 상품으로 변신은 금지 · 상품 · 운영정책": "改写法保留编码，禁止变成其他商品 · 商品 · 运营政策", "난이도 중": "难度：中", "[중장기] 그룹 재정의": "[中长期] 重新定义商品组", "연관상품 모음 → 같은 상품의 변형, 조건에 ‘같은 상품인가’ 추가 · 상품 · 운영정책 · 카테고리": "关联商品集合 → 同一商品的不同规格，条件中加入“是否同一商品” · 商品 · 运营政策 · 类目", "[중장기] 옵션 → 그룹 내 상품으로 이전": "[中长期] 把选项迁移为商品组内的商品", "판매를 멈추지 않고, 카테고리 단위로 · 상품 · API 파트너": "不停售，按类目逐步迁移 · 商品 · API 合作方", "[중장기] 검색·상세 적용": "[中长期] 应用到搜索和详情页", "그룹 한 칸 + 맞는 옵션 대표 노출 · 검색 · 전시": "商品组一个位置 + 匹配选项作为主图 · 搜索 · 展示", "①②만으로도 기록 끊김은 멈춰요. ③~⑤는 있는 그룹을 고쳐 쓰는 일이에요.": "仅 ①② 就能阻止记录中断。③~⑤ 是改造现有的商品组。", "구매자 눈에 보이는 건": "买家能看到的变化", "맨 위 ⑤번뿐": "只有最上面的 ⑤", "①~④는 땅속 기초 공사": "①~④ 是地下的地基工程", "화면이 크게 바뀌는 건 ⑤번뿐이에요. ①~④는 눈에 안 보이지만, 이게 없으면 ⑤도 없어요.": "画面上明显变化的只有 ⑤。①~④ 虽然看不见，但没有它们就没有 ⑤。", "❚❚ 멈춤": "❚❚ 暂停"}};const TITLE_KO="PH3 · Dynamite로 보는 옵션 구조";
+let LANG='ko';try{const v=localStorage.getItem('ph3lang');if(v&&(v==='ko'||I18N[v]))LANG=v}catch(e){}
+function applyLang(root){root=root||document.body;const D=I18N[LANG];
+ const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;
+ while(n=w.nextNode()){const p=n.parentNode;if(!p||p.nodeName==='SCRIPT'||p.nodeName==='STYLE'||p.closest('.langmenu,#langCur'))continue;
+  if(n.__ko===undefined){if(!/[가-힣]/.test(n.nodeValue))continue;n.__ko=n.nodeValue}
+  const ko=n.__ko,t=ko.trim(),lead=ko.match(/^\s*/)[0],trail=ko.match(/\s*$/)[0];
+  n.nodeValue=LANG==='ko'?ko:lead+((D&&D[t])||t)+trail}
+ root.querySelectorAll('[aria-label]').forEach(e=>{if(e.dataset.ko===undefined){const a=e.getAttribute('aria-label');if(!/[가-힣]/.test(a))return;e.dataset.ko=a}const k=e.dataset.ko;e.setAttribute('aria-label',LANG==='ko'?k:((D&&D[k])||k))});
+ document.documentElement.lang=LANG==='zh'?'zh-CN':LANG;
+ document.title=LANG==='ko'?TITLE_KO:((D&&D[TITLE_KO])||TITLE_KO);
+ document.getElementById('langCur').textContent={ko:'한국어',en:'English',zh:'中文'}[LANG];
+ document.querySelectorAll('#langMenu button').forEach(b=>b.classList.toggle('on',b.dataset.l===LANG));
+}
+document.getElementById('langBtn').onclick=e=>{e.stopPropagation();const m=document.getElementById('langMenu');m.classList.toggle('open');e.currentTarget.setAttribute('aria-expanded',m.classList.contains('open'))};
+document.addEventListener('click',()=>document.getElementById('langMenu').classList.remove('open'));
+document.getElementById('langMenu').onclick=e=>{const b=e.target.closest('button');if(!b)return;LANG=b.dataset.l;try{localStorage.setItem('ph3lang',LANG)}catch(err){}document.getElementById('langMenu').classList.remove('open');render()};
+
+const $=s=>document.querySelector(s);
+const V={'원곡':{c:'linear-gradient(135deg,#f6a53b,#e2603c)',p:'80만'},'Acoustic Remix':{c:'linear-gradient(135deg,#7cbf7f,#3f8a5c)',p:'50만'},'Tropical Remix':{c:'linear-gradient(135deg,#40b6d8,#3157c9)',p:'12만'}};
+const AC='Acoustic Remix',TR='Tropical Remix';
+const cover=(v,w=56)=>`<div class="cover" style="width:${w}px;height:${w}px;background:${V[v].c};font-size:${w*.4}px">♪</div>`;
+const memo=(v,name,play,x,y,r,d,cls='',style='')=>`<div class="a memo an drop ${cls}" style="left:${x}px;top:${y}px;--r:${r}deg;--d:${d}s;${style}">${name||v}<small>▶ 재생 ${play||V[v].p}</small></div>`;
+const track=(v,num,x,y,d,cls='',name,play)=>`<div class="a track an pop ${cls}" style="left:${x}px;top:${y}px;--d:${d}s"><span class="num">#${num}</span>${cover(v,58)}<b>${name||v}</b><small>▶ ${play||V[v].p}</small></div>`;
+const page=(x,y,w,h,label,inner,cls='',d=0)=>`<div class="a bigbox an fade ${cls}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;--d:${d}s"><div class="lb"><span>${label}</span></div>${inner||''}</div>`;
+const phone=(x,y,w,h,q,body)=>`<div class="a phone an rise" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;--d:.2s"><div class="q">🔍 ${q}</div>${body}</div>`;
+const A=(x,y,html,anim='rise',d=0,extra='')=>`<div class="a an ${anim}" style="left:${x}px;top:${y}px;--d:${d}s;${extra}">${html}</div>`;
+const rope=(d,x1,y1,w,h,cls='draw')=>`<rect class="${cls}" style="--d:${d}s" x="${x1}" y="${y1}" width="${w}" height="${h}" rx="26" fill="none" stroke="var(--rope)" stroke-width="4" ${cls?'stroke-dasharray="1600"':''} stroke-linecap="round"/>`;
+const pageHead=(d=0)=>A(30,30,`<div style="display:flex;gap:14px;align-items:center">${cover('원곡',80)}<div><div style="font-size:22px;font-weight:900">Dynamite</div><div style="font-size:13px;color:var(--sub)">대표 이미지는 원곡 커버</div></div></div>`,'fade',d);
+const VS=['원곡',AC,TR];
+const bottle=(c,l)=>`<div style="text-align:center;font-size:13px;font-weight:700"><svg width="54" height="90" viewBox="0 0 54 90"><rect x="19" y="2" width="16" height="14" rx="3" fill="#888"/><rect x="6" y="14" width="42" height="74" rx="12" fill="${c}"/><rect x="14" y="36" width="26" height="24" rx="4" fill="rgba(255,255,255,.7)"/></svg><div>${l}</div></div>`;
+const ROWY=[226,282,338];
+const lrow=(v,i,d,inner)=>`<div class="a lrow an rise" style="left:130px;top:${ROWY[i]}px;--d:${d}s">${cover(v,26)}${inner||v}</div>`;
+const rec=(txt,i,d,cls='',x=650)=>`<div class="a rec an pop ${cls}" style="left:${x}px;top:${ROWY[i]+2}px;--d:${d}s">▶ ${txt}</div>`;
+const thread=(i,d,cls='thread')=>`<line class="${cls}" style="--d:${d}s" x1="372" y1="${ROWY[i]+22}" x2="648" y2="${ROWY[i]+22}" stroke="var(--muted)" stroke-width="2" stroke-dasharray="5 6"/><text x="510" y="${ROWY[i]+16}" text-anchor="middle" font-size="11" fill="var(--muted)" class="${cls}" style="--d:${d}s">이름 글자로 연결</text>`;
+const ddHead=(d=0,txt='버전 선택 ▾')=>A(130,196,`<div style="font-size:13px;font-weight:700;color:var(--sub)">${txt}</div>`,'fade',d);
+const recHead=(d=0)=>A(650,196,'<div style="font-size:13px;font-weight:700;color:var(--sub)">재생 기록 <span style="font-weight:400;color:var(--muted)">(예시 수치)</span></div>','fade',d);
+const card=(v,t,s,cls='',d=0)=>`<div class="card an rise ${cls}" style="--d:${d}s">${cover(v,42)}<div><b>${t}</b><span>${s}</span></div></div>`;
+
+const S=[
+ {h:'지금 우리 옵션은 ‘이름으로만 이어진 목록’이에요',p:'Dynamite 페이지 안에 버전이 한 줄씩 적혀 있고, 재생 기록은 그 ‘이름 글자’에 매달려 있어요.',
+  real:'곡 페이지 = 상품번호 1개, 목록 한 줄 = 옵션. 특히 단독형 옵션은 등록할 때 데이터가 따로 생기지 않고 주문할 때 글자로만 기록돼요. 조합형은 코드가 있지만 수정하면 새로 생겨요.',
+  draw:()=>page(100,60,380,410,'Dynamite · 곡 페이지 1개',pageHead(.2))+ddHead(.5)
+   +VS.map((v,i)=>lrow(v,i,.8+i*.25)).join('')+recHead(1.6)
+   +`<svg class="ov">${VS.map((_,i)=>thread(i,1.8+i*.25,'thread')).join('')}</svg>`
+   +VS.map((v,i)=>rec(V[v].p,i,2+i*.25)).join('')
+   +A(650,420,'<div class="anno" style="font-size:14px">기록은 ‘이름 글자’에 매달려 있어요</div>','rise',3)},
+ {h:'이름을 고치면, 기록과의 연결이 끊어져요',p:'‘Acoustic Remix’를 ‘Acoustic Ver.’로 정리했을 뿐인데, 기록이 0이 됐어요.',
+  real:'‘라벤더 50ml’(코드 1111, 500건 판매)를 ‘라벤더향 50ml’로 고치면 코드가 9999로 새로 생기고 0건부터 다시 시작해요. 옵션명·값 수정, 그리드 개별 수정 모두 해당돼요.',
+  draw:()=>page(100,60,380,410,'Dynamite · 곡 페이지 1개',pageHead())+ddHead()+recHead()
+   +lrow(VS[0],0,0)+lrow(VS[2],2,0)
+   +`<div class="a lrow an fade" style="left:130px;top:${ROWY[1]}px;--d:0s">${cover(AC,26)}<span style="position:relative"><span class="an out" style="--d:1.5s;display:inline-block">Acoustic Remix</span><span class="an pop" style="--d:1.8s;position:absolute;left:0;top:0;white-space:nowrap;color:var(--blue)">Acoustic Ver.</span></span></div>`
+   +A(330,ROWY[1]-6,'<span class="pencil">✏️</span>','pop',.8)
+   +`<svg class="ov">${thread(0,0,'')}${thread(2,0,'')}<g class="snapline" style="--d:2.2s">${thread(1,0,'')}</g><g class="an fade" style="--d:3.4s">${thread(1,0,'').replace('이름 글자로 연결','새 이름으로 새로 연결')}</g></svg>`
+   +rec(V[VS[0]].p,0,0)+rec(V[VS[2]].p,2,0)
+   +rec('50만',1,0,'fall')
+   +rec('0',1,3.6,'zero')
+   +A(780,ROWY[1]+60,'<div style="font-size:12.5px;color:var(--red);font-weight:700" >주인 잃은 기록 50만</div>','fade',2.8)
+   +A(650,420,'<div class="say">“이름만 정리했을 뿐인데요…”</div>','rise',4)},
+ {h:'검색은 곡 페이지 겉면만 봐요',p:'목록은 안쪽에 접혀 있어서, ‘Dynamite acoustic’을 찾아도 원곡만 보여요.',
+  real:'옵션이 상품 안에 있어서 색상·사이즈별로 검색되지 않아요. 구매자는 불편을 말하기보다 조용히 다른 상품이나 다른 앱으로 가요. 그래서 VOC에는 잘 안 잡혀요.',
+  draw:()=>page(70,70,360,300,'Dynamite · 겉면',pageHead())+A(100,205,'<div class="lrow" style="opacity:.5">버전 3개 ▸ (접혀 있음)</div>','fade',.3)
+   +A(110,275,'<div class="anno" style="font-size:13px">안쪽 목록은 검색이 못 봐요</div>','fade',2.4)
+   +`<svg class="ov"><line class="beam" x1="640" y1="110" x2="400" y2="130" stroke="var(--buyer)" stroke-width="3"/></svg>`
+   +phone(640,40,280,450,'Dynamite acoustic',card('원곡','Dynamite','원곡 커버 · 버전 3개','',1)+`<div class="ghostc an fade" style="--d:1.8s">Acoustic Remix는<br>검색 결과에 없어요</div>`)
+   +A(330,400,'<div class="say">“어쿠스틱은 없나 보네…”<br><span style="opacity:.7;font-size:12.5px">(불만 없이 조용히 떠남)</span></div>','rise',2.8)},
+ {h:'다른 곳은 이렇게 풀었어요: 버전마다 번호, 같은 곡끼리 ‘그룹’',p:'버전 하나하나를 번호 달린 곡으로 세우고, 같은 곡의 버전끼리 묶어요. 이 묶음을 ‘그룹’이라고 불러요.',
+  real:'네이버는 새 등록 화면까지 만들며 그룹상품을 밀고 있어요. 그룹에 설정한 판매옵션을 검색·필터·추천에 쓰고, 리뷰는 그룹 단위로 합쳐 보여줘요.',
+  draw:()=>A(30,30,`<div class="cmp" style="width:300px;height:300px"><h4>네이버 · 그룹상품</h4><div class="sub">버전 = 각각 상품 · 그룹 = 같은 곡의 버전</div><div style="display:flex;gap:8px;border:2px dashed var(--rope);border-radius:14px;padding:16px 10px 8px;width:max-content">${VS.map((v,i)=>`<div style="position:relative">${cover(v,40)}<span class="mininum">#${i+1}</span></div>`).join('')}</div><ul><li>버전마다 상품번호</li><li>판매옵션이 검색·필터·추천에 쓰여요</li><li>리뷰는 그룹으로 합쳐 보여줘요</li></ul></div>`,'rise',.2)
+   +A(350,30,`<div class="cmp" style="width:300px;height:300px"><h4>쿠팡</h4><div class="sub">옵션마다 고유번호 · 같은 상품은 한 페이지</div><div style="display:flex;gap:8px;padding-top:12px">${VS.map((v,i)=>`<div style="position:relative;border:2px solid var(--box);border-radius:10px;padding:3px">${cover(v,36)}<span class="mininum">#${i+1}</span></div>`).join('')}</div><ul><li>‘Black+225’와 ‘Black+230’이 각각 별도 상품 ID</li><li>판매·리뷰가 옵션 단위로 쌓여요</li><li>같은 상품끼리 한 페이지에 모아요</li></ul></div>`,'rise',1)
+   +A(670,30,`<div class="cmp gm" style="width:300px;height:300px"><h4>G마켓 · 지금</h4><div class="sub">버전 = 글자 목록 · 그룹 = 뜻이 달라요</div><div style="display:flex;flex-direction:column;gap:4px">${VS.map(v=>`<div style="display:flex;gap:6px;align-items:center;font-size:12px;font-weight:700">${cover(v,18)}${v}<span style="color:var(--muted);font-weight:400">┄ 기록</span></div>`).join('')}</div><ul><li>이름 고치면 기록이 끊겨요</li><li>검색이 안쪽 버전을 못 봐요</li><li>그룹 기능은 있는데… <b style="color:var(--red)">다음 장면</b></li></ul></div>`,'slidein',2.2)
+   +A(30,365,'<div class="why">🔍 찾는 버전으로 바로 가고</div>','pop',3.4)+A(340,365,'<div class="why">📈 기록이 끊기지 않고</div>','pop',3.8)+A(630,365,'<div class="why">⚖️ 같은 곡끼리만 묶여요</div>','pop',4.2)
+   +A(30,445,'<div style="font-size:13px;color:var(--muted)">경쟁사 구조는 공개 자료와 셀러 화면 기준의 추론이에요.</div>','fade',4.6)},
+ {h:'우리도 그룹이 있어요. 그런데 뜻이 달라요',p:'옵션이 있어도 추천옵션명을 쓰면 묶을 수 있어요. 그런데 입장 조건 어디에도 ‘같은 곡의 버전인가’가 없어서, 연관된 곡이면 다 묶여요.',
+  real:'G마켓 그룹은 ‘상품상세에 연관상품을 묶어 보여주는 기능’이에요. 조건은 같은 판매아이디, 같은 배송조건, 유사 카테고리 대그룹, 옵션이 있다면 추천옵션명 사용(직접입력 불가), 성인은 성인끼리, 최대 100개. ‘같은 상품의 변형인가’는 조건에 없어서 샴푸와 여성청결제가 한 그룹인 건 정책상 정상이에요. 반대로 추천옵션이 발송일 위주라, 색상·사이즈를 직접입력한 상품은 못 들어와요.',
+  draw:()=>A(30,40,`<div class="panel" style="width:430px;padding:12px 14px"><h4 style="margin-bottom:6px">그룹 입장 조건</h4>${[['같은 판매자',0],['같은 배송조건 · 출고지',0],['유사 카테고리 (대그룹)',0],['옵션이 있으면 추천옵션명 사용',0],['같은 곡의 버전인가?',1]].map(([t,bad],i)=>`<div class="chk an ${bad?'pop':'rise'}" style="--d:${bad?3.4:.4+i*.3}s"><span>${t}</span><b class="${bad?'no':'yes'}">${bad?'확인 안 함':'✓ 확인'}</b></div>`).join('')}</div>`,'fade',0)
+   +A(490,40,`<div class="case an rise" style="--d:1.8s"><div style="display:flex;gap:8px;align-items:center">${cover('원곡',30)}<div><b>Dynamite</b><small>옵션명 ‘발매 요일’ (추천옵션)</small></div></div><span class="pass">✓ 입장</span></div>`,'fade',1.8)
+   +A(490,112,`<div class="case an rise" style="--d:2.3s"><div style="display:flex;gap:8px;align-items:center">${cover(AC,30)}<div><b>Dynamite</b><small>옵션명 ‘버전’ (직접입력)</small></div></div><span class="fail">✕ 입장 불가</span></div>`,'fade',2.3)
+   +A(490,186,'<div style="font-size:12.5px;color:var(--sub);max-width:440px;line-height:1.5">추천옵션이 발매 요일 위주라, 버전을 제대로 쓰려면 직접입력해야 해요. <b style="color:var(--red)">정작 제대로 쓴 곡이 못 들어와요.</b></div>','fade',2.8)
+   +A(30,288,'<div class="band">그러다 보니, 같은 곡이 아니어도 다 묶여요</div>','fade',3.8)
+   +`<svg class="ov">${rope(4,30,322,440,180)}</svg>`
+   +track('원곡','4901300001',80,338,4.4,'','Dynamite','80만')
+   +`<div class="a track an pop" style="left:270px;top:338px;--d:4.8s;border-color:var(--red)"><span class="num" style="background:var(--red)">다른 곡</span><div class="cover" style="width:58px;height:58px;background:linear-gradient(135deg,#ffd84a,#f39c2b);font-size:23px">♪</div><b>상어가족</b><small>Baby Shark</small></div>`
+   +A(520,320,`<div class="panel" style="width:430px;display:flex;gap:14px;align-items:center;padding:12px 16px"><div style="font-size:13px;color:var(--sub);font-weight:700;width:90px">G마켓에서 실제로 있는 일</div>${bottle('#6fa8dc','샴푸')}<span style="font-size:20px;color:var(--muted)">+</span>${bottle('#e8a3c4','여성청결제')}<div class="row bad" style="margin:0">한 그룹<br><span style="font-weight:500;font-size:12px">정책상 정상</span></div></div>`,'rise',5.4)},
+ {ph:'단기',h:'먼저, 목록은 그대로 두고 각 줄에 ‘고정 코드’를 박아요',p:'이름을 조금 고쳐도 코드가 그대로라 기록이 이어져요. 대신 아예 다른 곡으로 바꾸는 건 막아요.',
+  real:'추천옵션명·옵션값을 코드화하고, 옵션 수정 제한 정책을 둬요(쿠팡은 수정 불가·삭제 후 재등록, 네이버는 30일 이내만 수정). 이것만으로도 기록 끊김은 멈춰요. 다만 직접입력·단독형 옵션은 코드가 없어 한계가 있어서, 중장기 단계가 필요해요.',
+  draw:()=>page(100,60,380,410,'Dynamite · 곡 페이지 1개',pageHead())+ddHead()
+   +A(650,196,'<div style="font-size:13px;font-weight:700;color:var(--sub)">재생 기록 <span style="font-weight:400;color:var(--muted)">(예시 수치)</span></div>','fade',0)
+   +lrow(VS[0],0,0)
+   +`<div class="a lrow an fade" style="left:130px;top:${ROWY[1]}px">${cover(AC,26)}<span style="position:relative"><span class="an out" style="--d:1.6s;display:inline-block">Acoustic Remix</span><span class="an pop" style="--d:1.9s;position:absolute;left:0;top:0;white-space:nowrap;color:var(--blue)">Acoustic Ver.</span></span></div>`
+   +`<div class="a lrow an fade" style="left:130px;top:${ROWY[2]}px">${cover(TR,26)}<span style="position:relative">Tropical Remix<span class="an pop" style="--d:3.2s;position:absolute;left:0;top:-26px;white-space:nowrap;color:var(--red);text-decoration:line-through;background:var(--red-bg);border-radius:6px;padding:0 6px">상어가족</span></span></div>`
+   +`<svg class="ov">${[0,1,2].map(i=>`<line x1="440" y1="${ROWY[i]+22}" x2="648" y2="${ROWY[i]+22}" stroke="var(--green)" stroke-width="3" class="an fade" style="--d:${.7+i*.15}s"/><text x="545" y="${ROWY[i]+15}" text-anchor="middle" font-size="11" fill="var(--green)" font-weight="700" class="an fade" style="--d:${.7+i*.15}s">코드로 연결</text>`).join('')}</svg>`
+   +[0,1,2].map(i=>A(380,ROWY[i]+10,`<div class="codebadge">🔒 C10${i+1}</div>`,'pop',.4+i*.15)).join('')
+   +VS.map((v,i)=>rec(V[v].p,i,0,'',650).replace('an pop','an fade')).join('')
+   +A(745,ROWY[1]+6,'<div class="okdot">✓</div>','pop',2.4)
+   +A(780,ROWY[1]+8,'<div style="font-size:12.5px;color:var(--green);font-weight:700">코드 그대로 · 기록 유지</div>','fade',2.6)
+   +A(332,ROWY[2]+4,'<div class="stop" style="width:36px;height:36px;font-size:18px">✕</div>','pop',3.5)
+   +A(745,ROWY[2]+8,'<div style="font-size:12.5px;color:var(--red);font-weight:700">다른 곡으로 변신 금지</div>','fade',3.7)
+   +A(650,420,'<div class="say">오타·표기 정리는 OK, 다른 상품으로 변신은 NO</div>','rise',4.2)},
+ {ph:'중장기',h:'그다음, 버전마다 상품번호를 따로 주고 같은 곡끼리 묶어요',p:'버전 하나하나가 상품번호를 가진 독립된 곡이 돼요. 판매·재고·리뷰가 각자 쌓이고, 그룹은 같은 곡의 버전만 묶어요.',
+  real:'옵션으로 쓰던 것(네이비 M 등)이 각각 상품번호를 가진 독립 상품이 돼요. 쿠팡에서 ‘Black+225’와 ‘Black+230’이 각각 상품 ID를 갖는 것과 같아요. 우리 그룹 안 항목도 이미 독립 상품 구조라, 새로 만드는 게 아니라 그룹의 정의를 ‘같은 상품의 변형’으로 바꿔 고쳐 써요. 구매자 화면은 거의 그대로예요.',
+  draw:()=>`<div class="a bigbox boxfade" style="left:40px;top:70px;width:560px;height:300px;--d:1.6s"><div class="lb an out" style="--d:1.6s"><span>Dynamite · 상품번호 1개</span></div></div>`
+   +VS.map((v,i)=>`<div class="a lrow an out" style="left:80px;top:${130+i*60}px;--d:1.1s">${cover(v,26)}${v}</div>`).join('')
+   +VS.map((v,i)=>`<div class="a track an pop" style="left:${80+i*175}px;top:150px;--d:${1.5+i*.3}s;width:140px;height:156px"><span class="pnum an stamp" style="--d:${1.9+i*.3}s">상품번호 490130000${i+1}</span>${cover(v,56)}<b>${['원곡','Acoustic','Tropical'][i]}</b><small>▶ ${V[v].p}</small><span class="own an fade" style="--d:${2.8+i*.15}s">판매·재고·리뷰 각자</span></div>`).join('')
+   +`<svg class="ov">${rope(3.3,56,112,540,238)}</svg>`
+   +A(150,96,'<div class="tag" style="border-style:dashed">그룹 = 같은 곡 ‘Dynamite’의 버전만</div>','pop',3.7)
+   +`<div class="a track an kickout" style="left:470px;top:390px;width:110px;height:64px;--d:4.2s;border-color:var(--red);flex-direction:row;gap:8px"><div class="cover" style="width:30px;height:30px;background:linear-gradient(135deg,#ffd84a,#f39c2b);font-size:13px">♪</div><b style="font-size:12px">상어가족</b></div>`
+   +A(56,384,'<div style="font-size:14px;color:var(--sub);font-weight:700">상품번호</div><div class="big" style="font-size:42px">1개 <span style="color:var(--muted);font-size:26px">→</span> <span style="color:var(--green)">3개</span></div>','pop',3)
+   +A(270,400,'<div class="tag">추천옵션: 버전 종류 (발매 요일 X)</div>','pop',4.4)
+   +phone(680,40,260,440,'Dynamite',card('원곡','Dynamite','곡 페이지','',.6)+`<div style="margin:4px 12px;font-size:12px;color:var(--muted)">버전 선택</div><div class="fchips an fade" style="--d:.9s;flex-wrap:wrap"><span>원곡</span><span>Acoustic</span><span>Tropical</span></div><div class="ghostc an fade" style="--d:4.6s;border-color:var(--green);color:var(--green)">듣는 사람 화면은 그대로예요<br><span style="font-size:11px">뒤에서는 각자 독립된 상품</span></div>`)},
+ {ph:'중장기',h:'이제 검색이 안쪽 버전까지 봐요',p:'‘Dynamite acoustic’을 찾으면 Dynamite 한 칸이 나오고, 누르면 Acoustic이 골라진 채로 열려요.',
+  real:'버전마다 따로 보여주면 같은 곡이 검색 결과를 도배해요. 그래서 결과는 그룹 한 칸, 대신 검색어에 맞는 옵션(네이비)이 대표로 보이고 선택된 채로 열려요. 네이버 그룹상품과 같은 방향이에요.',
+  draw:()=>`<svg class="ov"><rect x="40" y="70" width="508" height="220" rx="26" fill="none" stroke="var(--rope)" stroke-width="4"/><line class="beam" x1="640" y1="110" x2="380" y2="160" stroke="var(--green)" stroke-width="4"/></svg>`
+   +track('원곡','4901300001',65,105,0,'','원곡').replace('an pop','an fade')+track(TR,'4901300003',395,105,0,'','Tropical').replace('an pop','an fade')
+   +`<div class="a track hl an pulse" style="left:230px;top:105px;--d:1s"><span class="num" style="background:var(--green)">#4901300002</span>${cover(AC,58)}<b>Acoustic</b><small>▶ 50만</small></div>`
+   +phone(640,40,300,450,'Dynamite acoustic',`<div style="margin:0 12px 6px;font-size:12px;color:var(--muted)">검색 결과 · 1칸</div>`+card(AC,'Dynamite','Acoustic Remix 일치 · 버전 3개','best',1.1)
+     +`<div class="an fade" style="--d:2s;text-align:center;color:var(--muted);font-size:13px">↓ 누르면</div><div class="an rise" style="--d:2.4s;margin:6px 10px;background:var(--card);border-radius:12px;padding:10px"><div style="display:flex;gap:10px;align-items:center">${cover(AC,40)}<b style="font-size:13.5px">Dynamite</b></div><div style="font-size:11.5px;color:var(--muted);margin:8px 0 4px">버전 선택</div><div class="fchips" style="margin:0;flex-wrap:wrap"><span>원곡</span><span class="on">Acoustic ✓</span><span>Tropical</span></div></div>`)
+   +A(40,320,`<div class="vs bad"><b>✕ 버전마다 따로 노출</b><div style="display:flex;gap:4px;margin-top:6px">${VS.map(v=>cover(v,30)).join('')}${VS.map(v=>cover(v,30)).join('')}</div><small>같은 곡이 결과를 도배해요</small></div>`,'rise',3)
+   +A(310,320,`<div class="vs good"><b>✓ 그룹 한 칸 + 맞는 버전으로</b><div style="display:flex;gap:4px;margin-top:6px">${cover(AC,30)}</div><small>결과는 깔끔, 찾던 버전은 바로</small></div>`,'rise',3.5)
+   +A(140,450,'<div class="say">“어쿠스틱 있네! 바로 이거”</div>','rise',4.2)},
+ {h:'그러면 줄줄이 좋은 일이 생겨요',p:'구조 하나를 바꿨을 뿐인데, 셀러·구매자·G마켓 모두에게 이어져요.',real:'반팔티로 치면: 네이비 이름을 고쳐도 기록 유지 → 잘 팔리는 색이 보임 → ‘네이비 반팔티’ 검색에 네이비가 바로 노출.',
+  draw:()=>[['셀','셀러','#6b4ee6',['고쳐도 기록이 안 끊겨요','어떤 색·사이즈가 잘 팔리는지 보여요','인기 옵션 재고를 미리 준비해요']],
+            ['구','구매자','#e0457b',['찾던 색으로 바로 들어가요','‘인기 옵션’ 표시를 믿을 수 있어요','놓치던 검색이 구매로']],
+            ['G','G마켓','#1f8a9a',['같은 상품끼리만 묶여요','인기 태그·추천이 정확해져요','광고도 옵션 단위로']]]
+   .map(([a,n,col,t],r)=>A(40,50+r*150,`<div style="display:flex;align-items:center;gap:14px"><div class="who"><span class="ava" style="background:${col}">${a}</span>${n}</div>${t.map((x,i)=>`${i?'<span class="arrow">→</span>':''}<div class="tile lit" style="--d:${.6+r*1.2+i*.4}s">${x}</div>`).join('')}</div>`,'fade',r*.3)).join('')},
+ {h:'그러려면 이 순서로 쌓아요',p:'아래 두 칸은 단기, 위 세 칸은 중장기. 추천옵션이 제대로여야 그룹도 제대로 묶여요.',real:'화면이 크게 바뀌는 건 ⑤번뿐이에요. ①~④는 눈에 안 보이지만, 이게 없으면 ⑤도 없어요.',
+  draw:()=>[['[단기] 추천옵션명·옵션값 코드화','발송일 말고 색상·사이즈를, 고정 코드로','카테고리 · 상품','상','#b4572a'],
+            ['[단기] 옵션 수정 제한 정책','표기 정리는 코드 유지, 다른 상품으로 변신은 금지','상품 · 운영정책','중','#6b4ee6'],
+            ['[중장기] 그룹 재정의','연관상품 모음 → 같은 상품의 변형, 조건에 ‘같은 상품인가’ 추가','상품 · 운영정책 · 카테고리','중','#2f5bea'],
+            ['[중장기] 옵션 → 그룹 내 상품으로 이전','판매를 멈추지 않고, 카테고리 단위로','상품 · API 파트너','상','#1f8a9a'],
+            ['[중장기] 검색·상세 적용','그룹 한 칸 + 맞는 옵션 대표 노출','검색 · 전시','중','#0d9463']]
+   .map(([t,d,team,lv,col],i)=>`<div class="a block an drop" style="left:340px;top:${420-i*82}px;background:${col};--d:${.3+i*.55}s"><span class="n">${i+1}</span><div><b>${t}</b><small>${d} · ${team}</small></div><span class="lv">난이도 ${lv}</span></div>`).join('')
+   +A(40,330,'<div class="say" style="max-width:260px">①②만으로도 기록 끊김은 멈춰요. ③~⑤는 있는 그룹을 고쳐 쓰는 일이에요.</div>','rise',3.4)
+   +A(40,110,'<div style="font-size:15px;color:var(--sub);font-weight:700">구매자 눈에 보이는 건</div>','rise',2.8)
+   +A(40,140,'<div style="font-size:34px;font-weight:900;color:var(--green);line-height:1.2">맨 위 ⑤번뿐<br><span style="font-size:16px;color:var(--sub);font-weight:500">①~④는 땅속 기초 공사</span></div>','pop',3)}
+];
+let cur=0,timer=null;const DUR=8000;
+function render(){
+ const s=S[cur];
+ $('#bar').innerHTML=S.map((_,i)=>`<button class="${i<cur?'done':''} ${i===cur?'on'+(timer?' run':''):''}" style="--dur:${DUR}ms" data-i="${i}" aria-label="${i+1}번째 장면"></button>`).join('');
+ $('#bar').querySelectorAll('button').forEach(b=>b.onclick=()=>go(+b.dataset.i,1));
+ $('#head').innerHTML=`<div class="no">${cur+1} / ${S.length}${s.ph?` <span class="phase ${s.ph==='단기'?'p1':'p2'}">${s.ph}</span>`:''}</div><h1>${s.h}</h1><p>${s.p}</p>`;
+ $('#stage').innerHTML=s.draw();
+ $('#real').innerHTML=s.real?`<b>실제로는</b><span>${s.real}</span>`:'';
+ $('#play').textContent=timer?'❚❚ 멈춤':'▶ 자동 재생';
+ applyLang();
+}
+function go(i,user){if(i<0||i>=S.length)return;if(user&&timer){clearInterval(timer);timer=null}cur=i;render()}
+$('#prev').onclick=()=>go(cur-1,1);$('#next').onclick=()=>go(cur+1,1);
+$('#play').onclick=()=>{if(timer){clearInterval(timer);timer=null;render();return}if(cur===S.length-1)cur=0;timer=setInterval(()=>{if(cur>=S.length-1){clearInterval(timer);timer=null;render();return}cur++;render()},DUR);render()};
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')go(cur+1,1);if(e.key==='ArrowLeft')go(cur-1,1);if(e.key===' '){e.preventDefault();$('#play').click()}});
+function fit(){$('#stage').style.transform=`scale(${$('#stagebox').clientWidth/1000})`}
+new ResizeObserver(fit).observe($('#stagebox'));fit();render();
+</script>
+</body>
+</html>
