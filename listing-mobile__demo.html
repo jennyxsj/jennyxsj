@@ -55,7 +55,6 @@ button{cursor:pointer;border:0;background:none}
 .chip b{font-weight:500;color:var(--sub);margin-left:3px;font-size:12px}
 .chip.on{background:var(--text);color:var(--card);border-color:var(--text)}
 .chip.on b{color:var(--card);opacity:.75}
-.chip.warn:not(.on){color:var(--red)}
 .lbar{display:flex;align-items:center;padding:10px 18px;font-size:13px;color:var(--sub);flex:none;gap:10px}
 .lbar b{color:var(--text)}
 .lbar .r{margin-left:auto;display:flex;gap:12px}
@@ -65,12 +64,14 @@ button{cursor:pointer;border:0;background:none}
 .needdesc{font-size:12.5px;color:var(--sub);padding:0 6px 8px;margin-top:-4px}
 .item{display:flex;gap:12px;align-items:center;background:var(--card);border-radius:14px;padding:12px;margin-bottom:8px;width:100%;text-align:left}
 .item:active{transform:scale(.99)}
-.thumb{width:52px;height:52px;border-radius:10px;flex:none;display:grid;place-items:center;font-weight:800;color:rgba(255,255,255,.95);font-size:15px}
+/* 썸네일: 실제론 상품 사진 자리. 데모에선 상품 유형별 픽토그램 + 카테고리 색 (빨강 계열은 배지 전용이라 제외) */
+.thumb{width:52px;height:52px;border-radius:12px;flex:none;display:grid;place-items:center;color:var(--c);background:color-mix(in srgb,var(--c) 14%,var(--card))}
+.thumb svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .item .info{flex:1;min-width:0}
 .item .nm{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .edtag{font-size:10px;font-weight:500;color:var(--blue);background:var(--blue-bg);border-radius:4px;padding:0 4px;margin-left:5px;vertical-align:1px}
 .item .meta{font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center;margin-top:1px}
-.item .meta .s{font-weight:800;font-size:10px}.s.g{color:#16a34a}.s.a{color:#e5372f}
+.item .meta .s{font-weight:800;font-size:10px;color:var(--sub)}
 .item .bot{display:flex;gap:6px;align-items:center;margin-top:5px;font-size:12px}
 .pill{border-radius:6px;padding:1px 7px;font-size:11px;font-weight:500;background:var(--chip);color:var(--sub);white-space:nowrap}
 .pill.on{background:var(--green-bg);color:var(--green)}
@@ -78,6 +79,7 @@ button{cursor:pointer;border:0;background:none}
 .pill.low{background:var(--red-bg);color:var(--red)}
 .pill.out{background:var(--red);color:#fff}
 .item .price{margin-left:auto;font-weight:700;font-size:13px;white-space:nowrap}
+.item.off .thumb,.item.off .nm,.item.off .meta,.item.off .price,.item.off .pill:not(.stop){opacity:.45}
 .cbox{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);flex:none;display:none;place-items:center;color:#fff;font-size:12px}
 .selmode .cbox{display:grid}
 .item.sel .cbox{background:var(--blue);border-color:var(--blue)}
@@ -122,9 +124,11 @@ button{cursor:pointer;border:0;background:none}
 .sheet h3{font-size:19px;margin:6px 0 4px;letter-spacing:-.4px}
 .sheet .desc{color:var(--sub);font-size:13px;margin:0 0 14px;line-height:1.6}
 .ph{display:flex;gap:12px;align-items:center;margin:4px 0 14px}
-.ph .thumb{width:60px;height:60px}
+.ph .thumb{width:60px;height:60px}.ph .thumb svg{width:32px;height:32px}
 .ph .nm{font-weight:700;font-size:16px;line-height:1.35}
 .ph .meta{font-size:12px;color:var(--muted);margin-top:2px}
+.pill.star{display:inline-flex;align-items:center;gap:3px;background:#f5edff;color:#823ad5;font-weight:700;padding:1px 7px 1px 3px}.pill.star svg{width:13px;height:13px;flex:none}
+.infobox{background:var(--chip);color:var(--sub);border-radius:12px;padding:10px 12px;font-size:12.5px;line-height:1.55;margin-bottom:4px}.infobox b{color:var(--text);font-weight:500}
 .warnbox{background:var(--amber-bg);color:var(--amber);border-radius:12px;padding:10px 12px;font-size:12.5px;margin:12px 0 0;line-height:1.55}
 .errbox{background:var(--red-bg);color:var(--red);border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.6;margin-bottom:6px}
 .sitenote{font-size:12px;color:var(--muted);margin-top:14px}
@@ -133,13 +137,12 @@ button{cursor:pointer;border:0;background:none}
 .segc{display:flex;background:var(--chip);border-radius:12px;padding:4px}
 .segc button{flex:1;height:42px;border-radius:9px;font-weight:500;color:var(--sub)}
 .segc button.on{background:var(--card);color:var(--text);font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.segc button.on.stopc{color:var(--red)}
 .orow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
 .orow:last-child{border:0}
 .orow .on1{flex:1;min-width:0}
 .orow .on1 b{font-weight:500;display:block}
 .orow .on1 span{font-size:12px;color:var(--muted)}
-.orow .on1 span.z{color:var(--red)}
+.orow span.z{color:var(--red)}
 .orow.chg .on1 b::after{content:"●";color:var(--blue);font-size:8px;margin-left:5px;vertical-align:2px}
 .step{display:flex;align-items:center;background:var(--chip);border-radius:10px;height:40px}
 .step button{width:38px;height:40px;font-size:18px;color:var(--sub)}
@@ -192,6 +195,9 @@ button{cursor:pointer;border:0;background:none}
   .sbar{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.meta .pill.star{font-size:10.5px;vertical-align:1px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pill.star{background:#2a1f45;color:#c09aeb}}
+:root[data-theme="dark"] .pill.star{background:#2a1f45;color:#c09aeb}
 </style>
 </head>
 <body>
@@ -250,7 +256,7 @@ ko:{
  h_prod:'상품관리',h_chat:'채팅',h_noti:'알림',acct:'G마켓 10 · 옥션 6 계정',ai_on:'AI 응대 켜짐',
  ph_search:'상품명, 상품번호, 판매자관리코드',aria_search:'상품 검색',aria_clear:'검색어 지우기',
  f_need:'확인 필요',f_out:'품절',f_low:'재고 10개 이하',f_on:'판매중',f_stop:'판매중지',f_all:'전체',
- need_desc:'판매중인데 품절됐거나 재고가 10개 이하인 상품이에요',
+ need_desc:'구매자에게 품절로 보이거나, 재고가 10개 이하로 남은 상품이에요',
  sorts:['최근 수정순','최근 등록순','판매량 많은순'],
  qpre:'‘{q}’ ',count:'<b>{n}</b>개',sel:'선택',selN:'{n}개 선택',selAllDone:'<b>{n}개 전체 선택됨</b>',selAllBtn:'검색결과 {n}개 전체 선택',selClear:'선택 해제',
  empty_t:'찾는 상품이 없어요',empty_d:'상품번호를 확인하거나 필터를 ‘전체’로 바꿔 보세요.',
@@ -262,8 +268,9 @@ ko:{
  st_on:'판매중',st_stop:'판매중지',
  sec_status:'판매상태',sec_optstock:'옵션별 재고',allOut:'전체 품절',soldbtn:'품절',sec_stock:'재고',q0:'0개',
  dec:'빼기',inc:'더하기',stockOf:'{o} 재고',stockAria:'재고 수량',
- zero_warn:'재고가 0개라 판매중으로 바꿔도 구매할 수 없어요. 재고도 함께 채워 주세요.',
+ zero_warn:'재고가 0개라 구매자에게는 <b>품절</b>로 보여요. 재고를 채우면 바로 다시 팔려요.',
  both_sites:'G마켓·옥션에 같이 반영돼요.',
+ star:'스타배송',ff_info:'<b>풀필먼트 스타배송 상품이에요.</b> 재고는 물류센터 재고로 자동으로 맞춰져서 여기서 바꿀 수 없어요. 입고는 PC의 ESM+에서 요청해 주세요.',ff_bulk_n:'풀필먼트 스타배송 상품 {m}개는 물류센터 재고라 제외돼요.',ff_bulk_all:'풀필먼트 스타배송 상품은 물류센터 재고라 제외돼요.',ff_skipped:' · 풀필먼트 {m}개 제외',nm_ffskip:'풀필먼트 스타배송 {m}개는 제외했어요.',
  close:'닫기',save_n:'저장하기 ({n})',no_change:'변경사항 없음',saved:'저장했어요',undo:'되돌리기',undone:'되돌렸어요',
  err_t:'저장하지 못했어요',err_d:'저장하는 사이에 주문이 들어와 재고가 {a}개에서 {b}개로 바뀌었어요. 바뀐 재고를 확인하고 다시 저장해 주세요.',err_btn:'최신 재고 보기',
  err_banner:'방금 재고가 {b}개로 바뀌었어요. 확인하고 다시 저장해 주세요.',
@@ -283,12 +290,13 @@ ko:{
  bk:'블랙',wh:'화이트',pack:'{n}팩',
  n_nike:'나이키 에어맥스 270',n_coke:'코카콜라 제로 355ml 24캔',
  br:['나이키','아디다스','락앤락','쿠쿠','무인양품','오뚜기','코카콜라','삼성','다이슨','유니클로','풀무원','농심','해피콜','뉴발란스','필립스','종근당'],
- pr:['에어맥스 270','쿨링 반팔 티셔츠','밀폐용기 10종 세트','IH 전기밥솥 6인용','PP 수납함 대형','진라면 순한맛 40입','제로 콜라 355ml 24캔','버즈 실리콘 케이스','무선 청소기 필터','히트텍 크루넥 티','국산콩 두부 3입','신라면 멀티팩 5입','IH 프라이팬 28cm','530 러닝화','전동칫솔 리필모','비타민D 2000IU'],
+ pr:[["에어맥스 270", "에어포스 1 ’07", "페가수스 41 러닝화"], ["쿨링 반팔 티셔츠", "에어로레디 반팔 티", "오버핏 로고 티"], ["밀폐용기 10종 세트", "비스프리 밀폐용기 4종", "유리 밀폐용기 6종"], ["IH 전기밥솥 6인용", "IH 전기밥솥 10인용", "트윈프레셔 밥솥 6인용"], ["PP 수납함 대형", "PP 수납함 소형", "PP 서랍장 3단"], ["진라면 순한맛 40입", "진라면 매운맛 40입", "컵누들 15입"], ["제로 355ml 24캔", "오리지널 500ml 20병", "제로 1.5L 12병"], ["버즈 실리콘 케이스", "버즈3 프로 투명 케이스", "버즈 가죽 케이스"], ["무선 청소기 필터", "V15 교체 필터", "헤파 필터 2개입"], ["히트텍 크루넥 티", "에어리즘 반팔 티", "수피마코튼 티"], ["국산콩 두부 3입", "부침두부 2입", "연두부 4입"], ["신라면 멀티팩 5입", "너구리 5입", "짜파게티 5입"], ["IH 프라이팬 28cm", "IH 프라이팬 24cm", "IH 궁중팬 30cm"], ["530 러닝화", "993 메이드인USA", "327 스니커즈"], ["전동칫솔 리필모", "소닉케어 칫솔모 4입", "소닉케어 칫솔모 8입"], ["비타민D 2000IU", "비타민C 1000", "오메가3 90캡슐"]],
  prn:['운동화','티셔츠','밀폐용기','전기밥솥','수납함','라면','콜라','케이스','필터','티셔츠','두부','라면','프라이팬','러닝화','칫솔모','영양제'],
  notes_h:'확인이 필요한 상품부터, 세 번 탭이면 재고와 판매상태를 바꿔요',
  notes_p:'PH2 모바일 상품관리 · 셀러 채팅 앱 안의 새 탭',
  notes_li:[
-  '<b>첫 화면은 확인 필요 상품</b>앱을 열면 판매중인데 품절됐거나 재고가 10개 이하인 상품부터 보여요. 알림과 채팅에서도 바로 들어와요.',
+  '<b>첫 화면은 확인 필요 상품</b>앱을 열면 품절됐거나 재고가 10개 이하로 남은 상품부터 보여요. 알림과 채팅에서도 바로 들어와요.',
+  '<b>풀필먼트 상품은 재고 잠금</b>물류센터 재고로 자동으로 맞춰지는 상품은 여기서 재고를 바꿀 수 없다고 미리 알려주고, 일괄 변경에서도 빼요.',
   '<b>스크롤 대신 검색</b>상품명·상품번호·판매자관리코드를 한 칸에서 찾아요. 상품번호는 쉼표로 여러 개를 한 번에 찾을 수 있어요.',
   '<b>바로 저장, 바로 되돌리기</b>확인 화면 없이 저장하고 5초 안에 되돌릴 수 있어요. 바꾼 상품은 목록에 ‘수정됨’으로 남아요.',
   '<b>실패하면 이유와 다음 행동까지</b>저장하는 사이 주문이 들어와 재고가 바뀌면, 최신 값을 보여주고 다시 저장하게 해요.',
@@ -300,7 +308,7 @@ zh:{
  h_prod:'商品管理',h_chat:'聊天',h_noti:'通知',acct:'Gmarket 10个 · Auction 6个账号',ai_on:'AI自动回复已开启',
  ph_search:'商品名称、商品编号、卖家管理编码',aria_search:'搜索商品',aria_clear:'清除搜索内容',
  f_need:'待处理',f_out:'已售罄',f_low:'库存≤10件',f_on:'在售',f_stop:'已停售',f_all:'全部',
- need_desc:'在售中但已售罄，或库存在10件以下的商品',
+ need_desc:'买家端显示已售罄，或库存仅剩10件以下的商品',
  sorts:['最近修改','最近上架','销量最高'],
  qpre:'“{q}” ',count:'共<b>{n}</b>件',sel:'选择',selN:'已选{n}件',selAllDone:'<b>已全选{n}件</b>',selAllBtn:'全选{n}件搜索结果',selClear:'取消全选',
  empty_t:'没有找到相关商品',empty_d:'请检查商品编号，或将筛选条件改为“全部”。',
@@ -312,8 +320,9 @@ zh:{
  st_on:'在售',st_stop:'已停售',
  sec_status:'销售状态',sec_optstock:'各选项库存',allOut:'全部设为售罄',soldbtn:'售罄',sec_stock:'库存',q0:'0件',
  dec:'减少',inc:'增加',stockOf:'{o} 库存',stockAria:'库存数量',
- zero_warn:'库存为0，即使设为在售，买家也无法购买。请同时补充库存。',
+ zero_warn:'库存为0，买家端会显示为<b>已售罄</b>。补充库存后即可恢复销售。',
  both_sites:'将同步应用到Gmarket和Auction。',
+ star:'Star配送',ff_info:'<b>这是仓储履约星配送商品。</b>库存会按物流中心的库存自动同步，无法在此修改。如需入库，请在电脑端ESM+中申请。',ff_bulk_n:'其中{m}件为仓储履约星配送商品，库存由物流中心同步，将被排除。',ff_bulk_all:'仓储履约星配送商品的库存由物流中心同步，将被排除。',ff_skipped:' · 已排除{m}件仓储履约商品',nm_ffskip:'已排除{m}件仓储履约星配送商品。',
  close:'关闭',save_n:'保存（{n}）',no_change:'暂无修改',saved:'已保存',undo:'撤销',undone:'已撤销',
  err_t:'保存失败',err_d:'保存期间有新订单，库存已从{a}件变为{b}件。请确认最新库存后重新保存。',err_btn:'查看最新库存',
  err_banner:'库存刚刚变为{b}件，请确认后重新保存。',
@@ -333,12 +342,13 @@ zh:{
  bk:'黑色',wh:'白色',pack:'{n}包',
  n_nike:'耐克 Air Max 270',n_coke:'可口可乐 零度 355ml×24罐',
  br:['耐克','阿迪达斯','乐扣乐扣','CUCKOO福库','无印良品','不倒翁','可口可乐','三星','戴森','优衣库','圃美多','农心','Happycall','新百伦','飞利浦','钟根堂'],
- pr:['Air Max 270','凉感短袖T恤','保鲜盒10件套','IH电饭煲 6人份','PP收纳箱 大号','真拉面 温和口味 40包','零度可乐 355ml×24罐','Buds 硅胶保护套','无线吸尘器滤网','HEATTECH圆领T恤','国产大豆豆腐 3盒','辛拉面 5连包','IH平底锅 28cm','530 跑鞋','电动牙刷替换刷头','维生素D 2000IU'],
+ pr:[["Air Max 270", "Air Force 1 ’07", "Pegasus 41 跑鞋"], ["凉感短袖T恤", "AEROREADY短袖T恤", "宽松Logo T恤"], ["保鲜盒10件套", "BISFREE保鲜盒4件套", "玻璃保鲜盒6件套"], ["IH电饭煲 6人份", "IH电饭煲 10人份", "双压电饭煲 6人份"], ["PP收纳箱 大号", "PP收纳箱 小号", "PP三层抽屉柜"], ["真拉面 温和口味 40包", "真拉面 辣味 40包", "杯面 15杯"], ["零度 355ml×24罐", "原味 500ml×20瓶", "零度 1.5L×12瓶"], ["Buds 硅胶保护套", "Buds3 Pro 透明保护套", "Buds 皮革保护套"], ["无线吸尘器滤网", "V15 替换滤网", "HEPA滤网 2个装"], ["HEATTECH圆领T恤", "AIRism短袖T恤", "Supima棉T恤"], ["国产大豆豆腐 3盒", "煎用豆腐 2盒", "嫩豆腐 4盒"], ["辛拉面 5连包", "浣熊面 5连包", "Chapagetti炸酱面 5连包"], ["IH平底锅 28cm", "IH平底锅 24cm", "IH深炒锅 30cm"], ["530 跑鞋", "993 美国制造", "327 休闲鞋"], ["电动牙刷替换刷头", "Sonicare刷头 4支装", "Sonicare刷头 8支装"], ["维生素D 2000IU", "维生素C 1000", "欧米伽3 90粒"]],
  prn:['运动鞋','T恤','保鲜盒','电饭煲','收纳箱','拉面','可乐','保护套','滤网','T恤','豆腐','拉面','平底锅','跑鞋','刷头','营养补充剂'],
  notes_h:'从待处理商品开始，点三下就能修改库存和销售状态',
  notes_p:'PH2 移动端商品管理 · 卖家聊天App中的新标签页',
  notes_li:[
-  '<b>首页就是待处理商品</b>打开App，最先看到在售但已售罄、或库存在10件以下的商品。也可以从通知和聊天直接进入。',
+  '<b>首页就是待处理商品</b>打开App，最先看到已售罄、或库存仅剩10件以下的商品。也可以从通知和聊天直接进入。',
+  '<b>仓储履约商品锁定库存</b>库存由物流中心自动同步的商品，会提前提示无法在此修改，批量修改时也会自动排除。',
   '<b>用搜索代替滑动</b>商品名称、商品编号、卖家管理编码，一个搜索框即可查询。多个商品编号用逗号隔开，可一次查到。',
   '<b>直接保存，随时撤销</b>无需确认页即可保存，5秒内可撤销。修改过的商品会在列表中标记“已修改”。',
   '<b>失败时说明原因和下一步</b>如果保存期间有新订单导致库存变化，会显示最新数值，并引导重新保存。',
@@ -350,7 +360,7 @@ en:{
  h_prod:'Products',h_chat:'Chat',h_noti:'Alerts',acct:'10 Gmarket · 6 Auction accounts',ai_on:'AI replies on',
  ph_search:'Product name, product no., seller code',aria_search:'Search products',aria_clear:'Clear search',
  f_need:'Needs attention',f_out:'Sold out',f_low:'10 or fewer left',f_on:'On sale',f_stop:'Paused',f_all:'All',
- need_desc:'On sale, but sold out or down to 10 or fewer',
+ need_desc:'Showing as sold out to buyers, or down to 10 or fewer',
  sorts:['Recently edited','Recently added','Best selling'],
  qpre:'“{q}” · ',count:v=>`<b>${v.n}</b> ${v.raw===1?'product':'products'}`,sel:'Select',selN:'{n} selected',selAllDone:'<b>All {n} selected</b>',selAllBtn:'Select all {n} results',selClear:'Deselect all',
  empty_t:'No matching products',empty_d:'Check the product number, or switch the filter to “All”.',
@@ -362,8 +372,9 @@ en:{
  st_on:'On sale',st_stop:'Paused',
  sec_status:'Sales status',sec_optstock:'Stock by option',allOut:'Mark all sold out',soldbtn:'Sold out',sec_stock:'Stock',q0:'0',
  dec:'Decrease',inc:'Increase',stockOf:'{o} stock',stockAria:'Stock quantity',
- zero_warn:'Stock is 0, so buyers can’t purchase it even when it’s on sale. Add stock as well.',
+ zero_warn:'Stock is 0, so buyers see it as <b>sold out</b>. Add stock and it’s back on sale right away.',
  both_sites:'Applies to both Gmarket and Auction.',
+ star:'Star Delivery',ff_info:'<b>This is a Fulfillment Star Delivery product.</b> Stock syncs automatically with the fulfillment center, so it can’t be changed here. Request inbound stock in ESM+ on PC.',ff_bulk_n:'{m} Fulfillment Star Delivery products will be skipped, since their stock comes from the fulfillment center.',ff_bulk_all:'Fulfillment Star Delivery products will be skipped, since their stock comes from the fulfillment center.',ff_skipped:' · {m} fulfillment products skipped',nm_ffskip:'Skipped {m} Fulfillment Star Delivery products.',
  close:'Close',save_n:'Save ({n})',no_change:'No changes',saved:'Saved',undo:'Undo',undone:'Change undone',
  err_t:'Couldn’t save',err_d:'An order came in while saving, so stock changed from {a} to {b}. Check the latest stock and save again.',err_btn:'See latest stock',
  err_banner:'Stock just changed to {b}. Check it and save again.',
@@ -383,12 +394,13 @@ en:{
  bk:'Black',wh:'White',pack:v=>`${v.n} ${v.n==='1'?'pack':'packs'}`,
  n_nike:'Nike Air Max 270',n_coke:'Coca-Cola Zero 355ml × 24 cans',
  br:['Nike','Adidas','Lock&Lock','Cuckoo','MUJI','Ottogi','Coca-Cola','Samsung','Dyson','Uniqlo','Pulmuone','Nongshim','Happycall','New Balance','Philips','Chong Kun Dang'],
- pr:['Air Max 270','Cooling short-sleeve tee','Airtight container 10-piece set','IH rice cooker, 6 servings','PP storage box, large','Jin Ramen mild, 40 pack','Zero Cola 355ml × 24 cans','Buds silicone case','Cordless vacuum filter','HEATTECH crew neck tee','Korean soybean tofu, 3 pack','Shin Ramyun, 5 pack','IH frying pan 28cm','530 running shoes','Electric toothbrush heads','Vitamin D 2000IU'],
+ pr:[["Air Max 270", "Air Force 1 ’07", "Pegasus 41 running shoes"], ["Cooling short-sleeve tee", "AEROREADY tee", "Oversized logo tee"], ["Airtight container 10-piece set", "BISFREE containers, 4 pcs", "Glass containers, 6 pcs"], ["IH rice cooker, 6 servings", "IH rice cooker, 10 servings", "Twin Pressure cooker, 6 servings"], ["PP storage box, large", "PP storage box, small", "PP 3-drawer chest"], ["Jin Ramen mild, 40 pack", "Jin Ramen spicy, 40 pack", "Cup Noodle, 15 cups"], ["Zero 355ml × 24 cans", "Original 500ml × 20 bottles", "Zero 1.5L × 12 bottles"], ["Buds silicone case", "Buds3 Pro clear case", "Buds leather case"], ["Cordless vacuum filter", "V15 replacement filter", "HEPA filter, 2 pack"], ["HEATTECH crew neck tee", "AIRism short-sleeve tee", "Supima cotton tee"], ["Korean soybean tofu, 3 pack", "Firm tofu, 2 pack", "Soft tofu, 4 pack"], ["Shin Ramyun, 5 pack", "Neoguri, 5 pack", "Chapagetti, 5 pack"], ["IH frying pan 28cm", "IH frying pan 24cm", "IH wok 30cm"], ["530 running shoes", "993 Made in USA", "327 sneakers"], ["Electric toothbrush heads", "Sonicare brush heads, 4 pack", "Sonicare brush heads, 8 pack"], ["Vitamin D 2000IU", "Vitamin C 1000", "Omega-3, 90 capsules"]],
  prn:['sneakers','tee','containers','rice cooker','storage box','ramen','cola','case','filter','tee','tofu','ramen','frying pan','running shoes','brush heads','supplement'],
  notes_h:'Start with what needs attention. Three taps to change stock or sales status.',
  notes_p:'PH2 Mobile product management · a new tab in the seller chat app',
  notes_li:[
-  '<b>Products that need attention come first</b>The app opens on products that are on sale but sold out or down to 10 or fewer. Alerts and chats link straight in.',
+  '<b>Products that need attention come first</b>The app opens on products that are sold out or down to 10 or fewer. Alerts and chats link straight in.',
+  '<b>Fulfillment stock is locked</b>Products whose stock syncs from the fulfillment center say upfront that it can’t be edited here, and are skipped in bulk changes.',
   '<b>Search instead of scrolling</b>Find products by name, product number, or seller code in one box. Separate product numbers with commas to find several at once.',
   '<b>Save right away, undo right away</b>No confirmation step. Sellers can undo within 5 seconds, and changed products stay marked “Edited” in the list.',
   '<b>When saving fails, say why and what to do</b>If an order changes the stock while saving, the app shows the latest number and lets the seller save again.',
@@ -411,7 +423,7 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function h(s){let x=2166136261;for(let i=0;i<s.length;i++){x^=s.charCodeAt(i);x=Math.imul(x,16777619)}return x>>>0}
 
 /* ---------- data ---------- */
-const COUNTS={need:15870,out:3921,low:12408,on:1903211,stop:228852,all:2148392};
+const COUNTS={need:16329,out:3921,low:12408,on:1899290,stop:245181,all:2148392};
 const FILTERS=['need','out','low','on','stop','all'];
 const WARN=new Set(['need','out','low']);
 const CODEP=['NK','AD','LL','CK','MJ','OT','CC','SS','DS','UQ','PM','NS','HC','NB','PH','CD'];
@@ -420,29 +432,53 @@ const COLORS=['#3b5bdb','#0ca678','#f08c00','#e64980','#7048e8','#1098ad','#d948
 const cache=new Map();
 function makeProduct(id,q){
  if(cache.has(id))return cache.get(id);
- const s=h('p'+id),b=s%16,r=(s>>>5)%16;
+ const s=h('p'+id),r=(s>>>5)%16,b=r,v=(s>>>24)%3; /* 브랜드-상품 짝 맞춤, 상품별 3가지 변형 */
  const r1=(s>>>9)%100,r2=(s>>>15)%100;
  const status=r1<11?'stop':'on';
  const base=r2<4?0:r2<12?1+(s%10):11+(s%900);
  const set=OPTSETS[(s>>>3)%OPTSETS.length];
  let opts=null;
  if(set)opts=set.map((k,i)=>({k,stock:base===0?0:Math.max(0,Math.round(base*((h(id+k)%60)+20)/100/set.length*1.6)-(r2<12&&i===0?base:0))}));
- const p={id,b,r,q:q||'',price:(39+(s%600))*100,status,stock:opts?null:base,opts,
-  sites:(s>>>27)%3===0?['G']:(s>>>27)%3===1?['A']:['G','A'],color:COLORS[(s>>>12)%COLORS.length],code:`${CODEP[b]}-${String(s%99999).padStart(5,'0')}`,edited:false};
+ const p={id,b,r,v,ff:h('ff'+id)%100<14,q:q||'',price:(39+(s%600))*100,status,stock:opts?null:base,opts,
+  sites:['G','A'],color:COLORS[(s>>>12)%COLORS.length],code:`${CODEP[b]}-${String(s%99999).padStart(5,'0')}`,edited:false};
+ p.star=p.ff||h('sd'+id)%100<10; /* 스타배송 = 풀필먼트(재고 잠금) + 판매자 스타배송(일반 수정 가능) */
  cache.set(id,p);return p;
 }
-function pname(p){if(p.nk)return t('n_'+p.nk);if(p.q)return `${D('br')[p.b]} ${p.q} ${D('prn')[p.r]}`;return `${D('br')[p.b]} ${D('pr')[p.r]}`}
+/* 상품 유형별 픽토그램 */
+const ICON={
+ shoe:'<path d="M3 15.5h17.2c.5 0 .8-.4.8-.8 0-1.7-1.4-2.8-3.2-3.2L14 10.5 11.8 7H8.2L6.5 9.8H3z"/><path d="M3 15.5V18h18v-2.5M10 10.8l1.3 1.3M12.2 9.8l1.3 1.3"/>',
+ tee:'<path d="M8.5 4 3.5 7l2 4 2-1v10h9V10l2 1 2-4-5-3c-.4 1.6-1.9 2.7-3.5 2.7S8.9 5.6 8.5 4z"/>',
+ box:'<rect x="4" y="10" width="16" height="9" rx="2"/><path d="M3 10h18V7.5a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1z"/><path d="M10 13.5h4"/>',
+ cooker:'<path d="M4 11.5h16V17a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3z"/><path d="M4 11.5C4 8.5 7.6 6 12 6s8 2.5 8 5.5"/><path d="M10.5 4h3"/><circle cx="12" cy="15.8" r="1.3"/>',
+ bin:'<rect x="3" y="5.5" width="18" height="4.5" rx="1"/><path d="M5 10v8.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V10M10 13.5h4"/>',
+ bowl:'<path d="M3 12h18a9 8 0 0 1-18 0z"/><path d="M9 12V4.5M13 12V3.5M17.5 4.5 15 12"/>',
+ bottle:'<path d="M10 2.5h4v3l1.6 2.8V20a1.5 1.5 0 0 1-1.5 1.5h-4.2A1.5 1.5 0 0 1 8.4 20V8.3L10 5.5z"/><path d="M8.4 12h7.2M8.4 16.5h7.2"/>',
+ buds:'<rect x="4" y="7" width="16" height="12" rx="6"/><path d="M4.5 11.5h15"/><circle cx="12" cy="15.3" r="1"/>',
+ filter:'<ellipse cx="12" cy="6" rx="6" ry="2.4"/><path d="M6 6v12c0 1.3 2.7 2.4 6 2.4s6-1.1 6-2.4V6M9.5 9.2v9M12 9.5v9M14.5 9.2v9"/>',
+ tofu:'<path d="M4 9.5 12 6l8 3.5v7L12 20l-8-3.5z"/><path d="M4 9.5 12 13l8-3.5M12 13v7"/>',
+ pan:'<circle cx="10" cy="13" r="7"/><circle cx="10" cy="13" r="3.5"/><path d="M15.5 8.5 21.5 4"/>',
+ brush:'<path d="M5 21 15.5 8"/><rect x="13" y="2.5" width="8" height="5" rx="1.5" transform="rotate(38 17 5)"/>',
+ pill:'<rect x="6" y="8" width="12" height="13" rx="2"/><rect x="7" y="3" width="10" height="5" rx="1"/><path d="M10 14.5h4M12 12.5v4"/>'
+};
+const CAT={shoe:'#3b6fd8',tee:'#7a5af5',box:'#1f9d6b',cooker:'#1f9d6b',pan:'#1f9d6b',bin:'#1098ad',bowl:'#d08700',tofu:'#d08700',bottle:'#d08700',buds:'#5b6b84',filter:'#5b6b84',brush:'#0e9a94',pill:'#0e9a94'};
+const PR_ICON=['shoe','tee','box','cooker','bin','bowl','bottle','buds','filter','tee','tofu','bowl','pan','shoe','brush','pill'];
+const NK_ICON={nike:'shoe',coke:'bottle'};
+/* 스타배송 배지: 실제 서비스 배지 톤(남색 원 + 금색 별, 보라 글자)을 그대로 따름 */
+function starBadge(){return `<span class="pill star"><svg viewBox="0 0 16 16" aria-hidden="true"><defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4b3fe0"/><stop offset="1" stop-color="#1d1a86"/></linearGradient></defs><circle cx="8" cy="8" r="8" fill="url(#sg)"/><path d="M2.5 8.3h4" stroke="#c9c4ff" stroke-width=".8" opacity=".7"/><path d="M8.6 3.6 9.5 7.2 13 8.1 9.5 9 8.6 12.6 7.7 9 4.2 8.1 7.7 7.2z" fill="#ffd66b"/><circle cx="5.6" cy="5.2" r=".6" fill="#ffd66b"/><circle cx="5.4" cy="11" r=".5" fill="#ffd66b"/></svg>${t('star')}</span>`}
+function thumb(p){const k=p.nk?NK_ICON[p.nk]:PR_ICON[p.r];return `<span class="thumb" style="--c:${CAT[k]}" aria-hidden="true"><svg viewBox="0 0 24 24">${ICON[k]}</svg></span>`}
+function pname(p){if(p.nk)return t('n_'+p.nk);if(p.q)return `${D('br')[p.b]} ${p.q} ${D('prn')[p.r]}`;return `${D('br')[p.b]} ${D('pr')[p.r][p.v]}`}
 function optLabel(k){let m;if((m=k.match(/^(bk|wh)(\d+)$/)))return t(m[1])+'/'+m[2];if((m=k.match(/^p(\d)$/)))return t('pack',{n:m[1]});return k}
 const total=p=>p.opts?p.opts.reduce((a,o)=>a+o.stock,0):p.stock;
 function matches(f,p){const n=total(p);
- if(f==='need')return p.status==='on'&&n<=10;if(f==='low')return n>0&&n<=10;if(f==='out')return n===0;if(f==='on')return p.status==='on';if(f==='stop')return p.status==='stop';return true}
+ const on=p.status==='on';
+ if(f==='need')return on&&n<=10;if(f==='out')return on&&n===0;if(f==='low')return on&&n>0&&n<=10;if(f==='on')return on&&n>0;if(f==='stop')return !on;return true}
 function itemAt(key,f,q,i){
- for(let k=0;k<80;k++){const id=String(4900000000+(h(key+':'+i+':'+k)%99999999));const p=makeProduct(id,q);if(matches(f,p))return p}
+ for(let k=0;k<200;k++){const id=String(4900000000+(h(key+':'+i+':'+k)%99999999));const p=makeProduct(id,q);const nk=p.r+'-'+p.v;if(matches(f,p)&&(!st.names.has(nk)||(k>=120&&!st.items.includes(p)))){st.names.add(nk);return p}}
  return makeProduct(String(4900000000+(h(key+':'+i)%99999999)),q);
 }
 
 /* ---------- state ---------- */
-let st={f:'need',sort:0,q:'',items:[],count:0,loading:false,selMode:false,sel:new Set(),selAll:false,key:''};
+let st={names:new Set(),f:'need',sort:0,q:'',items:[],count:0,loading:false,selMode:false,sel:new Set(),selAll:false,key:''};
 let undoFn=null,newNoti=0,sheetFn=null;
 let notis=[{kind:'stock',n:COUNTS.need,time:'t_9am'}];
 const recent={ko:[...I18N.ko.recentList],zh:[...I18N.zh.recentList],en:[...I18N.en.recentList]};
@@ -454,7 +490,7 @@ function queryCount(){
  const n=12+h(st.q.toLowerCase())%4800;return Math.max(1,Math.round(n*COUNTS[st.f]/COUNTS.all*8));
 }
 function reset(){
- st.key=`${st.f}|${st.sort}|${st.q}`;st.items=[];st.sel=new Set();st.selAll=false;
+ st.key=`${st.f}|${st.sort}|${st.q}`;st.items=[];st.names=new Set();st.sel=new Set();st.selAll=false;
  if(st.q&&isNumQuery(st.q)){st.items=st.q.split(/[,\s]+/).filter(Boolean).slice(0,50).map(n=>makeProduct(n.padStart(10,'0').slice(-10)));st.count=st.items.length;render();return}
  st.count=Math.min(queryCount(),COUNTS[st.f]);render();loadMore(true);
 }
@@ -468,15 +504,19 @@ function loadMore(first){
 function renderChips(){
  $('#chips').innerHTML=FILTERS.map(k=>`<button class="chip ${st.f===k?'on':''} ${WARN.has(k)?'warn':''}" data-f="${k}" role="tab" aria-selected="${st.f===k}">${t('f_'+k)}<b>${shortN(COUNTS[k])}</b></button>`).join('');
 }
-function stockPill(p){const n=total(p);if(n===0)return `<span class="pill out">${t('pill_out')}</span>`;return `<span class="pill ${n<=10?'low':''}">${t('pill_stock',{n:fmt(n)})}</span>`}
+/* 색은 조치가 필요할 때만: 품절(진한 빨강), 재고 10개 이하(연한 빨강). 판매중은 배지 없이 재고만, 판매중지는 카드 딤드 */
+function statePills(p){const n=total(p);
+ if(p.status==='stop')return `<span class="pill stop">${t('st_stop')}</span><span class="pill">${t('pill_stock',{n:fmt(n)})}</span>`;
+ if(n===0)return `<span class="pill out">${t('pill_out')}</span>`;
+ return `<span class="pill ${n<=10?'low':''}">${t('pill_stock',{n:fmt(n)})}</span>`}
 function itemHTML(p){
  const s=st.sel.has(p.id)||st.selAll,nm=pname(p);
- return `<button class="item ${s?'sel':''}" data-id="${p.id}">
+ return `<button class="item ${s?'sel':''} ${p.status==='stop'?'off':''}" data-id="${p.id}">
   <span class="cbox">${s?'✓':''}</span>
-  <span class="thumb" style="background:${p.color}">${esc([...nm][0])}</span>
+  ${thumb(p)}
   <span class="info"><div class="nm">${esc(nm)}${p.edited?`<span class="edtag">${t('edited')}</span>`:''}</div>
-   <div class="meta">${p.sites.map(x=>`<span class="s ${x.toLowerCase()}">${x}</span>`).join('')}<span>${p.id}</span>${p.opts?`<span>· ${t('opts',{n:p.opts.length})}</span>`:''}</div>
-   <div class="bot"><span class="pill ${p.status}">${t('st_'+p.status)}</span>${stockPill(p)}<span class="price">${won(p.price)}</span></div></span></button>`;
+   <div class="meta"><span>${p.id}</span>${p.opts?`<span>· ${t('opts',{n:p.opts.length})}</span>`:''}</div>
+   <div class="bot">${statePills(p)}${p.star?starBadge():''}<span class="price">${won(p.price)}</span></div></span></button>`;
 }
 function render(){
  renderChips();
@@ -536,21 +576,26 @@ function changeCount(){
  if(cur.opts)cur.opts.forEach((o,i)=>{if(draft.opts[i].stock!==o.stock)c++});else if(draft.stock!==cur.stock)c++;
  return c;
 }
+function ffStock(p){
+ const rows=p.opts?p.opts.map(o=>`<div class="orow"><div class="on1"><b>${optLabel(o.k)}</b></div><span class="${o.stock===0?'z':''}" style="font-weight:700">${o.stock===0?t('pill_out'):fmt(o.stock)}</span></div>`).join('')
+  :`<div class="orow"><div class="on1"><b>${t('sec_stock')}</b></div><span class="${p.stock===0?'z':''}" style="font-weight:700">${p.stock===0?t('pill_out'):fmt(p.stock)}</span></div>`;
+ return `<div class="sec">${t(p.opts?'sec_optstock':'sec_stock')}</div><div class="infobox">${t('ff_info')}</div>${rows}`;
+}
 function renderDetail(){
  sheetFn=renderDetail;
  const p=cur,ch=changeCount(),nm=pname(p);
  const dTotal=draft.opts?draft.opts.reduce((a,o)=>a+o.stock,0):draft.stock;
- const stockUI=p.opts?`<div class="sec">${t('sec_optstock')} <button id="allOut">${t('allOut')}</button></div>${draft.opts.map((o,i)=>`<div class="orow ${o.stock!==p.opts[i].stock?'chg':''}"><div class="on1"><b>${optLabel(o.k)}</b><span class="${o.stock===0?'z':''}">${o.stock===0?t('pill_out'):t('pill_stock',{n:fmt(o.stock)})}</span></div>
+ const stockUI=p.ff?ffStock(p):p.opts?`<div class="sec">${t('sec_optstock')} <button id="allOut">${t('allOut')}</button></div>${draft.opts.map((o,i)=>`<div class="orow ${o.stock!==p.opts[i].stock?'chg':''}"><div class="on1"><b>${optLabel(o.k)}</b><span class="${o.stock===0?'z':''}">${o.stock===0?t('pill_out'):t('pill_stock',{n:fmt(o.stock)})}</span></div>
    ${o.stock>0?`<button class="soldbtn" data-out="${i}">${t('soldbtn')}</button>`:''}<div class="step"><button data-d="${i}" data-v="-1" aria-label="${t('dec')}">−</button><input inputmode="numeric" type="number" data-i="${i}" value="${o.stock}" aria-label="${esc(t('stockOf',{o:optLabel(o.k)}))}"><button data-d="${i}" data-v="1" aria-label="${t('inc')}">+</button></div></div>`).join('')}`
   :`<div class="sec">${t('sec_stock')}</div><div class="step big"><button data-d="s" data-v="-1" aria-label="${t('dec')}">−</button><input inputmode="numeric" type="number" data-i="s" value="${draft.stock}" aria-label="${t('stockAria')}"><button data-d="s" data-v="1" aria-label="${t('inc')}">+</button></div>
    <div class="quick"><button data-q="0">${t('q0')}</button><button data-q="+10">+10</button><button data-q="+50">+50</button><button data-q="+100">+100</button></div>`;
  openSheet(`${errNote?`<div class="errbox">${t('err_banner',{b:fmt(errNote)})}</div>`:''}
-  <div class="ph"><span class="thumb" style="background:${p.color}">${esc([...nm][0])}</span><div><div class="nm">${esc(nm)}</div><div class="meta">${p.sites.join('·')} ${p.id} · ${p.code} · ${won(p.price)}</div></div></div>
+  <div class="ph">${thumb(p)}<div><div class="nm">${esc(nm)}</div><div class="meta">${p.star?starBadge()+' ':''}${p.id} · ${p.code} · ${won(p.price)}</div></div></div>
   <div class="sec">${t('sec_status')}</div>
   <div class="segc"><button class="${draft.status==='on'?'on':''}" data-st="on">${t('st_on')}</button><button class="${draft.status==='stop'?'on stopc':''}" data-st="stop">${t('st_stop')}</button></div>
-  ${draft.status==='on'&&dTotal===0?`<div class="warnbox">${t('zero_warn')}</div>`:''}
+  ${!p.ff&&draft.status==='on'&&dTotal===0?`<div class="warnbox">${t('zero_warn')}</div>`:''}
   ${stockUI}
-  ${p.sites.length>1&&ch?`<div class="sitenote">${t('both_sites')}</div>`:''}`,
+  ${ch?`<div class="sitenote">${t('both_sites')}</div>`:''}`,
   `<button id="cClose">${t('close')}</button><button class="pri" id="cSave" ${ch?'':'disabled'}>${ch?t('save_n',{n:ch}):t('no_change')}</button>`);
  const B=$('#sbody');
  B.querySelectorAll('[data-st]').forEach(b=>b.onclick=()=>{draft.status=b.dataset.st;renderDetail()});
@@ -594,6 +639,7 @@ function bulkStatus(s){
 }
 function bulkStock(){
  const n=st.selAll?st.count:st.sel.size;let mode='set',val='';
+ const ffN=st.selAll?0:st.items.filter(p=>st.sel.has(p.id)&&p.ff).length;
  const draw=()=>{
   sheetFn=()=>{const el=$('#bv');if(el)val=el.value;draw()};
   openSheet(`<h3>${t('bs_t',{n:fmt(n)})}</h3><p class="desc">${t('bs_d')}</p>
@@ -601,6 +647,7 @@ function bulkStock(){
   <div class="sec">${t(mode==='set'?'bs_set_l':'bs_add_l')}</div>
   <div class="step big" style="padding:0 14px"><input id="bv" inputmode="numeric" type="number" placeholder="0" value="${esc(val)}" style="width:100%;text-align:left"><span style="color:var(--sub)">${t('unit')}</span></div>
   ${mode==='set'?`<div class="quick"><button data-qv="0">${t('bs_q0')}</button><button data-qv="10">${t('bs_q10')}</button><button data-qv="100">${t('bs_q100')}</button></div>`:''}
+  ${st.selAll?`<div class="infobox" style="margin-top:12px">${t('ff_bulk_all')}</div>`:(ffN?`<div class="infobox" style="margin-top:12px">${t('ff_bulk_n',{m:ffN})}</div>`:'')}
   ${st.selAll?`<div class="warnbox">${t('b_all_warn')}</div>`:''}`,
   `<button id="bCancel">${t('cancel')}</button><button class="pri" id="bOk">${t('apply')}</button>`);
   $('#sbody').querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{mode=b.dataset.m;val=$('#bv').value;draw()});
@@ -608,20 +655,20 @@ function bulkStock(){
   $('#bCancel').onclick=closeSheet;
   $('#bOk').onclick=()=>{const v=parseInt($('#bv').value,10);if(isNaN(v)){$('#bv').focus();return}closeSheet();
    const f=x=>mode==='set'?Math.max(0,v):Math.max(0,x+v);
-   runBulk(p=>{if(p.opts)p.opts.forEach(o=>o.stock=f(o.stock));else p.stock=f(p.stock)},mode==='set'?{k:'set',v:fmt(Math.max(0,v))}:{k:'add',v:(v>0?'+':'')+v})};
+   runBulk(p=>{if(p.ff)return false;if(p.opts)p.opts.forEach(o=>o.stock=f(o.stock));else p.stock=f(p.stock)},mode==='set'?{k:'set',v:fmt(Math.max(0,v))}:{k:'add',v:(v>0?'+':'')+v},true)};
  };draw();
 }
-function runBulk(fn,label){
+function runBulk(fn,label,skipFF){
  if(st.selAll){
   const n=st.count;const job={kind:'job',n,label,pct:5,time:'t_now'};notis.unshift(job);renderNoti();
-  st.items.forEach(p=>{fn(p);p.edited=true});st.selMode=false;st.selAll=false;render();
+  st.items.forEach(p=>{if(fn(p)!==false)p.edited=true});st.selMode=false;st.selAll=false;render();
   showToast(t('bulk_start',{n:fmt(n)}));
-  const iv=setInterval(()=>{job.pct+=18;if(job.pct>=100){clearInterval(iv);const fail=Math.round(n*0.004);job.kind='done';job.ok=n-fail;job.fail=fail;delete job.pct;job.new=true;newNoti++;showToast(t('bulk_done'))}renderNoti()},700);
+  const iv=setInterval(()=>{job.pct+=18;if(job.pct>=100){clearInterval(iv);const fail=Math.round(n*0.004),skip=skipFF?Math.round(n*0.12):0;job.kind='done';job.skip=skip;job.ok=n-fail-skip;job.fail=fail;delete job.pct;job.new=true;newNoti++;showToast(t('bulk_done'))}renderNoti()},700);
   return;
  }
  const ts=st.items.filter(p=>st.sel.has(p.id)),snap=ts.map(p=>[p,JSON.parse(JSON.stringify({status:p.status,stock:p.stock,opts:p.opts,edited:p.edited}))]);
- ts.forEach(p=>{fn(p);p.edited=true});st.selMode=false;st.sel=new Set();render();
- showToast(t('done_n',{n:ts.length,label:lab(label)}),()=>{snap.forEach(([p,b])=>Object.assign(p,b));render();showToast(t('undone'))});
+ let skipped=0;ts.forEach(p=>{if(fn(p)===false)skipped++;else p.edited=true});st.selMode=false;st.sel=new Set();render();
+ showToast(t('done_n',{n:ts.length-skipped,label:lab(label)})+(skipped?t('ff_skipped',{m:skipped}):''),()=>{snap.forEach(([p,b])=>Object.assign(p,b));render();showToast(t('undone'))});
 }
 $('#aStop').onclick=()=>bulkStatus('stop');$('#aResume').onclick=()=>bulkStatus('on');$('#aStock').onclick=bulkStock;
 
@@ -632,15 +679,15 @@ function renderNoti(){
  $('#nlist').innerHTML=notis.map((n,i)=>{
   if(n.kind==='stock')return `<button class="nitem" data-ni="${i}"><b>${t('nt_stock')}</b>${t('nm_stock',{n:fmt(n.n)})} <span class="go">${t('n_go')}</span><br><span>${t(n.time)}</span></button>`;
   if(n.kind==='job')return `<div class="nitem"><b>${t('nt_job')}</b>${t('nm_job',{n:fmt(n.n),label:lab(n.label)})}<br><span>${t(n.time)}</span><div class="progress"><i style="width:${Math.min(100,n.pct)}%"></i></div></div>`;
-  return `<div class="nitem ${n.new?'new':''}"><b>${t('nt_done')}</b>${t('nm_done',{label:lab(n.label),a:fmt(n.ok),b:fmt(n.fail)})}${n.fail?`<br>${t('nm_fail')}`:''}<br><span>${t(n.time)}</span></div>`;
+  return `<div class="nitem ${n.new?'new':''}"><b>${t('nt_done')}</b>${t('nm_done',{label:lab(n.label),a:fmt(n.ok),b:fmt(n.fail)})}${n.skip?`<br>${t('nm_ffskip',{m:fmt(n.skip)})}`:''}${n.fail?`<br>${t('nm_fail')}`:''}<br><span>${t(n.time)}</span></div>`;
  }).join('');
  $('#nlist').querySelectorAll('[data-ni]').forEach(b=>b.onclick=()=>{st.f='need';st.q='';$('#q').value='';$('#sbox').classList.remove('has');go('prod');reset()});
  const d=$('#ndot');d.style.display=newNoti?'block':'none';d.textContent=newNoti;
 }
 
 /* ---------- chat ---------- */
-const alertP=makeProduct('4901215508');Object.assign(alertP,{nk:'nike',opts:[{k:'bk260',stock:2},{k:'bk265',stock:0},{k:'bk270',stock:7},{k:'wh260',stock:14}],stock:null,status:'on'});
-const p2=makeProduct('4900876189');Object.assign(p2,{nk:'coke',opts:null,stock:640,status:'on',failOnce:true});
+const alertP=makeProduct('4901215508');Object.assign(alertP,{nk:'nike',opts:[{k:'bk260',stock:2},{k:'bk265',stock:0},{k:'bk270',stock:7},{k:'wh260',stock:14}],stock:null,status:'on',ff:false});
+const p2=makeProduct('4900876189');Object.assign(p2,{nk:'coke',opts:null,stock:640,status:'on',ff:false,failOnce:true});
 const AVA=['#e64980','#1098ad','#7048e8','#5c940d'],UNREAD=[1,0,2,0];
 function renderChat(){
  $('#chatlist').innerHTML=`<div class="alertcard"><div class="h">${t('al_h')}</div><b>${t('al_b',{p:esc(pname(alertP)),o:optLabel('bk265')})}</b><button id="goFix">${t('al_btn')}</button></div>`+
