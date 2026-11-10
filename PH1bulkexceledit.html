@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PH1 · ESM+ 상품 엑셀 일괄수정 데모</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f3f5;--card:#fff;--line:#e2e4e8;--line2:#eef0f3;--text:#222;--sub:#5f6670;--muted:#9aa0a8;
+  --blue:#1d6ff2;--blue-d:#1559c9;--blue-bg:#eef4ff;--red:#e5372f;--red-bg:#fff0ef;--green:#11955f;--green-bg:#e9f8f0;
+  --amber:#c77700;--amber-bg:#fff6e0;--hdr:#1c1c1c;--th:#f7f8fa;--lock:#f1f2f4;--edit:#fffbea;--chg:#ffe9a8;--xl:#1f7244;
+  --shadow:0 8px 30px rgba(20,30,50,.18);
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141619;--card:#1d2024;--line:#33373d;--line2:#2a2d32;--text:#e9ebee;--sub:#aab1ba;--muted:#7c838c;
+  --blue:#4b8dff;--blue-d:#6aa1ff;--blue-bg:#1b2a44;--red:#ff6b63;--red-bg:#3a2220;--green:#3fcf8e;--green-bg:#183327;
+  --amber:#ffb44a;--amber-bg:#3a2e17;--hdr:#0d0e10;--th:#24272c;--lock:#26292e;--edit:#2f2a1a;--chg:#5a4a14;--xl:#2c8a57;--shadow:0 8px 30px rgba(0,0,0,.5);
+}}
+:root[data-theme="dark"]{
+  --bg:#141619;--card:#1d2024;--line:#33373d;--line2:#2a2d32;--text:#e9ebee;--sub:#aab1ba;--muted:#7c838c;
+  --blue:#4b8dff;--blue-d:#6aa1ff;--blue-bg:#1b2a44;--red:#ff6b63;--red-bg:#3a2220;--green:#3fcf8e;--green-bg:#183327;
+  --amber:#ffb44a;--amber-bg:#3a2e17;--hdr:#0d0e10;--th:#24272c;--lock:#26292e;--edit:#2f2a1a;--chg:#5a4a14;--xl:#2c8a57;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font:13px/1.5 "Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.demo-ribbon{background:var(--blue);color:#fff;text-align:center;font-size:12px;padding:5px 10px}
+header.top{height:46px;background:var(--hdr);color:#fff;display:flex;align-items:center;gap:22px;padding:0 18px;position:sticky;top:0;z-index:20}
+.logo{font-weight:800;font-size:17px;letter-spacing:-.3px}
+header nav{display:flex;gap:16px;color:#c9ccd1;font-size:13px}
+header .right{margin-left:auto;display:flex;gap:14px;align-items:center;font-size:12px;color:#ddd}
+header .right .pill{border:1px solid #5b8dff;color:#8fb2ff;border-radius:10px;padding:0 6px;font-size:10px}
+.wrap{display:flex;min-height:calc(100vh - 70px)}
+aside.side{width:168px;flex:none;background:var(--card);border-right:1px solid var(--line);padding:14px 12px}
+.side h4{margin:6px 0 10px;font-size:13px;display:flex;justify-content:space-between}
+.side a{display:block;padding:5px 0;color:var(--sub);text-decoration:none;font-size:12px}
+.side a.on{color:var(--blue);font-weight:500}
+.side .grp{border-top:1px solid var(--line);margin-top:12px;padding-top:10px;font-weight:700;font-size:13px;color:var(--text)}
+.side .grp div{padding:9px 0;border-bottom:1px solid var(--line2);display:flex;justify-content:space-between}
+main{flex:1;min-width:0;padding:18px 22px 60px}
+h1{font-size:20px;margin:0 0 14px;letter-spacing:-.4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:6px}
+.stats{display:flex;gap:0;padding:16px 10px;flex-wrap:wrap}
+.stat{flex:1;min-width:110px;display:flex;gap:10px;align-items:center;padding:4px 14px}
+.stat i{width:34px;height:34px;border-radius:50%;background:var(--lock);display:grid;place-items:center;font-style:normal;font-size:12px;color:var(--sub);font-weight:700}
+.stat.on i{background:var(--blue);color:#fff}
+.stat small{display:block;color:var(--sub);font-size:11px}
+.stat b{font-size:17px}.stat.on b{color:var(--blue)}
+.filter{margin-top:12px;padding:16px 22px}
+.frow{display:flex;align-items:center;padding:9px 0;border-bottom:1px solid var(--line2);gap:20px}
+.frow:last-child{border:0}
+.frow label{width:90px;color:var(--sub);flex:none}
+.frow input[type=text]{width:min(560px,100%);height:32px;border:1px solid var(--line);border-radius:3px;padding:0 10px;background:var(--card)}
+.chk{display:flex;gap:16px;flex-wrap:wrap}
+.chk span{display:flex;gap:5px;align-items:center}
+.list{margin-top:12px;padding:18px 22px}
+.lhead{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.lhead h2{font-size:15px;margin:0 auto 0 0}.lhead h2 em{font-style:normal;color:var(--blue)}
+.btn{height:32px;padding:0 12px;border:1px solid var(--line);background:var(--card);border-radius:3px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{border-color:#b9bec6}
+.btn.pri{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn.pri:hover{background:var(--blue-d)}
+.btn.pri:disabled{opacity:.45;cursor:not-allowed}
+.btn.xl{border-color:var(--xl);color:var(--xl);font-weight:500}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--sub)}
+.xlicon{width:15px;height:15px;border-radius:2px;background:var(--xl);color:#fff;font-size:10px;font-weight:800;display:grid;place-items:center}
+.new{background:var(--red);color:#fff;font-size:9px;font-weight:700;border-radius:8px;padding:0 5px;line-height:14px}
+.toolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.toolbar .btn{height:30px;font-size:12px}
+.toolbar .sp{margin-left:auto}
+.dd{position:relative}
+.ddmenu{position:absolute;right:0;top:36px;background:var(--card);border:1px solid var(--line);border-radius:6px;box-shadow:var(--shadow);width:270px;z-index:30;padding:6px;display:none}
+.ddmenu.open{display:block}
+.ddmenu button{display:flex;width:100%;text-align:left;border:0;background:none;padding:9px 10px;border-radius:4px;gap:10px;align-items:flex-start}
+.ddmenu button:hover{background:var(--blue-bg)}
+.ddmenu .n{width:20px;height:20px;border-radius:50%;background:var(--blue);color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;flex:none;margin-top:1px}
+.ddmenu .n.g{background:var(--muted)}
+.ddmenu b{display:block;font-weight:500}.ddmenu small{color:var(--sub);font-size:11px}
+.ddmenu hr{border:0;border-top:1px solid var(--line2);margin:4px 0}
+.coach{display:flex;gap:10px;align-items:center;background:var(--blue-bg);border:1px solid color-mix(in srgb,var(--blue) 30%,transparent);border-radius:6px;padding:10px 14px;margin-bottom:12px;color:var(--text)}
+.coach ol{display:flex;gap:6px;margin:0;padding:0;list-style:none;flex-wrap:wrap}
+.coach li{background:var(--card);border-radius:12px;padding:1px 9px;font-size:12px}
+.coach .x{margin-left:auto;border:0;background:none;color:var(--sub)}
+.tscroll{overflow-x:auto;border-top:2px solid var(--text)}
+table.grid{border-collapse:collapse;width:100%;min-width:980px}
+table.grid th{background:var(--th);font-weight:500;color:var(--sub);padding:10px 8px;border-bottom:1px solid var(--line);font-size:12px;white-space:nowrap}
+table.grid td{padding:9px 8px;border-bottom:1px solid var(--line2);text-align:center;font-size:12px;vertical-align:middle}
+table.grid td.tl{text-align:left}table.grid td.tr{text-align:right}
+.mini{display:inline-block;border:1px solid var(--line);border-radius:3px;padding:1px 6px;font-size:11px;margin:0 2px;color:var(--sub)}
+.pno{display:flex;gap:4px;align-items:center;justify-content:center}
+.pno a{color:var(--blue);text-decoration:underline;font-size:12px}
+.site{font-weight:800;font-size:11px}.site.g{color:#14a34a}.site.a{color:#e5372f}
+.sub{font-size:11px;color:var(--muted)}
+.tag{display:inline-block;border-radius:3px;padding:1px 6px;font-size:11px}
+.ch-직접{background:var(--lock);color:var(--sub)}.ch-API{background:var(--blue-bg);color:var(--blue)}.ch-셀링툴{background:var(--amber-bg);color:var(--amber)}
+.st-판매가능{color:var(--green)}.st-판매중지{color:var(--sub)}.st-판매불가{color:var(--red)}
+.low{color:var(--red);font-weight:700}
+tr.flash td{animation:flash 2.4s ease-out}
+@keyframes flash{0%,30%{background:var(--chg)}100%{background:transparent}}
+.pager{display:flex;justify-content:center;gap:14px;padding:14px;color:var(--sub)}.pager b{color:var(--blue)}
+
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(10,14,20,.45);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+.modal.open{display:flex}
+.mbox{background:var(--card);border-radius:10px;box-shadow:var(--shadow);width:min(640px,100%);max-height:calc(100vh - 40px);display:flex;flex-direction:column}
+.mbox.wide{width:min(1100px,100%)}
+.mhead{display:flex;align-items:center;padding:18px 22px 0;gap:18px}
+.mhead h3{margin:0;font-size:17px}
+.mhead .x{margin-left:auto;border:0;background:none;font-size:22px;line-height:1;color:var(--sub)}
+.tabs{display:flex;gap:20px;border-bottom:1px solid var(--line);margin:12px 22px 0}
+.tab{border:0;background:none;padding:8px 0 10px;color:var(--sub);font-size:14px;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab.on{color:var(--blue);border-color:var(--blue);font-weight:700}
+.mbody{padding:18px 22px;overflow:auto}
+.mfoot{padding:14px 22px;border-top:1px solid var(--line2);display:flex;gap:8px;justify-content:flex-end;align-items:center}
+.mfoot .info{margin-right:auto;color:var(--sub);font-size:12px}
+.fl{font-weight:700;margin:16px 0 8px;font-size:13px}.fl:first-child{margin-top:0}
+.radios{display:flex;gap:8px;flex-wrap:wrap}
+.radio{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:6px;padding:9px 12px;cursor:pointer}
+.radio.on{border-color:var(--blue);background:var(--blue-bg)}
+.radio.dis{opacity:.45;cursor:not-allowed}
+.types{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.type{border:1px solid var(--line);border-radius:8px;padding:12px;text-align:left;background:var(--card)}
+.type.on{border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue);background:var(--blue-bg)}
+.type b{display:block;font-size:13px}.type small{color:var(--sub);font-size:11px}
+.cols{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
+.cols span{font-size:11px;background:var(--edit);border:1px solid color-mix(in srgb,var(--amber) 35%,transparent);border-radius:3px;padding:0 5px}
+.inp{height:34px;border:1px solid var(--line);border-radius:4px;padding:0 10px;width:100%;background:var(--card)}
+.note{background:var(--th);border-radius:6px;padding:10px 12px;color:var(--sub);font-size:12px;margin-top:14px}
+.note li{margin:2px 0}
+table.hist{width:100%;border-collapse:collapse}
+table.hist th{font-weight:500;color:var(--sub);font-size:12px;padding:8px;border-bottom:1px solid var(--line);text-align:left;background:var(--th)}
+table.hist td{padding:10px 8px;border-bottom:1px solid var(--line2);font-size:12px}
+.bar{height:5px;background:var(--line2);border-radius:3px;overflow:hidden;width:100px}
+.bar i{display:block;height:100%;background:var(--blue);transition:width .2s}
+.empty{text-align:center;color:var(--muted);padding:34px 0}
+
+/* sheet (excel sim) */
+.xlhead{background:var(--xl);color:#fff;border-radius:10px 10px 0 0;padding:10px 18px;display:flex;align-items:center;gap:10px}
+.xlhead b{font-weight:500}
+.xlhead .x{margin-left:auto;border:0;background:none;color:#fff;font-size:22px}
+.legend{display:flex;gap:14px;align-items:center;font-size:12px;color:var(--sub);padding:10px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.legend i{display:inline-block;width:12px;height:12px;border:1px solid var(--line);vertical-align:-2px;margin-right:4px}
+.sheetwrap{overflow:auto;max-height:56vh}
+table.sheet{border-collapse:collapse;font-size:12px;min-width:100%}
+table.sheet th,table.sheet td{border:1px solid var(--line);padding:0;height:30px;white-space:nowrap}
+table.sheet thead th{background:var(--th);font-weight:500;color:var(--sub);padding:0 8px;position:sticky;top:0;z-index:1}
+table.sheet thead tr.letters th{height:20px;font-size:10px;color:var(--muted);font-weight:400;top:0}
+table.sheet thead tr.names th{top:20px}
+table.sheet thead th.ed{background:var(--edit);color:var(--text)}
+table.sheet td.rn{background:var(--th);color:var(--muted);text-align:center;width:34px;font-size:11px}
+table.sheet td.lk{background:var(--lock);color:var(--sub);padding:0 8px}
+table.sheet td.ed input{border:0;background:transparent;height:30px;padding:0 8px;width:100%;min-width:90px}
+table.sheet td.ed.name input{min-width:260px}
+table.sheet td.ed.chg{background:var(--chg)}
+table.sheet td.ed input:focus{outline:2px solid var(--xl);outline-offset:-2px}
+
+/* upload steps */
+.steps{display:flex;gap:0;margin:16px 22px 0}
+.steps div{flex:1;text-align:center;font-size:12px;color:var(--muted);padding-bottom:8px;border-bottom:3px solid var(--line2)}
+.steps div.on{color:var(--blue);border-color:var(--blue);font-weight:700}
+.steps div.done{color:var(--text);border-color:color-mix(in srgb,var(--blue) 40%,transparent)}
+.drop{border:2px dashed var(--line);border-radius:10px;padding:26px;text-align:center;color:var(--sub)}
+.filecard{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-top:12px;text-align:left}
+.filecard .ic{width:34px;height:40px;background:var(--xl);border-radius:4px;color:#fff;display:grid;place-items:center;font-weight:800;font-size:12px}
+.filecard div{flex:1}
+.sum{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.sum div{border-radius:8px;padding:12px;background:var(--th)}
+.sum b{display:block;font-size:20px}
+.sum .e{background:var(--red-bg)}.sum .e b{color:var(--red)}
+.sum .w{background:var(--amber-bg)}.sum .w b{color:var(--amber)}
+.sum .o{background:var(--green-bg)}.sum .o b{color:var(--green)}
+.issue td{vertical-align:top}
+.lv{font-size:11px;font-weight:700;border-radius:3px;padding:1px 6px;white-space:nowrap}
+.lv.err{background:var(--red-bg);color:var(--red)}.lv.warn{background:var(--amber-bg);color:var(--amber)}.lv.ok{background:var(--green-bg);color:var(--green)}
+.diff{font-size:12px}.diff s{color:var(--muted)}.diff b{font-weight:500}
+.msgs div{font-size:12px}.msgs .err{color:var(--red)}.msgs .warn{color:var(--amber)}
+.seg{display:flex;gap:6px;margin-bottom:10px}
+.seg button{border:1px solid var(--line);background:var(--card);border-radius:14px;padding:2px 10px;font-size:12px}
+.seg button.on{background:var(--text);color:var(--card);border-color:var(--text)}
+.bigbar{height:10px;background:var(--line2);border-radius:5px;overflow:hidden;margin:18px 0 8px}
+.bigbar i{display:block;height:100%;background:var(--blue);width:0;transition:width .15s}
+.result{text-align:center;padding:10px 0 4px}
+.result h4{font-size:19px;margin:8px 0 4px}
+.toast{position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);background:#222;color:#fff;padding:11px 18px;border-radius:8px;opacity:0;transition:.25s;z-index:99;font-size:13px;pointer-events:none;max-width:90vw}
+.toast.show{opacity:1;transform:translateX(-50%)}
+@media (max-width:760px){aside.side{display:none}header nav{display:none}.types{grid-template-columns:1fr}.sum{grid-template-columns:1fr 1fr}main{padding:12px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* language switcher */
+html[lang="zh-CN"] body{font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei","Noto Sans KR",sans-serif}
+.lang{position:relative}
+.langbtn{display:flex;align-items:center;gap:6px;height:28px;padding:0 10px 0 8px;border:1px solid #4a4e55;border-radius:14px;background:transparent;color:#eceef1;font-size:12px}
+.langbtn:hover,.langbtn[aria-expanded="true"]{border-color:#8fb2ff;color:#fff}
+.langbtn svg{width:16px;height:16px;flex:none}
+.langbtn .car{font-size:9px;opacity:.7}
+.langmenu{position:absolute;right:0;top:36px;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);padding:5px;min-width:168px;display:none;z-index:40}
+.langmenu.open{display:block}
+.langmenu button{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;border:0;background:none;padding:9px 10px;border-radius:5px;text-align:left;font-size:13px}
+.langmenu button:hover{background:var(--blue-bg)}
+.langmenu button small{color:var(--muted);font-size:11px}
+.langmenu button[aria-checked="true"]{color:var(--blue);font-weight:700}
+.langmenu button[aria-checked="true"] small::before{content:"✓ ";color:var(--blue)}
+@media (max-width:760px){header .right .hm{display:none}}
+/* 모달이 열려 있어도 언어를 바꿀 수 있도록 헤더를 모달 위로 */
+header.top{z-index:55}
+.modal{padding-top:84px}
+.mbox{max-height:calc(100vh - 104px)}
+</style>
+</head>
+<body>
+<div class="demo-ribbon" data-i18n="ribbon"></div>
+<header class="top">
+  <div class="logo">ESM PLUS</div>
+  <nav><span data-i18n="nav.0"></span><span data-i18n="nav.1"></span><span data-i18n="nav.2"></span><span data-i18n="nav.3"></span></nav>
+  <div class="right">
+    <span class="pill" data-i18n="master"></span><span><b>test4plan</b><span data-i18n="sir"></span></span>
+    <span class="hm" data-i18n="logout"></span><span class="hm" data-i18n="help"></span><span class="hm" data-i18n="cs"></span>
+    <div class="lang">
+      <button class="langbtn" id="langBtn" aria-haspopup="true" aria-expanded="false" data-i18n-aria="langAria">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>
+        <span id="langCur">한국어</span><span class="car">▾</span>
+      </button>
+      <div class="langmenu" id="langMenu" role="menu">
+        <button role="menuitemradio" data-lang="ko">한국어<small>KO</small></button>
+        <button role="menuitemradio" data-lang="zh">简体中文<small>ZH</small></button>
+        <button role="menuitemradio" data-lang="en">English<small>EN</small></button>
+      </div>
+    </div>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="side">
+    <h4><span data-i18n="sideTitle"></span><span>⌃</span></h4>
+    <a class="on" data-i18n="side.0"></a><a data-i18n="side.1"></a><a data-i18n="side.2"></a><a data-i18n="side.3"></a><a data-i18n="side.4"></a><a data-i18n="side.5"></a><a data-i18n="side.6"></a><a data-i18n="side.7"></a><a data-i18n="side.8"></a><a data-i18n="side.9"></a>
+    <div class="grp"><div><span data-i18n="grp.0"></span><span>⌄</span></div><div><span data-i18n="grp.1"></span><span>⌄</span></div><div><span data-i18n="grp.2"></span><span>⌄</span></div><div><span data-i18n="grp.3"></span><span>⌄</span></div><div><span data-i18n="grp.4"></span><span>⌄</span></div><div><span data-i18n="grp.5"></span><span>⌄</span></div></div>
+  </aside>
+  <main>
+    <h1 data-i18n="h1"></h1>
+    <div class="card stats" id="stats"></div>
+    <div class="card filter">
+      <div class="frow"><label data-i18n="fNo"></label><input type="text" data-i18n-ph="phNo"></div>
+      <div class="frow"><label data-i18n="fKw"></label><input type="text" data-i18n-ph="phKw"></div>
+      <div class="frow"><label data-i18n="fSt"></label><div class="chk"><span><input type="checkbox"><span data-i18n="all"></span></span><span><input type="checkbox"><span data-tv="판매가능"></span></span><span><input type="checkbox"><span data-tv="판매불가"></span></span><span><input type="checkbox"><span data-tv="판매중지"></span></span><span><input type="checkbox"><span data-i18n="skuOut"></span></span></div></div>
+    </div>
+
+    <div class="card list">
+      <div class="lhead">
+        <h2 id="listTitle"></h2>
+        <button class="btn" data-i18n="sort"></button>
+        <button class="btn" data-i18n="perPage"></button>
+        <button class="btn"><span class="xlicon">X</span><span data-i18n="xlDown"></span></button>
+        <div class="dd">
+          <button class="btn xl" id="ddBtn" aria-haspopup="true" aria-expanded="false"><span class="xlicon">X</span><span data-i18n="xlBulk"></span> <span class="new">NEW</span> ⌄</button>
+          <div class="ddmenu" id="ddMenu" role="menu">
+            <button data-act="down"><span class="n">1</span><span><b data-i18n="dd1t"></b><small data-i18n="dd1s"></small></span></button>
+            <button data-act="up"><span class="n">2</span><span><b data-i18n="dd2t"></b><small data-i18n="dd2s"></small></span></button>
+            <hr>
+            <button data-act="hist"><span class="n g">≡</span><span><b data-i18n="dd3t"></b><small data-i18n="dd3s"></small></span></button>
+          </div>
+        </div>
+      </div>
+      <div class="coach" id="coach"><b data-i18n="xlBulk"></b><ol><li data-i18n="coach.0"></li><li data-i18n="coach.1"></li><li data-i18n="coach.2"></li><li data-i18n="coach.3"></li></ol><button class="x" data-i18n-aria="close" onclick="this.parentNode.remove()">✕</button></div>
+      <div class="toolbar">
+        <button class="btn" data-i18n="tb.0"></button><button class="btn" data-i18n="tb.1"></button><button class="btn" data-i18n="tb.2"></button><button class="btn" data-i18n="tb.3"></button><button class="btn" data-i18n="tb.4"></button><button class="btn" data-i18n="tb.5"></button>
+        <span class="sp sub" id="selInfo"></span>
+      </div>
+      <div class="tscroll">
+        <table class="grid">
+          <thead><tr><th><input type="checkbox" id="chkAll" data-i18n-aria="selectAll"></th><th data-i18n="th.0"></th><th data-i18n="th.1"></th><th data-i18n="th.2"></th><th data-i18n="th.3"></th><th data-i18n="th.4"></th><th data-i18n="th.5"></th><th data-i18n="th.6"></th><th data-i18n="th.7"></th><th data-i18n="th.8"></th><th data-i18n="th.9"></th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div class="pager"><b>1</b><span>2</span><span>3</span><span>4</span><span>5</span><span>…</span><span>149</span></div>
+    </div>
+  </main>
+</div>
+
+<!-- 다운로드 / 작업내역 -->
+<div class="modal" id="mDown" role="dialog" aria-modal="true" data-i18n-aria="xlBulk">
+  <div class="mbox">
+    <div class="mhead"><h3 data-i18n="xlBulk"></h3><button class="x" data-close data-i18n-aria="close">×</button></div>
+    <div class="tabs"><button class="tab on" data-tab="req" data-i18n="tabReq"></button><button class="tab" data-tab="hist" data-i18n="dd3t"></button></div>
+    <div class="mbody" id="downBody"></div>
+    <div class="mfoot" id="downFoot"></div>
+  </div>
+</div>
+
+<!-- 엑셀 시뮬레이션 -->
+<div class="modal" id="mSheet" role="dialog" aria-modal="true" data-i18n-aria="sheetAria">
+  <div class="mbox wide">
+    <div class="xlhead"><span class="xlicon" style="background:#fff;color:var(--xl)">X</span><b id="sheetName"></b><span style="opacity:.8;font-size:12px" data-i18n="sheetNote"></span><button class="x" data-close data-i18n-aria="close">×</button></div>
+    <div class="legend"><span><i style="background:var(--lock)"></i><span data-i18n="lgLock"></span></span><span><i style="background:var(--edit)"></i><span data-i18n="lgEdit"></span></span><span><i style="background:var(--chg)"></i><span data-i18n="lgChg"></span></span><span style="margin-left:auto" id="chgCount"></span></div>
+    <div class="sheetwrap" id="sheetWrap"></div>
+    <div class="mfoot"><span class="info" data-i18n="sheetInfo"></span><button class="btn" id="fillSample" data-i18n="fillSample"></button><button class="btn pri" id="saveSheet" data-i18n="saveSheet"></button></div>
+  </div>
+</div>
+
+<!-- 업로드 -->
+<div class="modal" id="mUp" role="dialog" aria-modal="true" data-i18n-aria="dd2t">
+  <div class="mbox wide" style="width:min(860px,100%)">
+    <div class="mhead"><h3 data-i18n="dd2t"></h3><button class="x" data-close data-i18n-aria="close">×</button></div>
+    <div class="steps" id="upSteps"><div data-i18n="steps.0"></div><div data-i18n="steps.1"></div><div data-i18n="steps.2"></div></div>
+    <div class="mbody" id="upBody"></div>
+    <div class="mfoot" id="upFoot"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* =========================================================
+   i18n — 화면 문구는 모두 여기서 관리해요.
+   내부 값(판매상태·발송정책 등)은 한국어 키로 두고, 표시할 때만 번역해요.
+   ========================================================= */
+const LANGS={ko:{html:'ko',short:'한국어'},zh:{html:'zh-CN',short:'中文'},en:{html:'en',short:'English'}};
+const V={
+ '판매가능':{ko:'판매가능',zh:'可售',en:'Available'},
+ '판매중지':{ko:'판매중지',zh:'停售',en:'Suspended'},
+ '판매불가':{ko:'판매불가',zh:'不可售',en:'Blocked'},
+ '당일발송':{ko:'당일발송',zh:'当日发货',en:'Same-day dispatch'},
+ '순차발송 2일 이내':{ko:'순차발송 2일 이내',zh:'2天内发货',en:'Dispatch within 2 days'},
+ '해외발송':{ko:'해외발송',zh:'海外发货',en:'Overseas shipping'},
+ '발송일미정':{ko:'발송일미정',zh:'发货日期待定',en:'Dispatch date TBD'},
+ '사용':{ko:'사용',zh:'启用',en:'Active'},
+ '품절':{ko:'품절',zh:'售罄',en:'Sold out'},
+ '직접':{ko:'직접',zh:'直接发布',en:'Direct'},
+ 'API':{ko:'API',zh:'API',en:'API'},
+ '셀링툴':{ko:'셀링툴',zh:'第三方工具',en:'Selling tool'}
+};
+const I18N={
+ko:{
+ title:'PH1 · ESM+ 상품 엑셀 일괄수정 데모',
+ ribbon:'PH1 프로토타입 · 데모 데이터로 동작해요. 실제 상품에는 반영되지 않아요.',
+ nav:['판매자 가이드','파트너센터','스타배송','광고센터'],
+ master:'마스터',sir:'님',logout:'로그아웃',help:'도움말',cs:'고객센터상담',langAria:'언어 선택',close:'닫기',
+ sideTitle:'상품 관리',
+ side:['상품 조회/수정','상품 등록','상품 일괄등록','통합솔루션으로 상품 등록','가격비교 노출 관리','배송정보 관리','그룹 관리','템플릿 관리','판매자 공지 관리','이벤트 홍보 관리'],
+ grp:['판매 관리','정산 관리','문의/리뷰 관리','통계','스타배송','프로모션관리'],
+ h1:'상품 조회/수정',
+ stats:['전체','재고 10개 이하','판매 종료 7일','판매중','판매불가','판매중지'],statIc:['전체','10','7','판','불','중'],unit:'건',
+ fNo:'번호',phNo:'상품번호/마스터상품번호/판매자관리코드/SKU번호, 여러 개는 쉼표(,)로 구분',
+ fKw:'검색어',phKw:'상품명, 브랜드명, 제조사명을 입력해주세요.',fSt:'판매상태',all:'전체',skuOut:'SKU품절',
+ listTitle:n=>`상품목록 <em>${n}</em>건`,sort:'상품등록일순 ⌄',perPage:'한 페이지에 100개씩 ⌄',xlDown:'엑셀 다운로드',xlBulk:'엑셀 일괄수정',
+ dd1t:'엑셀 파일 받기',dd1s:'수정할 항목을 골라 현재 정보가 담긴 파일을 받아요',
+ dd2t:'수정한 엑셀 파일 올리기',dd2s:'오류를 먼저 확인한 뒤 한 번에 반영해요',
+ dd3t:'작업 내역',dd3s:'파일 생성·반영 결과를 다시 볼 수 있어요',
+ coach:['① 항목 골라 파일 받기','② 엑셀에서 수정','③ 올리고 오류 확인','④ 한 번에 반영'],
+ tb:['판매 상태 변경 ⌄','판매 기간 변경 ⌄','판매가 설정 ⌄','재고 변경','배송정보 변경','기타 정보 수정 ⌄'],
+ selInfo:n=>`선택 ${n}건`,selectAll:'전체 선택',selectItem:n=>`${n} 선택`,
+ th:['수정/복사','상품번호','상품명','등록 방식','판매가','재고수량','판매상태','발송정책','배송비','판매자 관리코드'],
+ edit:'수정',copy:'복사',optCount:n=>`옵션 ${n}개`,optStock:'옵션재고 ',free:'무료',chTip:'외부 통합 판매관리 툴로 등록한 상품',
+ types:{basic:{l:'가격·재고·판매상태',d:'가장 자주 바꾸는 항목이에요'},option:{l:'옵션 재고·추가금',d:'옵션이 있는 상품만 옵션별로 담겨요'},ship:{l:'배송정보',d:'발송정책과 배송비를 바꿔요'},info:{l:'상품명·판매자관리코드',d:'판매 이력이 있으면 검수 후 반영돼요'}},
+ cols:{price:'판매가',stock:'재고수량',status:'판매상태',add:'옵션 추가금',ostock:'옵션 재고',use:'옵션 상태',ship:'발송정책',fee:'배송비',name:'상품명',code:'판매자관리코드'},
+ tabReq:'파일 받기',qTarget:'어떤 상품을 받을까요?',selN:n=>`선택한 상품 ${n}건`,allN:n=>`검색 결과 전체 ${n}건`,
+ selHint:'목록에서 상품을 체크하면 선택한 상품만 받을 수 있어요.',qType:'무엇을 수정할까요?',fname:'파일 이름',
+ notes:['한 파일에 최대 10만 건까지 담겨요. 더 많으면 파일이 나뉘어 만들어져요.','파일은 받는 시점의 정보로 만들어져요. 받은 뒤 다른 곳에서 바뀐 값은 올릴 때 알려드려요.','데모에서는 검색 결과 전체를 고르면 목록의 12건으로 만들어져요.'],
+ downInfo:'생성까지 상품 수에 따라 수 초~수 분 걸려요',makeFile:'파일 만들기',fileReady:n=>`${n} 파일이 준비됐어요`,
+ histTh:['시간','구분','파일','수정 항목','상태',''],kindDown:'받기',kindUp:'올리기',countN:n=>`${n}건`,done:'완료',making:'파일 만드는 중',
+ okFail:(o,f)=>`성공 ${o} · 실패 ${f}`,open:'열기',viewRes:'결과 보기',histEmpty:'아직 작업 내역이 없어요.',goDown:'파일 받으러 가기',histInfo:'작업 내역은 30일 동안 보관돼요',
+ sheetAria:'엑셀 파일',sheetNote:'· 엑셀에서 연 것처럼 보여주는 화면이에요',lgLock:'회색 열: 식별용, 수정해도 반영 안 돼요',lgEdit:'노란 열: 수정할 수 있어요',lgChg:'바뀐 칸',
+ chg:n=>`바뀐 칸 ${n}개`,sheetEmpty:'담긴 상품 중 옵션이 있는 상품이 없어요.<br>옵션 재고·추가금은 옵션 상품만 파일에 담겨요.',
+ lockPid:'상품번호(G)',lockName:'상품명',lockOpt:'옵션명',lockCh:'등록 방식',
+ sheetInfo:'판매상태처럼 정해진 값이 있는 열도 엑셀처럼 직접 타이핑할 수 있어요. 잘못 입력하면 업로드 때 걸러져요.',
+ fillSample:'예시 수정값 채우기',saveSheet:'저장하고 닫기',toastSample:'예시 수정값을 채웠어요. 일부러 오류도 섞어 뒀어요.',toastSaved:'파일을 저장했어요. 이제 ② 수정한 엑셀 파일 올리기로 반영하세요.',
+ steps:['1 파일 선택','2 사전 검증','3 반영 결과'],
+ dropT:'수정한 엑셀 파일을 여기로 끌어오세요',dropS:'.xlsx · 최대 10만 건 · 20MB',pcPick:'PC에서 파일 선택',savedFiles:'데모: 저장해 둔 파일',
+ fileMeta:(l,r,c)=>`${l} · ${r}행 · 바뀐 행 ${c}개`,noSaved:'아직 저장한 파일이 없어요. ① 엑셀 파일 받기에서 파일을 받아 수정한 뒤 저장해 주세요.',
+ upInfo:'올리면 바로 반영되지 않아요. 오류를 먼저 보여드려요.',cancel:'취소',checkErr:'오류 확인하기',pcToast:'데모에서는 아래 저장해 둔 파일로 진행해요',
+ checking:n=>`${n}행을 검사하고 있어요…`,noChange:'바뀐 값이 없어요.<br>파일에서 노란 열의 값을 수정한 뒤 다시 올려 주세요.',rePick:'파일 다시 고르기',
+ sChanged:'바뀐 행',sErr:'오류 · 반영 안 됨',sWarn:'주의 · 반영됨',sOk:'정상',seg:{all:'전체',err:'오류',warn:'주의',ok:'정상'},
+ skipN:n=>`바뀌지 않은 ${n}행은 건너뛰어요`,footInfo:(e,n)=>e?`오류 ${e}건은 빼고 ${n}건만 반영돼요`:`${n}건 모두 반영할 수 있어요`,
+ reEdit:'파일 다시 수정',applyBtn:(e,n)=>e?`오류 빼고 ${n}건 반영하기`:`${n}건 반영하기`,
+ applying:'상품에 반영하고 있어요. 창을 닫아도 작업은 계속돼요.',closeLater:'닫고 나중에 확인',
+ resTitle:(o,b)=>`${o}건 반영했어요${b?`, ${b}건은 실패했어요`:''}`,rOk:'성공',rFail:'실패',rWarn:'주의 포함 성공',rSkip:'건너뜀',
+ failList:'실패한 상품과 이유',failDl:'실패 건만 엑셀로 받기',viewList:'목록에서 확인하기',failPrefix:'실패건_',failToast:'실패한 상품만 담은 파일을 열었어요',
+ applyToast:(o,b)=>`${o}건 반영했어요${b?` · 실패 ${b}건`:''}`,
+ issueTh:['상태','상품','바뀌는 값','확인할 내용'],lv:{err:'오류',warn:'주의',ok:'정상'},noIssue:'문제 없어요',blank:'(빈칸)',sep:', ',
+ v:{
+  blocked:'판매불가 상품은 수정할 수 없어요. 판매불가 사유를 먼저 해소해 주세요.',
+  stale:(l,v)=>`파일을 받은 뒤 ${l}이(가) 다른 곳에서 ${v}(으)로 바뀌었어요. 파일 값으로 덮어써요.`,
+  numOnly:l=>`${l}: 숫자만 입력할 수 있어요`,
+  priceMin:'판매가는 10원 이상이어야 해요',priceUnit:'판매가는 10원 단위로 입력해 주세요',
+  priceUp:p=>`판매가가 ${p}% 올라요. 오입력이 아닌지 확인해 주세요.`,priceDown:p=>`판매가가 ${p}% 내려가요. 오입력이 아닌지 확인해 주세요.`,
+  stockRange:'재고는 0~99,999개 사이로 입력해 주세요',
+  feeMin:'배송비는 0원 이상이어야 해요',feeUnit:'배송비는 10원 단위로 입력해 주세요',
+  addRange:(lo,hi)=>`옵션 추가금은 판매가 기준 ${lo}~${hi}원 범위로 입력해 주세요 (예시 정책)`,addUnit:'옵션 추가금은 10원 단위예요',
+  badVal:(l,v,o)=>`${l}: ‘${v}’는 쓸 수 없는 값이에요. ${o} 중에 입력해 주세요.`,
+  nameEmpty:'상품명은 비워둘 수 없어요',nameLong:'상품명은 100자 이내로 입력해 주세요',nameReview:'판매 이력이 있는 상품이라 상품명은 검수 후 반영돼요 (1영업일 내)',
+  codeLong:'판매자관리코드는 50자 이내예요',
+  useZero:u=>`재고가 0개라 ‘${u}’으로 바꿔도 구매할 수 없어요`,
+  synced:ch=>`${V[ch].ko} 연동 상품이에요. 연동 툴이 다음에 값을 보내면 이 수정이 덮어써질 수 있어요.`
+ }
+},
+zh:{
+ title:'PH1 · ESM+ 商品Excel批量修改演示',
+ ribbon:'PH1 原型 · 使用演示数据运行，不会影响真实商品。',
+ nav:['卖家指南','合作伙伴中心','Star配送','广告中心'],
+ master:'主账号',sir:'',logout:'退出登录',help:'帮助',cs:'联系客服',langAria:'选择语言',close:'关闭',
+ sideTitle:'商品管理',
+ side:['商品查询/修改','发布商品','批量发布商品','通过集成方案发布商品','比价网站展示管理','配送信息管理','分组管理','模板管理','卖家公告管理','活动推广管理'],
+ grp:['销售管理','结算管理','咨询/评价管理','数据统计','Star配送','促销管理'],
+ h1:'商品查询/修改',
+ stats:['全部','库存≤10件','7天内结束销售','在售','不可售','停售'],statIc:['全','10','7','售','禁','停'],unit:'件',
+ fNo:'编号',phNo:'商品编号/主商品编号/卖家管理编码/SKU编号，多个请用逗号(,)分隔',
+ fKw:'关键词',phKw:'请输入商品名称、品牌或制造商',fSt:'销售状态',all:'全部',skuOut:'SKU售罄',
+ listTitle:n=>`商品列表 共<em>${n}</em>件`,sort:'按发布时间排序 ⌄',perPage:'每页100条 ⌄',xlDown:'下载Excel',xlBulk:'Excel批量修改',
+ dd1t:'下载Excel文件',dd1s:'选择要修改的项目，下载包含当前数据的文件',
+ dd2t:'上传修改后的Excel文件',dd2s:'先检查错误，再一次性应用',
+ dd3t:'操作记录',dd3s:'随时查看文件生成和应用结果',
+ coach:['① 选择项目并下载','② 在Excel中修改','③ 上传并检查错误','④ 一次性应用'],
+ tb:['修改销售状态 ⌄','修改销售期限 ⌄','设置售价 ⌄','修改库存','修改配送信息','修改其他信息 ⌄'],
+ selInfo:n=>`已选 ${n} 件`,selectAll:'全选',selectItem:n=>`选择 ${n}`,
+ th:['修改/复制','商品编号','商品名称','发布方式','售价','库存数量','销售状态','发货政策','运费','卖家管理编码'],
+ edit:'修改',copy:'复制',optCount:n=>`${n}个选项`,optStock:'选项库存 ',free:'免运费',chTip:'通过外部多平台销售管理工具发布的商品',
+ types:{basic:{l:'价格·库存·销售状态',d:'最常修改的项目'},option:{l:'选项库存·选项加价',d:'仅包含有选项的商品，每个选项占一行'},ship:{l:'配送信息',d:'修改发货政策和运费'},info:{l:'商品名称·卖家管理编码',d:'有销售记录的商品需审核后生效'}},
+ cols:{price:'售价',stock:'库存数量',status:'销售状态',add:'选项加价',ostock:'选项库存',use:'选项状态',ship:'发货政策',fee:'运费',name:'商品名称',code:'卖家管理编码'},
+ tabReq:'下载文件',qTarget:'要下载哪些商品？',selN:n=>`已选商品 ${n} 件`,allN:n=>`全部搜索结果 ${n} 件`,
+ selHint:'在列表中勾选商品后，即可只下载已选商品。',qType:'要修改哪些项目？',fname:'文件名',
+ notes:['每个文件最多包含10万件商品，超出时会自动拆分为多个文件。','文件按下载时的数据生成。下载后如有数据在其他地方被修改，上传时会提示您。','演示中选择“全部搜索结果”时，将使用列表中的12件商品生成。'],
+ downInfo:'根据商品数量，生成需要几秒到几分钟',makeFile:'生成文件',fileReady:n=>`${n} 已生成`,
+ histTh:['时间','类型','文件','修改项目','状态',''],kindDown:'下载',kindUp:'上传',countN:n=>`${n} 件`,done:'已完成',making:'正在生成文件',
+ okFail:(o,f)=>`成功 ${o} · 失败 ${f}`,open:'打开',viewRes:'查看结果',histEmpty:'暂无操作记录。',goDown:'去下载文件',histInfo:'操作记录保留30天',
+ sheetAria:'Excel文件',sheetNote:'· 模拟在Excel中打开文件的效果',lgLock:'灰色列：用于识别，修改无效',lgEdit:'黄色列：可修改',lgChg:'已修改的单元格',
+ chg:n=>`已修改 ${n} 个单元格`,sheetEmpty:'所选商品中没有带选项的商品。<br>“选项库存·选项加价”文件只包含带选项的商品。',
+ lockPid:'商品编号(G)',lockName:'商品名称',lockOpt:'选项名称',lockCh:'发布方式',
+ sheetInfo:'销售状态等有固定值的列，也可以像在Excel中一样直接输入。输入错误的值会在上传时被拦截。',
+ fillSample:'填入示例修改',saveSheet:'保存并关闭',toastSample:'已填入示例修改，其中特意混入了几处错误。',toastSaved:'文件已保存。接下来请通过“② 上传修改后的Excel文件”应用修改。',
+ steps:['1 选择文件','2 预校验','3 应用结果'],
+ dropT:'将修改后的Excel文件拖到此处',dropS:'.xlsx · 最多10万件 · 20MB',pcPick:'从电脑选择文件',savedFiles:'演示：已保存的文件',
+ fileMeta:(l,r,c)=>`${l} · 共${r}行 · 已修改${c}行`,noSaved:'还没有已保存的文件。请先在“① 下载Excel文件”中下载文件，修改后保存。',
+ upInfo:'上传后不会立即生效，会先显示检查结果。',cancel:'取消',checkErr:'检查错误',pcToast:'演示中请使用下方已保存的文件继续',
+ checking:n=>`正在检查 ${n} 行…`,noChange:'没有检测到修改。<br>请修改文件中黄色列的值后重新上传。',rePick:'重新选择文件',
+ sChanged:'已修改行',sErr:'错误 · 不会应用',sWarn:'注意 · 会应用',sOk:'正常',seg:{all:'全部',err:'错误',warn:'注意',ok:'正常'},
+ skipN:n=>`未修改的 ${n} 行将跳过`,footInfo:(e,n)=>e?`将排除 ${e} 件错误，仅应用 ${n} 件`:`${n} 件均可应用`,
+ reEdit:'重新修改文件',applyBtn:(e,n)=>e?`排除错误，应用 ${n} 件`:`应用 ${n} 件`,
+ applying:'正在应用到商品。关闭窗口后也会继续处理。',closeLater:'关闭，稍后查看',
+ resTitle:(o,b)=>`已应用 ${o} 件${b?`，${b} 件失败`:''}`,rOk:'成功',rFail:'失败',rWarn:'成功（含注意）',rSkip:'已跳过',
+ failList:'失败商品及原因',failDl:'仅下载失败商品(Excel)',viewList:'在列表中查看',failPrefix:'失败_',failToast:'已打开仅包含失败商品的文件',
+ applyToast:(o,b)=>`已应用 ${o} 件${b?` · 失败 ${b} 件`:''}`,
+ issueTh:['状态','商品','修改内容','需确认事项'],lv:{err:'错误',warn:'注意',ok:'正常'},noIssue:'没有问题',blank:'(空)',sep:'、',
+ v:{
+  blocked:'不可售商品无法修改，请先解除不可售原因。',
+  stale:(l,v)=>`下载文件后，${l}已在其他地方被改为 ${v}，将以文件中的值覆盖。`,
+  numOnly:l=>`${l}：只能输入数字`,
+  priceMin:'售价不能低于10韩元',priceUnit:'售价须以10韩元为单位',
+  priceUp:p=>`售价将上涨 ${p}%，请确认是否输入有误。`,priceDown:p=>`售价将下降 ${p}%，请确认是否输入有误。`,
+  stockRange:'库存须在0~99,999之间',
+  feeMin:'运费不能为负数',feeUnit:'运费须以10韩元为单位',
+  addRange:(lo,hi)=>`选项加价须在 ${lo}~${hi} 韩元之间（按售价计算，示例政策）`,addUnit:'选项加价须以10韩元为单位',
+  badVal:(l,v,o)=>`${l}：“${v}”不是有效值，请输入 ${o} 之一。`,
+  nameEmpty:'商品名称不能为空',nameLong:'商品名称不能超过100个字符',nameReview:'该商品有销售记录，商品名称需审核后生效（1个工作日内）',
+  codeLong:'卖家管理编码不能超过50个字符',
+  useZero:u=>`库存为0，即使改为“${u}”也无法购买`,
+  synced:ch=>`该商品通过${V[ch].zh}对接。对接工具下次同步数据时，此修改可能会被覆盖。`
+ }
+},
+en:{
+ title:'PH1 · ESM+ Bulk Product Edit via Excel (Demo)',
+ ribbon:'PH1 prototype · Runs on demo data. Nothing is applied to real products.',
+ nav:['Seller guide','Partner center','Star Delivery','Ad center'],
+ master:'Master',sir:'',logout:'Log out',help:'Help',cs:'Contact support',langAria:'Language',close:'Close',
+ sideTitle:'Products',
+ side:['View/edit products','Register product','Bulk register','Register via integrated solution','Price comparison listing','Shipping info','Groups','Templates','Seller notices','Event promotions'],
+ grp:['Sales','Settlement','Inquiries/Reviews','Statistics','Star Delivery','Promotions'],
+ h1:'View/edit products',
+ stats:['All','Stock ≤ 10','Ending in 7 days','On sale','Blocked','Suspended'],statIc:['All','10','7','On','Blk','Off'],unit:'',
+ fNo:'Number',phNo:'Product no. / master product no. / seller code / SKU no. Separate multiple with commas (,)',
+ fKw:'Keyword',phKw:'Enter a product name, brand, or manufacturer',fSt:'Status',all:'All',skuOut:'SKU sold out',
+ listTitle:n=>`Products <em>${n}</em>`,sort:'Newest first ⌄',perPage:'100 per page ⌄',xlDown:'Download Excel',xlBulk:'Bulk edit via Excel',
+ dd1t:'Download Excel file',dd1s:'Pick what to edit and get a file with current values',
+ dd2t:'Upload edited Excel file',dd2s:'Check errors first, then apply all at once',
+ dd3t:'Job history',dd3s:'Review file creation and apply results',
+ coach:['① Pick fields & download','② Edit in Excel','③ Upload & check errors','④ Apply all at once'],
+ tb:['Change status ⌄','Change sale period ⌄','Set price ⌄','Change stock','Change shipping','Edit other info ⌄'],
+ selInfo:n=>`${n} selected`,selectAll:'Select all',selectItem:n=>`Select ${n}`,
+ th:['Edit/Copy','Product no.','Product name','Channel','Price','Stock','Status','Dispatch policy','Shipping fee','Seller code'],
+ edit:'Edit',copy:'Copy',optCount:n=>`${n} options`,optStock:'Option stock ',free:'Free',chTip:'Registered through an external multi-channel listing tool',
+ types:{basic:{l:'Price · stock · status',d:'The fields you change most'},option:{l:'Option stock · surcharge',d:'Only products with options, one row per option'},ship:{l:'Shipping',d:'Change dispatch policy and shipping fee'},info:{l:'Name · seller code',d:'Products with sales history are reviewed first'}},
+ cols:{price:'Price',stock:'Stock',status:'Status',add:'Option surcharge',ostock:'Option stock',use:'Option status',ship:'Dispatch policy',fee:'Shipping fee',name:'Product name',code:'Seller code'},
+ tabReq:'Download',qTarget:'Which products?',selN:n=>`Selected products (${n})`,allN:n=>`All search results (${n})`,
+ selHint:'Check products in the list to download only those.',qType:'What do you want to edit?',fname:'File name',
+ notes:['Each file holds up to 100,000 products. Larger sets are split into multiple files.','Files reflect data at download time. If values change elsewhere afterward, we flag them on upload.','In this demo, "All search results" uses the 12 products in the list.'],
+ downInfo:'Takes a few seconds to a few minutes, depending on volume',makeFile:'Create file',fileReady:n=>`${n} is ready`,
+ histTh:['Time','Type','File','Fields','Status',''],kindDown:'Download',kindUp:'Upload',countN:n=>`${n} items`,done:'Done',making:'Creating file',
+ okFail:(o,f)=>`${o} succeeded · ${f} failed`,open:'Open',viewRes:'View results',histEmpty:'No jobs yet.',goDown:'Go to download',histInfo:'Job history is kept for 30 days',
+ sheetAria:'Excel file',sheetNote:'· Simulates how the file looks in Excel',lgLock:'Gray columns: for reference, edits are ignored',lgEdit:'Yellow columns: editable',lgChg:'Changed cells',
+ chg:n=>`${n} cells changed`,sheetEmpty:'None of the selected products have options.<br>The option stock · surcharge file only includes products with options.',
+ lockPid:'Product no. (G)',lockName:'Product name',lockOpt:'Option',lockCh:'Channel',
+ sheetInfo:'Fixed-value columns like Status can be typed freely, just like in Excel. Invalid values are caught on upload.',
+ fillSample:'Fill sample edits',saveSheet:'Save & close',toastSample:'Sample edits filled in, with a few errors mixed in on purpose.',toastSaved:'File saved. Next, apply it via "② Upload edited Excel file".',
+ steps:['1 Choose file','2 Pre-check','3 Results'],
+ dropT:'Drag your edited Excel file here',dropS:'.xlsx · up to 100,000 rows · 20MB',pcPick:'Choose from computer',savedFiles:'Demo: saved files',
+ fileMeta:(l,r,c)=>`${l} · ${r} rows · ${c} changed`,noSaved:'No saved files yet. Download one via "① Download Excel file", edit it, then save.',
+ upInfo:'Uploading doesn’t apply changes right away. You’ll see errors first.',cancel:'Cancel',checkErr:'Check for errors',pcToast:'In this demo, continue with a saved file below',
+ checking:n=>`Checking ${n} rows…`,noChange:'No changes found.<br>Edit values in the yellow columns, then upload again.',rePick:'Choose another file',
+ sChanged:'Changed rows',sErr:'Errors · not applied',sWarn:'Warnings · applied',sOk:'OK',seg:{all:'All',err:'Errors',warn:'Warnings',ok:'OK'},
+ skipN:n=>`${n} unchanged rows will be skipped`,footInfo:(e,n)=>e?`${e} errors will be skipped; ${n} will be applied`:`All ${n} can be applied`,
+ reEdit:'Edit file again',applyBtn:(e,n)=>e?`Skip errors & apply ${n}`:`Apply ${n}`,
+ applying:'Applying to products. It keeps running even if you close this window.',closeLater:'Close and check later',
+ resTitle:(o,b)=>`Applied ${o}${b?`, ${b} failed`:''}`,rOk:'Succeeded',rFail:'Failed',rWarn:'Succeeded with warnings',rSkip:'Skipped',
+ failList:'Failed products and reasons',failDl:'Download failed items (Excel)',viewList:'View in list',failPrefix:'failed_',failToast:'Opened a file with only the failed products',
+ applyToast:(o,b)=>`Applied ${o}${b?` · ${b} failed`:''}`,
+ issueTh:['Status','Product','Change','What to check'],lv:{err:'Error',warn:'Warning',ok:'OK'},noIssue:'No issues',blank:'(blank)',sep:', ',
+ v:{
+  blocked:'Blocked products can’t be edited. Resolve the block reason first.',
+  stale:(l,v)=>`${l} was changed to ${v} elsewhere after you downloaded the file. The file value will overwrite it.`,
+  numOnly:l=>`${l}: numbers only`,
+  priceMin:'Price must be at least 10 KRW',priceUnit:'Price must be in units of 10 KRW',
+  priceUp:p=>`Price goes up ${p}%. Double-check it’s not a typo.`,priceDown:p=>`Price goes down ${p}%. Double-check it’s not a typo.`,
+  stockRange:'Stock must be between 0 and 99,999',
+  feeMin:'Shipping fee can’t be negative',feeUnit:'Shipping fee must be in units of 10 KRW',
+  addRange:(lo,hi)=>`Option surcharge must be between ${lo} and ${hi} KRW, based on the price (sample policy)`,addUnit:'Option surcharge must be in units of 10 KRW',
+  badVal:(l,v,o)=>`${l}: “${v}” isn’t a valid value. Use one of: ${o}.`,
+  nameEmpty:'Product name can’t be blank',nameLong:'Product name must be 100 characters or fewer',nameReview:'This product has sales history, so the name change is reviewed first (within 1 business day)',
+  codeLong:'Seller code must be 50 characters or fewer',
+  useZero:u=>`Stock is 0, so buyers still can’t purchase it even if set to “${u}”`,
+  synced:ch=>`This product is synced via ${ch==='API'?'API':'a selling tool'}. The tool’s next sync may overwrite this edit.`
+ }
+}
+};
+let lang='ko';
+function t(k,...a){const get=d=>k.split('.').reduce((o,p)=>o==null?o:o[p],d);let v=get(I18N[lang]);if(v==null)v=get(I18N.ko);return typeof v==='function'?v(...a):v}
+const tv=v=>V[v]?(V[v][lang]||v):v;
+const L=x=>x&&typeof x==='object'?(x[lang]||x.ko):x;
+const tl=k=>t('types.'+k+'.l'),td=k=>t('types.'+k+'.d'),cl=c=>t('cols.'+c.lk);
+
+/* ---------- 데이터 ---------- */
+const $=s=>document.querySelector(s);
+const fmt=n=>Number(n).toLocaleString('ko-KR');
+const TODAY='261109';
+const P=[
+ {id:'4901215508',aid:'F709312284',name:{ko:'하이웨스트 스포츠 레깅스',zh:'高腰运动紧身裤',en:'High-Waist Sports Leggings'},price:29900,stock:52,status:'판매가능',ch:'직접',ship:'당일발송',fee:0,code:'LEG-HW-01',sold:true,opts:[{n:{ko:'블랙/S',zh:'黑色/S',en:'Black/S'},add:0,stock:20,use:'사용'},{n:{ko:'블랙/M',zh:'黑色/M',en:'Black/M'},add:0,stock:32,use:'사용'},{n:{ko:'네이비/M',zh:'藏青色/M',en:'Navy/M'},add:1000,stock:0,use:'품절'}]},
+ {id:'4901182931',aid:'F709298811',name:{ko:'무소음 원목 탁상시계',zh:'静音实木台钟',en:'Silent Solid Wood Desk Clock'},price:18500,stock:7,status:'판매가능',ch:'셀링툴',ship:'순차발송 2일 이내',fee:3000,code:'CLK-WD-02',sold:true},
+ {id:'4901173194',aid:'F709280373',name:{ko:'코튼 오버핏 반팔티 3종',zh:'纯棉宽松短袖T恤 3款',en:'Cotton Oversized Tee (3 Styles)'},price:15900,stock:340,status:'판매가능',ch:'API',ship:'당일발송',fee:0,code:'TS-OVR-01',sold:true,opts:[{n:{ko:'화이트/L',zh:'白色/L',en:'White/L'},add:0,stock:120,use:'사용'},{n:{ko:'블랙/L',zh:'黑色/L',en:'Black/L'},add:0,stock:220,use:'사용'}]},
+ {id:'4901106949',aid:'F709244150',name:{ko:'스테인리스 진공 텀블러 600ml',zh:'不锈钢真空保温杯 600ml',en:'Stainless Vacuum Tumbler 600ml'},price:12800,stock:3,status:'판매가능',ch:'직접',ship:'당일발송',fee:2500,code:'TBL-600',sold:true},
+ {id:'4901082971',aid:'F709231007',name:{ko:'유기농 현미 4kg',zh:'有机糙米 4kg',en:'Organic Brown Rice 4kg'},price:21900,stock:88,status:'판매중지',ch:'직접',ship:'순차발송 2일 이내',fee:0,code:'RICE-OG-4',sold:false},
+ {id:'4900876189',aid:'F709102265',name:{ko:'아이폰 16 투명 젤리 케이스',zh:'iPhone 16 透明软壳手机壳',en:'iPhone 16 Clear Jelly Case'},price:6900,stock:1200,status:'판매가능',ch:'API',ship:'당일발송',fee:2500,code:'IP16-CLR',sold:true},
+ {id:'4900589386',aid:'F708977014',name:{ko:'접이식 경량 캠핑 의자',zh:'折叠轻量露营椅',en:'Foldable Lightweight Camping Chair'},price:34000,stock:0,status:'판매가능',ch:'직접',ship:'발송일미정',fee:3500,code:'CAMP-CH-1',sold:true},
+ {id:'4900511840',aid:'F708933520',name:{ko:'데일리 비타민C 1000 90정',zh:'每日维生素C 1000 90片',en:'Daily Vitamin C 1000 (90 Tablets)'},price:19800,stock:410,status:'판매가능',ch:'셀링툴',ship:'당일발송',fee:0,code:'VITC-90',sold:true},
+ {id:'4900498212',aid:'F708921188',name:{ko:'극세사 차렵이불 퀸',zh:'超细纤维夹棉被 大号',en:'Microfiber Quilted Comforter (Queen)'},price:49900,stock:25,status:'판매불가',ch:'직접',ship:'순차발송 2일 이내',fee:0,code:'BED-Q-07',sold:true},
+ {id:'4900455017',aid:'F708899903',name:{ko:'실리콘 주방 집게 2P',zh:'硅胶厨房夹 2件装',en:'Silicone Kitchen Tongs (2-Pack)'},price:5900,stock:640,status:'판매가능',ch:'직접',ship:'당일발송',fee:2500,code:'KIT-TNG-2',sold:true},
+ {id:'4900401266',aid:'F708851472',name:{ko:'무선 미니 가습기',zh:'无线迷你加湿器',en:'Cordless Mini Humidifier'},price:23900,stock:64,status:'판매중지',ch:'API',ship:'해외발송',fee:5000,code:'HUM-MINI',sold:true},
+ {id:'4900387755',aid:'F708840031',name:{ko:'키즈 레인부츠',zh:'儿童雨靴',en:'Kids’ Rain Boots'},price:27900,stock:18,status:'판매가능',ch:'직접',ship:'당일발송',fee:0,code:'KID-BOOT',sold:true,opts:[{n:'150',add:0,stock:6,use:'사용'},{n:'160',add:0,stock:12,use:'사용'}]}
+];
+const SHIPS=['당일발송','순차발송 2일 이내','해외발송','발송일미정'];
+const TYPES={
+ basic:{file:'price_stock_status',cols:[{k:'price',lk:'price',t:'num'},{k:'stock',lk:'stock',t:'num'},{k:'status',lk:'status',t:'sel',o:['판매가능','판매중지']}]},
+ option:{file:'option_stock',cols:[{k:'add',lk:'add',t:'num'},{k:'stock',lk:'ostock',t:'num'},{k:'use',lk:'use',t:'sel',o:['사용','품절']}]},
+ ship:{file:'shipping',cols:[{k:'ship',lk:'ship',t:'sel',o:SHIPS},{k:'fee',lk:'fee',t:'num'}]},
+ info:{file:'name_code',cols:[{k:'name',lk:'name',t:'text'},{k:'code',lk:'code',t:'text'}]}
+};
+/* 예시 수정값: 객체는 현재 언어로 채워요 (잘못된 값도 언어별로 자연스럽게) */
+const BAD_ST={ko:'판매중',zh:'在售',en:'On sale'},BAD_SHIP={ko:'빠른배송',zh:'极速发货',en:'Express'};
+const SAMPLES={
+ basic:[[0,'price','27900'],[1,'stock','30'],[3,'stock','150'],[4,'status','판매가능'],[6,'stock','20'],[7,'price','45000'],[8,'price','45000'],[9,'price','5955'],[10,'status',BAD_ST]],
+ option:[[2,'stock','15'],[2,'use','사용'],[3,'add','2000'],[4,'add','30000'],[5,'stock','-3'],[6,'stock','40']],
+ ship:[[0,'ship','순차발송 2일 이내'],[2,'fee','2500'],[3,'fee','3333'],[5,'ship','당일발송'],[6,'ship',BAD_SHIP]],
+ info:[[0,'name',{ko:'하이웨스트 기모 스포츠 레깅스 겨울용',zh:'高腰加绒运动紧身裤 冬季款',en:'High-Waist Fleece-Lined Sports Leggings (Winter)'}],[2,'code','TS-OVR-3P'],[4,'name',''],[5,'name',{ko:'아이폰 16 투명 젤리 케이스 슬림핏',zh:'iPhone 16 透明软壳手机壳 超薄款',en:'iPhone 16 Clear Jelly Case, Slim Fit'}]]
+};
+let sel=new Set(), jobs=[], files=[], jobSeq=1;
+let down={target:'all',type:'basic',fname:''};
+let sheet=null;
+let up={step:1,file:null,val:null,filter:'all'};
+let curTab='req';
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}
+function toast(m){const el=$('#toast');el.textContent=m;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),2600)}
+function openM(id){$(id).classList.add('open')}
+function closeM(el){el.closest('.modal').classList.remove('open')}
+const isOpen=id=>$(id).classList.contains('open');
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>closeM(b));
+document.querySelectorAll('.modal').forEach(m=>m.addEventListener('mousedown',e=>{if(e.target===m)m.classList.remove('open')}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('#langMenu').classList.contains('open')){closeLang();return}const o=[...document.querySelectorAll('.modal.open')].pop();if(o)o.classList.remove('open');$('#ddMenu').classList.remove('open')}});
+
+/* ---------- 언어 전환 ---------- */
+function applyStatic(){
+ document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=t(el.dataset.i18n));
+ document.querySelectorAll('[data-i18n-ph]').forEach(el=>el.placeholder=t(el.dataset.i18nPh));
+ document.querySelectorAll('[data-i18n-aria]').forEach(el=>el.setAttribute('aria-label',t(el.dataset.i18nAria)));
+ document.querySelectorAll('[data-tv]').forEach(el=>el.textContent=tv(el.dataset.tv));
+}
+function renderStats(){
+ const N=['16,858','7','9','186','673','15,991'],ic=t('statIc'),u=t('unit');
+ $('#stats').innerHTML=t('stats').map((l,i)=>`<div class="stat ${i?'':'on'}"><i>${ic[i]}</i><div><small>${l}</small><b>${N[i]}</b>${u}</div></div>`).join('');
+}
+function syncFileNames(){
+ // 상품명 파일: 수정하지 않은 칸은 새 언어의 상품명으로 바꾸고, 수정한 칸은 그대로 둬요
+ files.forEach(f=>{if(f.type!=='info'||f.lang===lang)return;
+  f.rows.forEach(r=>{const p=P.find(x=>x.id===r.pid),nn=p.name[lang];if(r.cur.name===r.orig.name)r.cur.name=nn;r.orig.name=nn});
+  f.lang=lang});
+}
+function setLang(l,save=true){
+ if(!I18N[l])l='ko';lang=l;
+ document.documentElement.lang=LANGS[l].html;
+ document.title=t('title');
+ $('#langCur').textContent=LANGS[l].short;
+ document.querySelectorAll('#langMenu [data-lang]').forEach(b=>b.setAttribute('aria-checked',String(b.dataset.lang===l)));
+ syncFileNames();
+ applyStatic();renderStats();
+ $('#listTitle').innerHTML=t('listTitle','14,884');
+ renderTable();
+ if(isOpen('#mDown')){const fi=$('#fname');if(curTab==='req'&&fi&&fi.value!==defName())down.fname=fi.value;setTab(curTab)}
+ if(isOpen('#mSheet')&&sheet)renderSheet();
+ if(isOpen('#mUp'))renderUp();
+ if(save){try{localStorage.setItem('esm-demo-lang',l)}catch(e){}}
+}
+function closeLang(){$('#langMenu').classList.remove('open');$('#langBtn').setAttribute('aria-expanded','false')}
+$('#langBtn').onclick=e=>{e.stopPropagation();$('#ddMenu').classList.remove('open');const m=$('#langMenu');m.classList.toggle('open');$('#langBtn').setAttribute('aria-expanded',m.classList.contains('open'))};
+$('#langMenu').onclick=e=>{e.stopPropagation();const b=e.target.closest('[data-lang]');if(!b)return;setLang(b.dataset.lang);closeLang();$('#langBtn').focus()};
+
+/* ---------- 목록 ---------- */
+function renderTable(flash=new Set()){
+ $('#tbody').innerHTML=P.map(p=>{
+  const stock=p.opts?p.opts.reduce((a,o)=>a+o.stock,0):p.stock,nm=L(p.name);
+  return `<tr class="${flash.has(p.id)?'flash':''}">
+  <td><input type="checkbox" data-id="${p.id}" ${sel.has(p.id)?'checked':''} aria-label="${esc(t('selectItem',nm))}"></td>
+  <td><span class="mini">${t('edit')}</span><span class="mini">${t('copy')}</span></td>
+  <td><div class="pno"><span class="site g">G</span><a>${p.id}</a></div><div class="pno"><span class="site a">A</span><a>${p.aid}</a></div></td>
+  <td class="tl">${esc(nm)}${p.opts?`<div class="sub">${t('optCount',p.opts.length)} · ${p.opts.map(o=>esc(L(o.n))+' '+(o.use==='품절'?tv('품절'):fmt(o.stock))).join(' / ')}</div>`:''}</td>
+  <td><span class="tag ch-${p.ch}" ${p.ch==='셀링툴'?`title="${esc(t('chTip'))}"`:''}>${tv(p.ch)}</span></td>
+  <td class="tr">${fmt(p.price)}</td>
+  <td class="${stock<=10?'low':''}">${p.opts?t('optStock'):''}${fmt(stock)}</td>
+  <td class="st-${p.status}">${tv(p.status)}</td>
+  <td>${tv(p.ship)}</td><td>${p.fee?fmt(p.fee):t('free')}</td><td>${p.code}</td></tr>`}).join('');
+ $('#selInfo').textContent=t('selInfo',sel.size);
+ $('#chkAll').checked=sel.size===P.length;
+}
+$('#tbody').addEventListener('change',e=>{const id=e.target.dataset.id;if(!id)return;e.target.checked?sel.add(id):sel.delete(id);$('#selInfo').textContent=t('selInfo',sel.size);$('#chkAll').checked=sel.size===P.length});
+$('#chkAll').onchange=e=>{sel=e.target.checked?new Set(P.map(p=>p.id)):new Set();renderTable()};
+
+/* ---------- 드롭다운 ---------- */
+$('#ddBtn').onclick=e=>{e.stopPropagation();closeLang();const m=$('#ddMenu');m.classList.toggle('open');$('#ddBtn').setAttribute('aria-expanded',m.classList.contains('open'))};
+document.addEventListener('click',()=>{$('#ddMenu').classList.remove('open');closeLang()});
+$('#ddMenu').onclick=e=>{const b=e.target.closest('button');if(!b)return;const a=b.dataset.act;
+ if(a==='down'){down.target=sel.size?'sel':'all';down.fname='';openDown('req')}
+ if(a==='hist')openDown('hist');
+ if(a==='up')openUp();
+};
+
+/* ---------- 파일 받기 / 작업 내역 ---------- */
+function openDown(tab){openM('#mDown');setTab(tab)}
+document.querySelectorAll('#mDown .tab').forEach(x=>x.onclick=()=>setTab(x.dataset.tab));
+function setTab(x){curTab=x;document.querySelectorAll('#mDown .tab').forEach(b=>b.classList.toggle('on',b.dataset.tab===x));x==='req'?renderReq():renderHist()}
+function defName(){return `${TYPES[down.type].file}_${TODAY}`}
+function renderReq(){
+ const n=sel.size;
+ $('#downBody').innerHTML=`
+  <div class="fl">${t('qTarget')}</div>
+  <div class="radios">
+   <label class="radio ${down.target==='sel'?'on':''} ${n?'':'dis'}"><input type="radio" name="tg" value="sel" ${down.target==='sel'?'checked':''} ${n?'':'disabled'}>${t('selN',n)}</label>
+   <label class="radio ${down.target==='all'?'on':''}"><input type="radio" name="tg" value="all" ${down.target==='all'?'checked':''}>${t('allN','14,884')}</label>
+  </div>
+  ${n?'':`<div class="sub" style="margin-top:6px">${t('selHint')}</div>`}
+  <div class="fl">${t('qType')}</div>
+  <div class="types">${Object.keys(TYPES).map(k=>`<button type="button" class="type ${down.type===k?'on':''}" data-type="${k}"><b>${tl(k)}</b><small>${td(k)}</small><div class="cols">${TYPES[k].cols.map(c=>`<span>${cl(c)}</span>`).join('')}</div></button>`).join('')}</div>
+  <div class="fl">${t('fname')}</div>
+  <input class="inp" id="fname" value="${esc(down.fname||defName())}">
+  <ul class="note">${t('notes').map(x=>`<li>${x}</li>`).join('')}</ul>`;
+ $('#downFoot').innerHTML=`<span class="info">${t('downInfo')}</span><button class="btn" data-close2>${t('close')}</button><button class="btn pri" id="reqBtn">${t('makeFile')}</button>`;
+ $('#downBody').querySelectorAll('input[name=tg]').forEach(r=>r.onchange=()=>{down.target=r.value;down.fname=$('#fname').value;renderReq()});
+ $('#downBody').querySelectorAll('.type').forEach(b=>b.onclick=()=>{const keep=$('#fname').value!==defName();down.type=b.dataset.type;down.fname=keep?$('#fname').value:'';renderReq()});
+ $('#downFoot [data-close2]').onclick=()=>$('#mDown').classList.remove('open');
+ $('#reqBtn').onclick=()=>{
+  const ids=down.target==='sel'?P.filter(p=>sel.has(p.id)).map(p=>p.id):P.map(p=>p.id);
+  const job={id:jobSeq++,kind:'down',type:down.type,ids,name:($('#fname').value.trim()||defName())+'.xlsx',status:'making',pct:0,time:now(),count:ids.length};
+  jobs.unshift(job);down.fname='';setTab('hist');
+  const iv=setInterval(()=>{job.pct=Math.min(100,job.pct+9+Math.random()*14);if(job.pct>=100){job.status='done';clearInterval(iv);toast(t('fileReady',job.name))}if(curTab==='hist'&&isOpen('#mDown'))renderHist()},220);
+ };
+}
+function now(){const d=new Date();return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`}
+function renderHist(){
+ const th=t('histTh');
+ $('#downBody').innerHTML=jobs.length?`<table class="hist"><thead><tr>${th.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${jobs.map(j=>`<tr>
+  <td>${j.time}</td><td>${t(j.kind==='down'?'kindDown':'kindUp')}</td><td>${esc(j.name)}<div class="sub">${t('countN',j.count)}</div></td><td>${tl(j.type)}</td>
+  <td>${j.kind==='down'?(j.status==='done'?`<span class="lv ok">${t('done')}</span>`:`<div class="bar"><i style="width:${j.pct}%"></i></div><span class="sub">${t('making')}</span>`):`<span class="lv ${j.fail?'warn':'ok'}">${t('okFail',j.ok,j.fail)}</span>`}</td>
+  <td>${j.kind==='down'?`<button class="btn" data-open="${j.id}" ${j.status==='done'?'':'disabled'}>${t('open')}</button>`:`<button class="btn" data-res="${j.id}">${t('viewRes')}</button>`}</td></tr>`).join('')}</tbody></table>`
+  :`<div class="empty">${t('histEmpty')}<br><button class="btn pri" style="margin-top:12px" onclick="setTab('req')">${t('goDown')}</button></div>`;
+ $('#downFoot').innerHTML=`<span class="info">${t('histInfo')}</span><button class="btn" onclick="$('#mDown').classList.remove('open')">${t('close')}</button>`;
+ $('#downBody').querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openSheet(jobs.find(j=>j.id==b.dataset.open)));
+ $('#downBody').querySelectorAll('[data-res]').forEach(b=>b.onclick=()=>{const j=jobs.find(x=>x.id==b.dataset.res);$('#mDown').classList.remove('open');up={step:3,file:j.file,val:j.val,filter:'all',done:true};openM('#mUp');renderUp()});
+}
+
+/* ---------- 엑셀 시뮬레이션 ---------- */
+function getVal(p,r,k,fl){if(k==='name')return p.name[fl]||p.name.ko;return r.oi!=null?p.opts[r.oi][k]:p[k]}
+function buildRows(type,ids){
+ const rows=[];
+ ids.forEach(id=>{const p=P.find(x=>x.id===id);
+  if(type==='option'){if(!p.opts)return;p.opts.forEach((o,oi)=>{const v={};TYPES.option.cols.forEach(c=>v[c.k]=String(o[c.k]));rows.push({pid:id,oi,opt:o.n,orig:{...v},cur:{...v}})})}
+  else{const v={};TYPES[type].cols.forEach(c=>v[c.k]=String(getVal(p,{oi:null},c.k,lang)));rows.push({pid:id,oi:null,orig:{...v},cur:{...v}})}
+ });
+ return rows;
+}
+function openSheet(job){
+ let f=files.find(x=>x.jobId===job.id);
+ if(!f){f={jobId:job.id,name:job.name,type:job.type,lang,rows:buildRows(job.type,job.ids),saved:false};files.push(f)}
+ sheet=f;$('#mDown').classList.remove('open');$('#sheetName').textContent=f.name;renderSheet();openM('#mSheet');
+}
+/* 정해진 값 열: 어떤 언어로 입력해도 같은 값으로 인식해요 */
+function normSel(c,typed){const s=typed.trim().toLowerCase();for(const o of c.o){if(o.toLowerCase()===s)return o;if(V[o]&&Object.values(V[o]).some(x=>x.toLowerCase()===s))return o}return typed}
+const cellShow=(c,v)=>c.t==='sel'&&V[v]?tv(v):v;
+const LET='ABCDEFGHIJ';
+function renderSheet(){
+ const f=sheet,tp=TYPES[f.type];
+ if(!f.rows.length){$('#sheetWrap').innerHTML=`<div class="empty">${t('sheetEmpty')}</div>`;updCount();return}
+ const lock=[t('lockPid'),t('lockName')].concat(f.type==='option'?[t('lockOpt')]:[]).concat([t('lockCh')]);
+ const all=lock.length+tp.cols.length;
+ $('#sheetWrap').innerHTML=`<table class="sheet"><thead>
+  <tr class="letters"><th></th>${[...Array(all)].map((_,i)=>`<th>${LET[i]}</th>`).join('')}</tr>
+  <tr class="names"><th>1</th>${lock.map(l=>`<th>${l}</th>`).join('')}${tp.cols.map(c=>`<th class="ed">${cl(c)}${c.t==='sel'?`<div class="sub">${c.o.map(tv).join(' / ')}</div>`:''}</th>`).join('')}</tr></thead>
+  <tbody>${f.rows.map((r,i)=>{const p=P.find(x=>x.id===r.pid),nm=L(p.name);return `<tr><td class="rn">${i+2}</td><td class="lk">${r.pid}</td><td class="lk">${esc(nm)}</td>${r.opt?`<td class="lk">${esc(L(r.opt))}</td>`:''}<td class="lk">${tv(p.ch)}</td>
+   ${tp.cols.map(c=>`<td class="ed ${c.k==='name'?'name':''} ${r.cur[c.k]!==r.orig[c.k]?'chg':''}"><input data-r="${i}" data-k="${c.k}" value="${esc(cellShow(c,r.cur[c.k]))}" ${c.t==='sel'?`list="dl-${c.k}"`:''} aria-label="${esc(nm+' '+cl(c))}"></td>`).join('')}</tr>`}).join('')}</tbody></table>
+  ${tp.cols.filter(c=>c.t==='sel').map(c=>`<datalist id="dl-${c.k}">${c.o.map(o=>`<option value="${esc(tv(o))}">`).join('')}</datalist>`).join('')}`;
+ $('#sheetWrap').querySelectorAll('input').forEach(inp=>inp.oninput=()=>{const r=f.rows[inp.dataset.r],k=inp.dataset.k,c=tp.cols.find(x=>x.k===k);r.cur[k]=c.t==='sel'?normSel(c,inp.value):inp.value;inp.parentNode.classList.toggle('chg',r.cur[k]!==r.orig[k]);updCount()});
+ updCount();
+}
+function updCount(){let n=0;sheet.rows.forEach(r=>Object.keys(r.cur).forEach(k=>{if(r.cur[k]!==r.orig[k])n++}));$('#chgCount').textContent=t('chg',n)}
+$('#fillSample').onclick=()=>{(SAMPLES[sheet.type]||[]).forEach(([i,k,v])=>{if(sheet.rows[i])sheet.rows[i].cur[k]=L(v)});renderSheet();toast(t('toastSample'))};
+$('#saveSheet').onclick=()=>{sheet.saved=true;up={step:1,file:sheet,val:null,filter:'all'};$('#mSheet').classList.remove('open');toast(t('toastSaved'))};
+
+/* ---------- 업로드 ---------- */
+function openUp(){if(up.step!==1){up={step:1,file:up.file,val:null,filter:'all'}}openM('#mUp');renderUp()}
+function stepUI(){document.querySelectorAll('#upSteps div').forEach((d,i)=>{d.className=i+1===up.step?'on':(i+1<up.step?'done':'')})}
+function renderUp(){
+ stepUI();const b=$('#upBody'),ft=$('#upFoot');
+ if(up.step===1){
+  const ready=files.filter(f=>f.saved);
+  b.innerHTML=`<div class="drop"><div style="font-size:15px;color:var(--text);font-weight:500">${t('dropT')}</div><div class="sub" style="margin:4px 0 12px">${t('dropS')}</div><button class="btn" id="pcPick">${t('pcPick')}</button></div>
+   ${ready.length?`<div class="fl" style="margin-top:18px">${t('savedFiles')}</div>${ready.map(f=>{const n=f.rows.filter(r=>Object.keys(r.cur).some(k=>r.cur[k]!==r.orig[k])).length;return `<label class="filecard"><input type="radio" name="uf" value="${files.indexOf(f)}" ${up.file===f?'checked':''}><span class="ic">XLS</span><div><b>${esc(f.name)}</b><div class="sub">${t('fileMeta',tl(f.type),f.rows.length,n)}</div></div></label>`}).join('')}`
+   :`<div class="note">${t('noSaved')} <button class="btn" style="margin-left:6px" id="goDown">${t('goDown')}</button></div>`}`;
+  ft.innerHTML=`<span class="info">${t('upInfo')}</span><button class="btn" onclick="$('#mUp').classList.remove('open')">${t('cancel')}</button><button class="btn pri" id="valBtn" ${up.file&&up.file.saved?'':'disabled'}>${t('checkErr')}</button>`;
+  $('#pcPick').onclick=()=>toast(t('pcToast'));
+  const g=$('#goDown');if(g)g.onclick=()=>{$('#mUp').classList.remove('open');down.target=sel.size?'sel':'all';openDown('req')};
+  b.querySelectorAll('input[name=uf]').forEach(r=>r.onchange=()=>{up.file=files[r.value];renderUp()});
+  $('#valBtn').onclick=()=>{up.step=2;up.val=null;renderUp();setTimeout(()=>{up.val=validate(up.file);renderUp()},900)};
+ }
+ else if(up.step===2){
+  if(!up.val){b.innerHTML=`<div class="empty">${t('checking',up.file.rows.length)}<div class="bigbar" style="width:240px;margin:14px auto"><i style="width:70%"></i></div></div>`;ft.innerHTML='';return}
+  const v=up.val,e=v.res.filter(x=>x.lv==='err').length,w=v.res.filter(x=>x.lv==='warn').length,o=v.res.filter(x=>x.lv==='ok').length;
+  if(!v.res.length){b.innerHTML=`<div class="empty">${t('noChange')}</div>`;ft.innerHTML=`<button class="btn" id="back1">${t('rePick')}</button>`;$('#back1').onclick=()=>{up.step=1;renderUp()};return}
+  const list=v.res.filter(x=>up.filter==='all'||x.lv===up.filter);
+  b.innerHTML=`<div class="sum"><div><span class="sub">${t('sChanged')}</span><b>${v.res.length}</b></div><div class="e"><span class="sub">${t('sErr')}</span><b>${e}</b></div><div class="w"><span class="sub">${t('sWarn')}</span><b>${w}</b></div><div class="o"><span class="sub">${t('sOk')}</span><b>${o}</b></div></div>
+   <div class="seg">${['all','err','warn','ok'].map(k=>`<button class="${up.filter===k?'on':''}" data-f="${k}">${t('seg.'+k)}</button>`).join('')}<span class="sub" style="margin-left:auto">${t('skipN',v.unchanged)}</span></div>
+   ${issueTable(list)}`;
+  b.querySelectorAll('[data-f]').forEach(x=>x.onclick=()=>{up.filter=x.dataset.f;renderUp()});
+  ft.innerHTML=`<span class="info">${t('footInfo',e,w+o)}</span><button class="btn" id="reEdit">${t('reEdit')}</button><button class="btn pri" id="applyBtn" ${w+o?'':'disabled'}>${t('applyBtn',e,w+o)}</button>`;
+  $('#reEdit').onclick=()=>{$('#mUp').classList.remove('open');sheet=up.file;$('#sheetName').textContent=sheet.name;renderSheet();openM('#mSheet')};
+  $('#applyBtn').onclick=()=>{up.step=3;up.pct=0;renderUp();const iv=setInterval(()=>{up.pct+=12+Math.random()*12;if(up.pct>=100){clearInterval(iv);apply()}const i=$('#upBody .bigbar i');if(i)i.style.width=Math.min(100,up.pct)+'%'},160)};
+ }
+ else if(up.step===3){
+  if(!up.done){b.innerHTML=`<div class="result"><div class="sub">${t('applying')}</div><div class="bigbar"><i style="width:${Math.min(100,up.pct||0)}%"></i></div></div>`;ft.innerHTML=`<button class="btn" onclick="$('#mUp').classList.remove('open')">${t('closeLater')}</button>`;return}
+  const v=up.val,ok=v.res.filter(x=>x.lv!=='err'),bad=v.res.filter(x=>x.lv==='err');
+  b.innerHTML=`<div class="result"><div style="font-size:30px">${bad.length?'⚠️':'✅'}</div><h4>${t('resTitle',ok.length,bad.length)}</h4><div class="sub">${esc(up.file.name)} · ${tl(up.file.type)}</div></div>
+   <div class="sum" style="margin-top:14px"><div class="o"><span class="sub">${t('rOk')}</span><b>${ok.length}</b></div><div class="e"><span class="sub">${t('rFail')}</span><b>${bad.length}</b></div><div class="w"><span class="sub">${t('rWarn')}</span><b>${ok.filter(x=>x.lv==='warn').length}</b></div><div><span class="sub">${t('rSkip')}</span><b>${v.unchanged}</b></div></div>
+   ${bad.length?`<div class="fl">${t('failList')}</div>${issueTable(bad)}`:''}`;
+  ft.innerHTML=`${bad.length?`<button class="btn" id="failDl">${t('failDl')}</button>`:''}<button class="btn pri" onclick="$('#mUp').classList.remove('open')">${t('viewList')}</button>`;
+  const fd=$('#failDl');if(fd)fd.onclick=()=>{const ids=[...new Set(bad.map(x=>x.r.pid))];const job={id:jobSeq++,kind:'down',type:up.file.type,ids,name:`${t('failPrefix')}${up.file.name}`,status:'done',pct:100,time:now(),count:ids.length};jobs.unshift(job);$('#mUp').classList.remove('open');openSheet(job);toast(t('failToast'))};
+ }
+}
+function issueTable(list){
+ return `<div style="overflow-x:auto"><table class="hist issue"><thead><tr>${t('issueTh').map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${list.map(x=>`<tr>
+  <td><span class="lv ${x.lv}">${t('lv.'+x.lv)}</span></td>
+  <td>${esc(L(x.p.name))}${x.r.opt?` <span class="sub">· ${esc(L(x.r.opt))}</span>`:''}<div class="sub">${x.r.pid} · ${tv(x.p.ch)}</div></td>
+  <td class="diff">${x.changes.map(c=>`<div>${cl(c)} <s>${show(c,x.r.orig[c.k])}</s> → <b>${show(c,x.r.cur[c.k])}</b></div>`).join('')}</td>
+  <td class="msgs">${x.issues.length?x.issues.map(i=>`<div class="${i.lv}">${i.m()}</div>`).join(''):`<span class="sub">${t('noIssue')}</span>`}</td></tr>`).join('')}</tbody></table></div>`;
+}
+function show(c,v){v=String(v);if(v.trim()==='')return t('blank');if(c.t==='num'&&/^-?\d+$/.test(v.trim()))return fmt(v.trim());if(c.t==='sel'&&V[v])return tv(v);return esc(v)}
+/* 검증 메시지는 함수로 담아 두고, 화면에 그릴 때 현재 언어로 만들어요 */
+function validate(f){
+ const tp=TYPES[f.type],res=[];let unchanged=0;
+ f.rows.forEach(r=>{
+  const p=P.find(x=>x.id===r.pid);
+  const changes=tp.cols.filter(c=>r.cur[c.k].trim()!==r.orig[c.k]);
+  if(!changes.length){unchanged++;return}
+  const issues=[],add=(lv,m)=>issues.push({lv,m});
+  if(p.status==='판매불가')add('err',()=>t('v.blocked'));
+  changes.forEach(c=>{
+   const v=r.cur[c.k].trim(),live=String(getVal(p,r,c.k,f.lang));
+   if(live!==r.orig[c.k])add('warn',()=>t('v.stale',cl(c),show(c,live)));
+   if(c.t==='num'){
+    if(!/^-?\d+$/.test(v)){add('err',()=>t('v.numOnly',cl(c)));return}
+    const n=+v,o=+r.orig[c.k];
+    if(c.k==='price'){if(n<10)add('err',()=>t('v.priceMin'));else if(n%10)add('err',()=>t('v.priceUnit'));else if(n>o*1.5){const pc=Math.round((n/o-1)*100);add('warn',()=>t('v.priceUp',pc))}else if(n<o*.3){const pc=Math.round((1-n/o)*100);add('warn',()=>t('v.priceDown',pc))}}
+    if(c.k==='stock'&&(n<0||n>99999))add('err',()=>t('v.stockRange'));
+    if(c.k==='fee'){if(n<0)add('err',()=>t('v.feeMin'));else if(n%10)add('err',()=>t('v.feeUnit'))}
+    if(c.k==='add'){const lo=-Math.floor(p.price*.5),hi=p.price;if(n<lo||n>hi)add('err',()=>t('v.addRange',fmt(lo),fmt(hi)));else if(n%10)add('err',()=>t('v.addUnit'))}
+   }
+   if(c.t==='sel'&&!c.o.includes(v))add('err',()=>t('v.badVal',cl(c),esc(v),c.o.map(tv).join(t('sep'))));
+   if(c.k==='name'){if(!v)add('err',()=>t('v.nameEmpty'));else if(v.length>100)add('err',()=>t('v.nameLong'));else if(p.sold)add('warn',()=>t('v.nameReview'))}
+   if(c.k==='code'&&v.length>50)add('err',()=>t('v.codeLong'));
+   if(c.k==='use'&&v==='사용'&&f.type==='option'&&+r.cur.stock===0)add('warn',()=>t('v.useZero',tv('사용')));
+  });
+  if(p.ch!=='직접'&&!issues.some(i=>i.lv==='err'))add('warn',()=>t('v.synced',p.ch));
+  const lv=issues.some(i=>i.lv==='err')?'err':issues.length?'warn':'ok';
+  res.push({r,p,changes,issues,lv});
+ });
+ res.sort((a,b)=>({err:0,warn:1,ok:2}[a.lv]-{err:0,warn:1,ok:2}[b.lv]));
+ return {res,unchanged};
+}
+function apply(){
+ const v=up.val,flash=new Set();
+ v.res.filter(x=>x.lv!=='err').forEach(x=>{
+  x.changes.forEach(c=>{let val=x.r.cur[c.k].trim();if(c.t==='num')val=+val;
+   if(c.k==='name'){if(!x.p.sold)x.p.name={ko:val,zh:val,en:val};return}
+   if(x.r.oi!=null)x.p.opts[x.r.oi][c.k]=val;else x.p[c.k]=val});
+  flash.add(x.p.id);
+ });
+ const bad=v.res.filter(x=>x.lv==='err').length;
+ jobs.unshift({id:jobSeq++,kind:'up',type:up.file.type,name:up.file.name,count:v.res.length,ok:v.res.length-bad,fail:bad,time:now(),file:up.file,val:v});
+ up.done=true;renderUp();renderTable(flash);
+ toast(t('applyToast',v.res.length-bad,bad));
+}
+
+/* ---------- 시작 언어: #zh·#en 링크 > 마지막 선택 > 브라우저 언어(중국어) > 한국어 ---------- */
+(function(){
+ const h=(location.hash||'').slice(1).toLowerCase();let s=null;
+ try{s=localStorage.getItem('esm-demo-lang')}catch(e){}
+ const nav=(navigator.language||'').toLowerCase();
+ setLang(I18N[h]?h:(s&&I18N[s]?s:(nav.startsWith('zh')?'zh':'ko')),false);
+})();
+</script>
+</body>
+</html>
