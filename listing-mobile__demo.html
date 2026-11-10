@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PH2 · 모바일 상품관리 데모</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --page:#e9ecf1;--bg:#f4f5f7;--card:#fff;--line:#e8eaee;--text:#191f28;--sub:#6b7684;--muted:#a3abb5;
+  --blue:#1d6ff2;--blue-bg:#e9f1ff;--red:#f04438;--red-bg:#ffefed;--green:#0e9f6e;--green-bg:#e6f7ef;--amber:#c27400;--amber-bg:#fff4dc;
+  --dim:rgba(14,20,30,.45);--chip:#f0f2f5;--sk:#eceef1;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --page:#0f1113;--bg:#141619;--card:#1e2125;--line:#2c3036;--text:#eceef1;--sub:#a1a9b3;--muted:#6f7780;
+  --blue:#4c8dff;--blue-bg:#1a2a45;--red:#ff6a5f;--red-bg:#3b2120;--green:#3fd08f;--green-bg:#17332a;--amber:#ffb84d;--amber-bg:#3b2e15;--chip:#2a2e33;--sk:#262a2f;--dim:rgba(0,0,0,.6);
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --page:#0f1113;--bg:#141619;--card:#1e2125;--line:#2c3036;--text:#eceef1;--sub:#a1a9b3;--muted:#6f7780;
+  --blue:#4c8dff;--blue-bg:#1a2a45;--red:#ff6a5f;--red-bg:#3b2120;--green:#3fd08f;--green-bg:#17332a;--amber:#ffb84d;--amber-bg:#3b2e15;--chip:#2a2e33;--sk:#262a2f;--dim:rgba(0,0,0,.6);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{margin:0;background:var(--page);color:var(--text);font:14px/1.45 "Noto Sans KR","Apple SD Gothic Neo",sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:14px 24px 24px}
+html[lang^="zh"] body{font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei","Noto Sans KR",sans-serif}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+/* language switch */
+.langbar{display:flex;gap:2px;background:var(--card);border-radius:12px;padding:4px;flex:none;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.langbar button{height:34px;padding:0 16px;border-radius:9px;font-size:13px;font-weight:500;color:var(--sub)}
+.langbar button.on{background:var(--text);color:var(--card)}
+.stage{display:flex;align-items:center;justify-content:center;gap:40px;min-height:0}
+
+.phone{width:390px;height:min(820px,calc(100vh - 100px));background:var(--bg);border-radius:44px;box-shadow:0 0 0 10px #1b1d21,0 30px 60px rgba(0,0,0,.25);overflow:hidden;position:relative;display:flex;flex-direction:column;flex:none}
+.sbar{height:40px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;font-size:13px;font-weight:700;background:var(--card);flex:none}
+.screen{flex:1;min-height:0;display:none;flex-direction:column;position:relative}
+.screen.on{display:flex}
+.apphead{background:var(--card);padding:6px 18px 10px;flex:none}
+.apphead .row{display:flex;align-items:center;gap:8px}
+.apphead h1{font-size:21px;margin:0;letter-spacing:-.5px}
+.acct{margin-left:auto;font-size:12px;color:var(--sub);background:var(--chip);border-radius:14px;padding:4px 10px;white-space:nowrap}
+.search{margin-top:10px;display:flex;align-items:center;gap:8px;background:var(--chip);border-radius:12px;padding:0 12px;height:44px}
+.search input{flex:1;border:0;background:none;outline:none;min-width:0;font-size:15px}
+.search .clr{color:var(--muted);font-size:16px;display:none}
+.search.has .clr{display:block}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:10px 18px 12px;background:var(--card);border-bottom:1px solid var(--line);flex:none;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border-radius:18px;border:1px solid var(--line);padding:6px 12px;font-size:13px;background:var(--card);white-space:nowrap}
+.chip b{font-weight:500;color:var(--sub);margin-left:3px;font-size:12px}
+.chip.on{background:var(--text);color:var(--card);border-color:var(--text)}
+.chip.on b{color:var(--card);opacity:.75}
+.chip.warn:not(.on){color:var(--red)}
+.lbar{display:flex;align-items:center;padding:10px 18px;font-size:13px;color:var(--sub);flex:none;gap:10px}
+.lbar b{color:var(--text)}
+.lbar .r{margin-left:auto;display:flex;gap:12px}
+.lbar button{color:var(--sub);font-size:13px}
+.lbar .selbtn{color:var(--blue);font-weight:500}
+.list{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:0 12px 90px}
+.needdesc{font-size:12.5px;color:var(--sub);padding:0 6px 8px;margin-top:-4px}
+.item{display:flex;gap:12px;align-items:center;background:var(--card);border-radius:14px;padding:12px;margin-bottom:8px;width:100%;text-align:left}
+.item:active{transform:scale(.99)}
+.thumb{width:52px;height:52px;border-radius:10px;flex:none;display:grid;place-items:center;font-weight:800;color:rgba(255,255,255,.95);font-size:15px}
+.item .info{flex:1;min-width:0}
+.item .nm{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.edtag{font-size:10px;font-weight:500;color:var(--blue);background:var(--blue-bg);border-radius:4px;padding:0 4px;margin-left:5px;vertical-align:1px}
+.item .meta{font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center;margin-top:1px}
+.item .meta .s{font-weight:800;font-size:10px}.s.g{color:#16a34a}.s.a{color:#e5372f}
+.item .bot{display:flex;gap:6px;align-items:center;margin-top:5px;font-size:12px}
+.pill{border-radius:6px;padding:1px 7px;font-size:11px;font-weight:500;background:var(--chip);color:var(--sub);white-space:nowrap}
+.pill.on{background:var(--green-bg);color:var(--green)}
+.pill.stop{background:var(--chip);color:var(--sub)}
+.pill.low{background:var(--red-bg);color:var(--red)}
+.pill.out{background:var(--red);color:#fff}
+.item .price{margin-left:auto;font-weight:700;font-size:13px;white-space:nowrap}
+.cbox{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);flex:none;display:none;place-items:center;color:#fff;font-size:12px}
+.selmode .cbox{display:grid}
+.item.sel .cbox{background:var(--blue);border-color:var(--blue)}
+.item.sel{box-shadow:inset 0 0 0 1.5px var(--blue)}
+.sk{height:76px;border-radius:14px;background:var(--sk);margin-bottom:8px;animation:pulse 1s infinite alternate}
+@keyframes pulse{to{opacity:.5}}
+.foot{text-align:center;font-size:12px;color:var(--muted);padding:14px 10px 4px;line-height:1.6}
+.empty{text-align:center;padding:60px 20px;color:var(--sub)}
+.empty b{display:block;color:var(--text);font-size:16px;margin-bottom:4px}
+.recent{padding:6px 18px}
+.recent h5{margin:12px 0 8px;font-size:13px;color:var(--sub);font-weight:500}
+.recent .tags{display:flex;gap:6px;flex-wrap:wrap}
+.recent .tags button{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:5px 11px;font-size:13px}
+.hint{background:var(--card);border-radius:12px;padding:12px 14px;margin-top:12px;font-size:13px;color:var(--sub);line-height:1.6}
+.hint b{color:var(--text);font-weight:500}
+.tabbar{position:absolute;left:0;right:0;bottom:0;height:72px;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:14px;z-index:5}
+.tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;color:var(--muted);gap:2px;position:relative}
+.tabbar button svg{width:24px;height:24px}
+.tabbar button.on{color:var(--text);font-weight:700}
+.tabbar .dot{position:absolute;top:8px;left:calc(50% + 6px);background:var(--red);color:#fff;font-size:9px;border-radius:8px;padding:0 4px;min-width:15px;line-height:15px}
+.actbar{position:absolute;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:10px 12px 24px;display:none;gap:8px;z-index:6}
+.actbar.on{display:flex}
+.actbar button{flex:1;height:48px;border-radius:12px;background:var(--chip);font-weight:500;font-size:14px}
+.actbar button.pri{background:var(--blue);color:#fff}
+.actbar button:disabled{opacity:.4}
+.selhead{display:none;align-items:center;gap:10px;background:var(--blue-bg);color:var(--blue);padding:9px 18px;font-size:13px;flex:none}
+.selmode .selhead{display:flex}
+.selhead button{color:var(--blue);font-weight:700;margin-left:auto;font-size:13px}
+.selhead .x{margin-left:0;color:var(--sub);font-weight:400}
+
+/* sheet */
+.dim{position:absolute;inset:0;background:var(--dim);opacity:0;pointer-events:none;transition:opacity .2s;z-index:20}
+.dim.on{opacity:1;pointer-events:auto}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--card);border-radius:22px 22px 0 0;z-index:21;transform:translateY(105%);transition:transform .28s cubic-bezier(.2,.8,.2,1);max-height:88%;display:flex;flex-direction:column}
+.sheet.on{transform:none}
+.sheet .grab{width:40px;height:4px;border-radius:2px;background:var(--line);margin:8px auto 4px;flex:none}
+.sheet .body{overflow-y:auto;padding:8px 20px 16px}
+.sheet .foot2{padding:10px 20px 26px;display:flex;gap:8px;border-top:1px solid var(--line);flex:none}
+.sheet .foot2 button{flex:1;height:52px;border-radius:14px;background:var(--chip);font-weight:700;font-size:15px}
+.sheet .foot2 button.pri{background:var(--blue);color:#fff;flex:2}
+.sheet .foot2 button:disabled{opacity:.4}
+.sheet h3{font-size:19px;margin:6px 0 4px;letter-spacing:-.4px}
+.sheet .desc{color:var(--sub);font-size:13px;margin:0 0 14px;line-height:1.6}
+.ph{display:flex;gap:12px;align-items:center;margin:4px 0 14px}
+.ph .thumb{width:60px;height:60px}
+.ph .nm{font-weight:700;font-size:16px;line-height:1.35}
+.ph .meta{font-size:12px;color:var(--muted);margin-top:2px}
+.warnbox{background:var(--amber-bg);color:var(--amber);border-radius:12px;padding:10px 12px;font-size:12.5px;margin:12px 0 0;line-height:1.55}
+.errbox{background:var(--red-bg);color:var(--red);border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.6;margin-bottom:6px}
+.sitenote{font-size:12px;color:var(--muted);margin-top:14px}
+.sec{font-size:13px;color:var(--sub);margin:16px 0 8px;display:flex;align-items:center}
+.sec button{margin-left:auto;color:var(--blue);font-size:13px}
+.segc{display:flex;background:var(--chip);border-radius:12px;padding:4px}
+.segc button{flex:1;height:42px;border-radius:9px;font-weight:500;color:var(--sub)}
+.segc button.on{background:var(--card);color:var(--text);font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.segc button.on.stopc{color:var(--red)}
+.orow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.orow:last-child{border:0}
+.orow .on1{flex:1;min-width:0}
+.orow .on1 b{font-weight:500;display:block}
+.orow .on1 span{font-size:12px;color:var(--muted)}
+.orow .on1 span.z{color:var(--red)}
+.orow.chg .on1 b::after{content:"●";color:var(--blue);font-size:8px;margin-left:5px;vertical-align:2px}
+.step{display:flex;align-items:center;background:var(--chip);border-radius:10px;height:40px}
+.step button{width:38px;height:40px;font-size:18px;color:var(--sub)}
+.step input{width:56px;text-align:center;border:0;background:none;font-weight:700;font-size:15px;outline:none;-moz-appearance:textfield}
+.step input::-webkit-outer-spin-button,.step input::-webkit-inner-spin-button{-webkit-appearance:none}
+.step.big{height:54px;justify-content:space-between}
+.step.big input{font-size:24px;width:120px}
+.step.big button{width:60px;height:54px;font-size:24px}
+.quick{display:flex;gap:6px;margin-top:8px}
+.quick button{flex:1;height:36px;border-radius:10px;border:1px solid var(--line);font-size:13px}
+.soldbtn{font-size:12px;color:var(--red);border:1px solid var(--line);border-radius:8px;padding:5px 8px;white-space:nowrap}
+.toast{position:absolute;left:16px;right:16px;bottom:88px;background:#2a2f36;color:#fff;border-radius:14px;padding:13px 16px;font-size:14px;display:flex;align-items:center;gap:10px;z-index:30;transform:translateY(20px);opacity:0;transition:.25s;pointer-events:none}
+.toast.on{opacity:1;transform:none;pointer-events:auto}
+.toast button{margin-left:auto;color:#8db7ff;font-weight:700;white-space:nowrap}
+/* chat */
+.chatlist{flex:1;overflow-y:auto;padding:4px 0 90px;background:var(--card)}
+.crow{display:flex;gap:12px;padding:12px 18px;align-items:center;width:100%;text-align:left}
+.ava{width:46px;height:46px;border-radius:50%;flex:none;display:grid;place-items:center;color:#fff;font-weight:700}
+.crow .c{flex:1;min-width:0}.crow .c b{font-weight:500}.crow .c div{color:var(--sub);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.crow .t{font-size:11px;color:var(--muted);text-align:right;white-space:nowrap}
+.crow .t i{display:inline-block;background:var(--red);color:#fff;font-style:normal;border-radius:9px;padding:0 6px;font-size:11px;margin-top:4px}
+.alertcard{margin:10px 14px;background:var(--bg);border-radius:16px;padding:14px}
+.alertcard .h{font-size:12px;color:var(--sub);margin-bottom:6px}
+.alertcard b{display:block;margin-bottom:8px}
+.alertcard button{background:var(--blue);color:#fff;border-radius:10px;padding:8px 12px;font-size:13px;font-weight:700}
+.nlist{flex:1;overflow-y:auto;padding:8px 14px 90px}
+.nitem{display:block;width:100%;text-align:left;background:var(--card);border-radius:14px;padding:14px;margin-bottom:8px;font-size:13px;line-height:1.55}
+.nitem b{display:block;font-size:14px;margin-bottom:2px}
+.nitem span{color:var(--muted);font-size:12px}
+.nitem.new{box-shadow:inset 3px 0 0 var(--blue)}
+.nitem .go{color:var(--blue);font-weight:500}
+.progress{height:6px;background:var(--chip);border-radius:3px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;background:var(--blue);transition:width .3s}
+
+/* notes */
+.notes{max-width:360px;color:var(--text)}
+.notes h2{font-size:22px;margin:0 0 6px;letter-spacing:-.5px;line-height:1.35}
+.notes p{color:var(--sub);margin:0 0 18px;font-size:14px}
+.notes ol{padding:0;margin:0;list-style:none;counter-reset:n}
+.notes li{counter-increment:n;padding:12px 0 12px 34px;position:relative;border-top:1px solid color-mix(in srgb,var(--sub) 25%,transparent);font-size:13.5px;line-height:1.6;color:var(--sub)}
+.notes li::before{content:counter(n);position:absolute;left:0;top:12px;width:22px;height:22px;border-radius:50%;background:var(--text);color:var(--page);font-size:12px;font-weight:700;display:grid;place-items:center}
+.notes li b{color:var(--text);display:block;font-size:14px}
+.notes .try{margin-top:16px;font-size:13px;color:var(--sub);background:var(--card);border-radius:12px;padding:12px 14px;line-height:1.7}
+@media (max-width:900px){.notes{display:none}}
+@media (max-width:480px){
+  body{padding:0;gap:0;justify-content:flex-start}
+  .langbar{width:100%;border-radius:0;justify-content:center;box-shadow:none;border-bottom:1px solid var(--line)}
+  .langbar button{flex:1;max-width:120px}
+  .stage{flex:1;width:100%}
+  .phone{width:100%;height:100%;border-radius:0;box-shadow:none}
+  .sbar{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="langbar" id="langbar" role="group" aria-label="Language">
+  <button data-lang="ko" class="on">한국어</button><button data-lang="zh">中文</button><button data-lang="en">English</button>
+</div>
+
+<div class="stage">
+<div class="phone" id="phone">
+  <div class="sbar"><span>9:41</span><span>●●● 5G ▮</span></div>
+
+  <section class="screen on" id="sc-prod">
+    <div class="apphead">
+      <div class="row"><h1 data-i18n="h_prod"></h1><span class="acct" data-i18n="acct"></span></div>
+      <label class="search" id="sbox"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="color:var(--muted)"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" enterkeyhint="search" autocomplete="off" data-i18n-ph="ph_search" data-i18n-aria="aria_search">
+        <button class="clr" id="qclr" data-i18n-aria="aria_clear">✕</button></label>
+    </div>
+    <div class="chips" id="chips" role="tablist"></div>
+    <div class="selhead" id="selhead"><button class="x" id="selExit">✕</button><span id="selTxt"></span><button id="selAll"></button></div>
+    <div class="lbar" id="lbar"></div>
+    <div class="list" id="list"></div>
+    <div id="recentPane" class="list" style="display:none"></div>
+  </section>
+
+  <section class="screen" id="sc-chat">
+    <div class="apphead"><div class="row"><h1 data-i18n="h_chat"></h1><span class="acct" data-i18n="ai_on"></span></div></div>
+    <div class="chatlist" id="chatlist"></div>
+  </section>
+
+  <section class="screen" id="sc-noti">
+    <div class="apphead"><div class="row"><h1 data-i18n="h_noti"></h1></div></div>
+    <div class="nlist" id="nlist"></div>
+  </section>
+
+  <nav class="tabbar" id="tabbar">
+    <button data-sc="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v11H9l-5 4z"/></svg><span data-i18n="h_chat"></span><span class="dot">3</span></button>
+    <button data-sc="prod" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8l8-4 8 4v9l-8 4-8-4z"/><path d="M4 8l8 4 8-4M12 12v9"/></svg><span data-i18n="h_prod"></span></button>
+    <button data-sc="noti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/></svg><span data-i18n="h_noti"></span><span class="dot" id="ndot" style="display:none">0</span></button>
+  </nav>
+  <div class="actbar" id="actbar"><button id="aStop" data-i18n="act_stop"></button><button id="aResume" data-i18n="act_resume"></button><button class="pri" id="aStock" data-i18n="act_stock"></button></div>
+
+  <div class="dim" id="dim"></div>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true"><div class="grab"></div><div class="body" id="sbody"></div><div class="foot2" id="sfoot"></div></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"><span id="toastMsg"></span><button id="toastUndo" data-i18n="undo"></button></div>
+</div>
+
+<aside class="notes" id="notes"></aside>
+</div>
+
+<script>
+/* ---------- i18n ---------- */
+const I18N={
+ko:{
+ title:'PH2 · 모바일 상품관리 데모',
+ h_prod:'상품관리',h_chat:'채팅',h_noti:'알림',acct:'G마켓 10 · 옥션 6 계정',ai_on:'AI 응대 켜짐',
+ ph_search:'상품명, 상품번호, 판매자관리코드',aria_search:'상품 검색',aria_clear:'검색어 지우기',
+ f_need:'확인 필요',f_out:'품절',f_low:'재고 10개 이하',f_on:'판매중',f_stop:'판매중지',f_all:'전체',
+ need_desc:'판매중인데 품절됐거나 재고가 10개 이하인 상품이에요',
+ sorts:['최근 수정순','최근 등록순','판매량 많은순'],
+ qpre:'‘{q}’ ',count:'<b>{n}</b>개',sel:'선택',selN:'{n}개 선택',selAllDone:'<b>{n}개 전체 선택됨</b>',selAllBtn:'검색결과 {n}개 전체 선택',selClear:'선택 해제',
+ empty_t:'찾는 상품이 없어요',empty_d:'상품번호를 확인하거나 필터를 ‘전체’로 바꿔 보세요.',
+ more:'{a} / {b}개 · 아래로 내리면 20개씩 더 불러와요',toomany:'상품이 많아요. 스크롤보다 <b>검색이나 필터</b>로 좁히는 게 빨라요.',
+ recent:'최근 검색',recentList:['에어맥스','4901215508','제로 콜라'],
+ hint:'<b>상품번호 여러 개</b>는 쉼표로 구분하면 한 번에 찾아요.<br>예) 4901215508, 4900876189<br><b>판매자관리코드</b>나 상품명 일부로도 찾을 수 있어요.',
+ opts:'옵션 {n}',pill_out:'품절',pill_stock:'재고 {n}',edited:'수정됨',
+ act_stop:'판매중지',act_resume:'판매재개',act_stock:'재고 변경',
+ st_on:'판매중',st_stop:'판매중지',
+ sec_status:'판매상태',sec_optstock:'옵션별 재고',allOut:'전체 품절',soldbtn:'품절',sec_stock:'재고',q0:'0개',
+ dec:'빼기',inc:'더하기',stockOf:'{o} 재고',stockAria:'재고 수량',
+ zero_warn:'재고가 0개라 판매중으로 바꿔도 구매할 수 없어요. 재고도 함께 채워 주세요.',
+ both_sites:'G마켓·옥션에 같이 반영돼요.',
+ close:'닫기',save_n:'저장하기 ({n})',no_change:'변경사항 없음',saved:'저장했어요',undo:'되돌리기',undone:'되돌렸어요',
+ err_t:'저장하지 못했어요',err_d:'저장하는 사이에 주문이 들어와 재고가 {a}개에서 {b}개로 바뀌었어요. 바뀐 재고를 확인하고 다시 저장해 주세요.',err_btn:'최신 재고 보기',
+ err_banner:'방금 재고가 {b}개로 바뀌었어요. 확인하고 다시 저장해 주세요.',
+ b_stop_t:'{n}개 상품을 판매중지할까요?',b_resume_t:'{n}개 상품을 다시 판매할까요?',
+ b_stop_d:'구매자 화면에서 바로 구매할 수 없게 돼요.',b_resume_d:'재고가 있는 상품만 구매할 수 있게 돼요.',
+ b_all_warn:'검색결과 전체에 적용돼요. 상품이 많아 <b>백그라운드에서 처리</b>하고, 끝나면 알림으로 결과를 알려드려요.',
+ cancel:'취소',b_stop_ok:'판매중지하기',b_resume_ok:'판매재개하기',
+ bs_t:'{n}개 상품 재고 변경',bs_d:'옵션 상품은 모든 옵션에 같은 방식으로 적용돼요.',bs_set:'수량으로 맞추기',bs_add:'더하기·빼기',
+ bs_set_l:'바꿀 재고 수량',bs_add_l:'더하거나 뺄 수량 (빼려면 −)',unit:'개',bs_q0:'0개 (품절)',bs_q10:'10개',bs_q100:'100개',apply:'적용하기',
+ lab_stop:'판매중지',lab_resume:'판매재개',lab_set:'재고 {v}개로 변경',lab_add:'재고 {v}',
+ done_n:'{n}개 상품 {label} 완료',bulk_start:'{n}개 처리를 시작했어요. 끝나면 알려드릴게요',bulk_done:'일괄 처리가 끝났어요. 알림에서 결과를 확인하세요',
+ nt_stock:'재고 알림',nm_stock:'판매중인 상품 중 확인이 필요한 상품이 {n}개예요.',n_go:'확인하러 가기',
+ nt_job:'일괄 처리 중',nm_job:'{n}개 상품 · {label}',nt_done:'일괄 처리 완료',nm_done:'{label} · 성공 {a}개, 실패 {b}개',nm_fail:'실패한 상품은 주문을 처리하는 중이라 바꾸지 못했어요. 잠시 후 다시 시도해 주세요.',
+ t_9am:'오전 9:00',t_now:'방금',
+ al_h:'상품 알림 · 방금',al_b:'‘{p}’ {o}가 품절됐고, 같은 옵션 문의가 2건 들어왔어요.',al_btn:'재고 바로 채우기',
+ chats:[['김*희','260 사이즈 언제 재입고돼요?','오후 2:14'],['박*준','AI 응대: 주문하신 상품은 오늘 출고돼요.','오후 1:02'],['이*수','블랙 265 품절인가요?','오전 11:40'],['최*영','교환 접수했어요','어제']],
+ bk:'블랙',wh:'화이트',pack:'{n}팩',
+ n_nike:'나이키 에어맥스 270',n_coke:'코카콜라 제로 355ml 24캔',
+ br:['나이키','아디다스','락앤락','쿠쿠','무인양품','오뚜기','코카콜라','삼성','다이슨','유니클로','풀무원','농심','해피콜','뉴발란스','필립스','종근당'],
+ pr:['에어맥스 270','쿨링 반팔 티셔츠','밀폐용기 10종 세트','IH 전기밥솥 6인용','PP 수납함 대형','진라면 순한맛 40입','제로 콜라 355ml 24캔','버즈 실리콘 케이스','무선 청소기 필터','히트텍 크루넥 티','국산콩 두부 3입','신라면 멀티팩 5입','IH 프라이팬 28cm','530 러닝화','전동칫솔 리필모','비타민D 2000IU'],
+ prn:['운동화','티셔츠','밀폐용기','전기밥솥','수납함','라면','콜라','케이스','필터','티셔츠','두부','라면','프라이팬','러닝화','칫솔모','영양제'],
+ notes_h:'확인이 필요한 상품부터, 세 번 탭이면 재고와 판매상태를 바꿔요',
+ notes_p:'PH2 모바일 상품관리 · 셀러 채팅 앱 안의 새 탭',
+ notes_li:[
+  '<b>첫 화면은 확인 필요 상품</b>앱을 열면 판매중인데 품절됐거나 재고가 10개 이하인 상품부터 보여요. 알림과 채팅에서도 바로 들어와요.',
+  '<b>스크롤 대신 검색</b>상품명·상품번호·판매자관리코드를 한 칸에서 찾아요. 상품번호는 쉼표로 여러 개를 한 번에 찾을 수 있어요.',
+  '<b>바로 저장, 바로 되돌리기</b>확인 화면 없이 저장하고 5초 안에 되돌릴 수 있어요. 바꾼 상품은 목록에 ‘수정됨’으로 남아요.',
+  '<b>실패하면 이유와 다음 행동까지</b>저장하는 사이 주문이 들어와 재고가 바뀌면, 최신 값을 보여주고 다시 저장하게 해요.',
+  '<b>많은 상품은 서버에서 처리</b>검색결과 전체를 바꾸면 백그라운드로 처리하고, 성공·실패 건수를 알림으로 알려줘요.'],
+ notes_try:'해볼 것: 첫 화면에서 상품 탭 → 재고 바꾸고 저장 → 되돌리기 / 검색창에 4900876189 → 재고 바꾸고 저장 (실패 안내) / 채팅 탭의 품절 알림 카드 / ‘선택’ → 검색결과 전체 선택 → 판매중지'
+},
+zh:{
+ title:'PH2 · 移动端商品管理 Demo',
+ h_prod:'商品管理',h_chat:'聊天',h_noti:'通知',acct:'Gmarket 10个 · Auction 6个账号',ai_on:'AI自动回复已开启',
+ ph_search:'商品名称、商品编号、卖家管理编码',aria_search:'搜索商品',aria_clear:'清除搜索内容',
+ f_need:'待处理',f_out:'已售罄',f_low:'库存≤10件',f_on:'在售',f_stop:'已停售',f_all:'全部',
+ need_desc:'在售中但已售罄，或库存在10件以下的商品',
+ sorts:['最近修改','最近上架','销量最高'],
+ qpre:'“{q}” ',count:'共<b>{n}</b>件',sel:'选择',selN:'已选{n}件',selAllDone:'<b>已全选{n}件</b>',selAllBtn:'全选{n}件搜索结果',selClear:'取消全选',
+ empty_t:'没有找到相关商品',empty_d:'请检查商品编号，或将筛选条件改为“全部”。',
+ more:'{a} / {b}件 · 向下滑动，每次再加载20件',toomany:'商品较多，用<b>搜索或筛选</b>缩小范围会比滑动更快。',
+ recent:'最近搜索',recentList:['Air Max','4901215508','可乐'],
+ hint:'<b>多个商品编号</b>用逗号隔开，可一次查询。<br>例：4901215508, 4900876189<br>也可以用<b>卖家管理编码</b>或部分商品名称查询。',
+ opts:'{n}个选项',pill_out:'已售罄',pill_stock:'库存 {n}',edited:'已修改',
+ act_stop:'停售',act_resume:'恢复销售',act_stock:'修改库存',
+ st_on:'在售',st_stop:'已停售',
+ sec_status:'销售状态',sec_optstock:'各选项库存',allOut:'全部设为售罄',soldbtn:'售罄',sec_stock:'库存',q0:'0件',
+ dec:'减少',inc:'增加',stockOf:'{o} 库存',stockAria:'库存数量',
+ zero_warn:'库存为0，即使设为在售，买家也无法购买。请同时补充库存。',
+ both_sites:'将同步应用到Gmarket和Auction。',
+ close:'关闭',save_n:'保存（{n}）',no_change:'暂无修改',saved:'已保存',undo:'撤销',undone:'已撤销',
+ err_t:'保存失败',err_d:'保存期间有新订单，库存已从{a}件变为{b}件。请确认最新库存后重新保存。',err_btn:'查看最新库存',
+ err_banner:'库存刚刚变为{b}件，请确认后重新保存。',
+ b_stop_t:'要停售这{n}件商品吗？',b_resume_t:'要恢复销售这{n}件商品吗？',
+ b_stop_d:'买家将立即无法购买这些商品。',b_resume_d:'只有有库存的商品才能被购买。',
+ b_all_warn:'将应用于全部搜索结果。由于商品较多，将<b>在后台处理</b>，完成后会通过通知告知结果。',
+ cancel:'取消',b_stop_ok:'确认停售',b_resume_ok:'确认恢复销售',
+ bs_t:'修改{n}件商品的库存',bs_d:'有选项的商品，所有选项将按相同方式修改。',bs_set:'设为指定数量',bs_add:'增加或减少',
+ bs_set_l:'新的库存数量',bs_add_l:'增减数量（减少请输入 −）',unit:'件',bs_q0:'0件（售罄）',bs_q10:'10件',bs_q100:'100件',apply:'应用',
+ lab_stop:'停售',lab_resume:'恢复销售',lab_set:'库存改为{v}件',lab_add:'库存{v}',
+ done_n:'{n}件商品已处理（{label}）',bulk_start:'已开始处理{n}件商品，完成后会通知你',bulk_done:'批量处理已完成，请在通知中查看结果',
+ nt_stock:'库存提醒',nm_stock:'在售商品中有{n}件需要处理。',n_go:'去处理',
+ nt_job:'批量处理中',nm_job:'{n}件商品 · {label}',nt_done:'批量处理完成',nm_done:'{label} · 成功{a}件，失败{b}件',nm_fail:'失败的商品正在处理订单，暂时无法修改，请稍后重试。',
+ t_9am:'上午9:00',t_now:'刚刚',
+ al_h:'商品提醒 · 刚刚',al_b:'“{p}” {o}已售罄，已有2条关于该选项的咨询。',al_btn:'立即补库存',
+ chats:[['金*熙','260码什么时候补货？','下午2:14'],['朴*俊','AI回复：您订购的商品今天发货。','下午1:02'],['李*秀','黑色265是卖完了吗？','上午11:40'],['崔*英','已申请换货','昨天']],
+ bk:'黑色',wh:'白色',pack:'{n}包',
+ n_nike:'耐克 Air Max 270',n_coke:'可口可乐 零度 355ml×24罐',
+ br:['耐克','阿迪达斯','乐扣乐扣','CUCKOO福库','无印良品','不倒翁','可口可乐','三星','戴森','优衣库','圃美多','农心','Happycall','新百伦','飞利浦','钟根堂'],
+ pr:['Air Max 270','凉感短袖T恤','保鲜盒10件套','IH电饭煲 6人份','PP收纳箱 大号','真拉面 温和口味 40包','零度可乐 355ml×24罐','Buds 硅胶保护套','无线吸尘器滤网','HEATTECH圆领T恤','国产大豆豆腐 3盒','辛拉面 5连包','IH平底锅 28cm','530 跑鞋','电动牙刷替换刷头','维生素D 2000IU'],
+ prn:['运动鞋','T恤','保鲜盒','电饭煲','收纳箱','拉面','可乐','保护套','滤网','T恤','豆腐','拉面','平底锅','跑鞋','刷头','营养补充剂'],
+ notes_h:'从待处理商品开始，点三下就能修改库存和销售状态',
+ notes_p:'PH2 移动端商品管理 · 卖家聊天App中的新标签页',
+ notes_li:[
+  '<b>首页就是待处理商品</b>打开App，最先看到在售但已售罄、或库存在10件以下的商品。也可以从通知和聊天直接进入。',
+  '<b>用搜索代替滑动</b>商品名称、商品编号、卖家管理编码，一个搜索框即可查询。多个商品编号用逗号隔开，可一次查到。',
+  '<b>直接保存，随时撤销</b>无需确认页即可保存，5秒内可撤销。修改过的商品会在列表中标记“已修改”。',
+  '<b>失败时说明原因和下一步</b>如果保存期间有新订单导致库存变化，会显示最新数值，并引导重新保存。',
+  '<b>大批量交给服务器处理</b>修改全部搜索结果时在后台处理，并通过通知告知成功和失败数量。'],
+ notes_try:'可以试试：在首页点开一个商品 → 修改库存并保存 → 撤销 / 搜索 4900876189 → 修改库存并保存（查看失败提示）/ 聊天页的售罄提醒卡片 / 点“选择” → 全选搜索结果 → 停售'
+},
+en:{
+ title:'PH2 · Mobile product management demo',
+ h_prod:'Products',h_chat:'Chat',h_noti:'Alerts',acct:'10 Gmarket · 6 Auction accounts',ai_on:'AI replies on',
+ ph_search:'Product name, product no., seller code',aria_search:'Search products',aria_clear:'Clear search',
+ f_need:'Needs attention',f_out:'Sold out',f_low:'10 or fewer left',f_on:'On sale',f_stop:'Paused',f_all:'All',
+ need_desc:'On sale, but sold out or down to 10 or fewer',
+ sorts:['Recently edited','Recently added','Best selling'],
+ qpre:'“{q}” · ',count:v=>`<b>${v.n}</b> ${v.raw===1?'product':'products'}`,sel:'Select',selN:'{n} selected',selAllDone:'<b>All {n} selected</b>',selAllBtn:'Select all {n} results',selClear:'Deselect all',
+ empty_t:'No matching products',empty_d:'Check the product number, or switch the filter to “All”.',
+ more:'{a} of {b} · Scroll down to load 20 more',toomany:'That’s a lot of products. <b>Search or filter</b> to narrow it down faster than scrolling.',
+ recent:'Recent searches',recentList:['Air Max','4901215508','cola'],
+ hint:'<b>Several product numbers?</b> Separate them with commas to find them all at once.<br>e.g. 4901215508, 4900876189<br>You can also search by <b>seller code</b> or part of a product name.',
+ opts:'{n} options',pill_out:'Sold out',pill_stock:'Stock {n}',edited:'Edited',
+ act_stop:'Pause',act_resume:'Resume',act_stock:'Change stock',
+ st_on:'On sale',st_stop:'Paused',
+ sec_status:'Sales status',sec_optstock:'Stock by option',allOut:'Mark all sold out',soldbtn:'Sold out',sec_stock:'Stock',q0:'0',
+ dec:'Decrease',inc:'Increase',stockOf:'{o} stock',stockAria:'Stock quantity',
+ zero_warn:'Stock is 0, so buyers can’t purchase it even when it’s on sale. Add stock as well.',
+ both_sites:'Applies to both Gmarket and Auction.',
+ close:'Close',save_n:'Save ({n})',no_change:'No changes',saved:'Saved',undo:'Undo',undone:'Change undone',
+ err_t:'Couldn’t save',err_d:'An order came in while saving, so stock changed from {a} to {b}. Check the latest stock and save again.',err_btn:'See latest stock',
+ err_banner:'Stock just changed to {b}. Check it and save again.',
+ b_stop_t:'Pause sales for {n} products?',b_resume_t:'Resume sales for {n} products?',
+ b_stop_d:'Buyers won’t be able to buy them right away.',b_resume_d:'Only products with stock can be bought.',
+ b_all_warn:'This applies to every result. Since it’s a lot of products, it <b>runs in the background</b> and you’ll get an alert when it’s done.',
+ cancel:'Cancel',b_stop_ok:'Pause sales',b_resume_ok:'Resume sales',
+ bs_t:'Change stock for {n} products',bs_d:'For products with options, every option changes the same way.',bs_set:'Set to',bs_add:'Add or subtract',
+ bs_set_l:'New stock quantity',bs_add_l:'Amount to add (use − to subtract)',unit:'units',bs_q0:'0 (sold out)',bs_q10:'10',bs_q100:'100',apply:'Apply',
+ lab_stop:'Paused sales',lab_resume:'Resumed sales',lab_set:'Stock set to {v}',lab_add:'Stock {v}',
+ done_n:'{label} for {n} products',bulk_start:'Started updating {n} products. We’ll let you know when it’s done.',bulk_done:'Bulk update finished. Check Alerts for the results.',
+ nt_stock:'Stock alert',nm_stock:'{n} products on sale need attention.',n_go:'Review now',
+ nt_job:'Bulk update in progress',nm_job:'{n} products · {label}',nt_done:'Bulk update finished',nm_done:'{label} · {a} succeeded, {b} failed',nm_fail:'The failed products had orders in progress, so they couldn’t be changed. Try again in a moment.',
+ t_9am:'9:00 AM',t_now:'Just now',
+ al_h:'Product alert · Just now',al_b:'“{p}” {o} is sold out, and 2 buyers have asked about that option.',al_btn:'Restock now',
+ chats:[['Kim *hee','When will size 260 be back in stock?','2:14 PM'],['Park *jun','AI reply: Your order ships today.','1:02 PM'],['Lee *su','Is Black 265 sold out?','11:40 AM'],['Choi *young','I’ve requested an exchange.','Yesterday']],
+ bk:'Black',wh:'White',pack:v=>`${v.n} ${v.n==='1'?'pack':'packs'}`,
+ n_nike:'Nike Air Max 270',n_coke:'Coca-Cola Zero 355ml × 24 cans',
+ br:['Nike','Adidas','Lock&Lock','Cuckoo','MUJI','Ottogi','Coca-Cola','Samsung','Dyson','Uniqlo','Pulmuone','Nongshim','Happycall','New Balance','Philips','Chong Kun Dang'],
+ pr:['Air Max 270','Cooling short-sleeve tee','Airtight container 10-piece set','IH rice cooker, 6 servings','PP storage box, large','Jin Ramen mild, 40 pack','Zero Cola 355ml × 24 cans','Buds silicone case','Cordless vacuum filter','HEATTECH crew neck tee','Korean soybean tofu, 3 pack','Shin Ramyun, 5 pack','IH frying pan 28cm','530 running shoes','Electric toothbrush heads','Vitamin D 2000IU'],
+ prn:['sneakers','tee','containers','rice cooker','storage box','ramen','cola','case','filter','tee','tofu','ramen','frying pan','running shoes','brush heads','supplement'],
+ notes_h:'Start with what needs attention. Three taps to change stock or sales status.',
+ notes_p:'PH2 Mobile product management · a new tab in the seller chat app',
+ notes_li:[
+  '<b>Products that need attention come first</b>The app opens on products that are on sale but sold out or down to 10 or fewer. Alerts and chats link straight in.',
+  '<b>Search instead of scrolling</b>Find products by name, product number, or seller code in one box. Separate product numbers with commas to find several at once.',
+  '<b>Save right away, undo right away</b>No confirmation step. Sellers can undo within 5 seconds, and changed products stay marked “Edited” in the list.',
+  '<b>When saving fails, say why and what to do</b>If an order changes the stock while saving, the app shows the latest number and lets the seller save again.',
+  '<b>Large batches run on the server</b>Changing every search result runs in the background, and an alert reports how many succeeded and failed.'],
+ notes_try:'Try it: tap a product on the first screen → change stock and save → undo / search 4900876189 → change stock and save (see the error) / the sold-out card in Chat / Select → select all results → Pause'
+}};
+let LANG='ko';
+function t(k,v={}){const d=I18N[LANG],s=(k in d)?d[k]:I18N.ko[k];if(typeof s==='function')return s(v);if(typeof s!=='string')return s;return s.replace(/\{(\w+)\}/g,(_,x)=>v[x]??'')}
+const D=k=>I18N[LANG][k];
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const fmt=n=>Number(n).toLocaleString('en-US');
+const won=n=>LANG==='ko'?`${fmt(n)}원`:`₩${fmt(n)}`;
+function shortN(n){
+ if(LANG==='en'){if(n>=1e6)return (n/1e6).toFixed(1).replace('.0','')+'M';if(n>=1e4)return (n/1e3).toFixed(1).replace('.0','')+'K';return fmt(n)}
+ return n>=10000?(n/10000).toFixed(n>=1000000?0:1).replace('.0','')+(LANG==='zh'?'万':'만'):fmt(n);
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;')}
+function h(s){let x=2166136261;for(let i=0;i<s.length;i++){x^=s.charCodeAt(i);x=Math.imul(x,16777619)}return x>>>0}
+
+/* ---------- data ---------- */
+const COUNTS={need:15870,out:3921,low:12408,on:1903211,stop:228852,all:2148392};
+const FILTERS=['need','out','low','on','stop','all'];
+const WARN=new Set(['need','out','low']);
+const CODEP=['NK','AD','LL','CK','MJ','OT','CC','SS','DS','UQ','PM','NS','HC','NB','PH','CD'];
+const OPTSETS=[null,['bk260','bk265','bk270','wh260'],['S','M','L','XL'],['p1','p2','p3'],null,null];
+const COLORS=['#3b5bdb','#0ca678','#f08c00','#e64980','#7048e8','#1098ad','#d9480f','#5c940d','#495057','#c2255c'];
+const cache=new Map();
+function makeProduct(id,q){
+ if(cache.has(id))return cache.get(id);
+ const s=h('p'+id),b=s%16,r=(s>>>5)%16;
+ const r1=(s>>>9)%100,r2=(s>>>15)%100;
+ const status=r1<11?'stop':'on';
+ const base=r2<4?0:r2<12?1+(s%10):11+(s%900);
+ const set=OPTSETS[(s>>>3)%OPTSETS.length];
+ let opts=null;
+ if(set)opts=set.map((k,i)=>({k,stock:base===0?0:Math.max(0,Math.round(base*((h(id+k)%60)+20)/100/set.length*1.6)-(r2<12&&i===0?base:0))}));
+ const p={id,b,r,q:q||'',price:(39+(s%600))*100,status,stock:opts?null:base,opts,
+  sites:(s>>>27)%3===0?['G']:(s>>>27)%3===1?['A']:['G','A'],color:COLORS[(s>>>12)%COLORS.length],code:`${CODEP[b]}-${String(s%99999).padStart(5,'0')}`,edited:false};
+ cache.set(id,p);return p;
+}
+function pname(p){if(p.nk)return t('n_'+p.nk);if(p.q)return `${D('br')[p.b]} ${p.q} ${D('prn')[p.r]}`;return `${D('br')[p.b]} ${D('pr')[p.r]}`}
+function optLabel(k){let m;if((m=k.match(/^(bk|wh)(\d+)$/)))return t(m[1])+'/'+m[2];if((m=k.match(/^p(\d)$/)))return t('pack',{n:m[1]});return k}
+const total=p=>p.opts?p.opts.reduce((a,o)=>a+o.stock,0):p.stock;
+function matches(f,p){const n=total(p);
+ if(f==='need')return p.status==='on'&&n<=10;if(f==='low')return n>0&&n<=10;if(f==='out')return n===0;if(f==='on')return p.status==='on';if(f==='stop')return p.status==='stop';return true}
+function itemAt(key,f,q,i){
+ for(let k=0;k<80;k++){const id=String(4900000000+(h(key+':'+i+':'+k)%99999999));const p=makeProduct(id,q);if(matches(f,p))return p}
+ return makeProduct(String(4900000000+(h(key+':'+i)%99999999)),q);
+}
+
+/* ---------- state ---------- */
+let st={f:'need',sort:0,q:'',items:[],count:0,loading:false,selMode:false,sel:new Set(),selAll:false,key:''};
+let undoFn=null,newNoti=0,sheetFn=null;
+let notis=[{kind:'stock',n:COUNTS.need,time:'t_9am'}];
+const recent={ko:[...I18N.ko.recentList],zh:[...I18N.zh.recentList],en:[...I18N.en.recentList]};
+
+function isNumQuery(q){return /^[\d,\s]+$/.test(q)&&/\d{6,}/.test(q)}
+function queryCount(){
+ if(!st.q)return COUNTS[st.f];
+ if(isNumQuery(st.q))return null;
+ const n=12+h(st.q.toLowerCase())%4800;return Math.max(1,Math.round(n*COUNTS[st.f]/COUNTS.all*8));
+}
+function reset(){
+ st.key=`${st.f}|${st.sort}|${st.q}`;st.items=[];st.sel=new Set();st.selAll=false;
+ if(st.q&&isNumQuery(st.q)){st.items=st.q.split(/[,\s]+/).filter(Boolean).slice(0,50).map(n=>makeProduct(n.padStart(10,'0').slice(-10)));st.count=st.items.length;render();return}
+ st.count=Math.min(queryCount(),COUNTS[st.f]);render();loadMore(true);
+}
+function loadMore(first){
+ if(st.loading||st.items.length>=st.count)return;
+ st.loading=true;render();const key=st.key;
+ setTimeout(()=>{if(key!==st.key)return;const n=Math.min(20,st.count-st.items.length);for(let i=0;i<n;i++)st.items.push(itemAt(key,st.f,st.q,st.items.length));st.loading=false;render()},first?250:450);
+}
+
+/* ---------- list ---------- */
+function renderChips(){
+ $('#chips').innerHTML=FILTERS.map(k=>`<button class="chip ${st.f===k?'on':''} ${WARN.has(k)?'warn':''}" data-f="${k}" role="tab" aria-selected="${st.f===k}">${t('f_'+k)}<b>${shortN(COUNTS[k])}</b></button>`).join('');
+}
+function stockPill(p){const n=total(p);if(n===0)return `<span class="pill out">${t('pill_out')}</span>`;return `<span class="pill ${n<=10?'low':''}">${t('pill_stock',{n:fmt(n)})}</span>`}
+function itemHTML(p){
+ const s=st.sel.has(p.id)||st.selAll,nm=pname(p);
+ return `<button class="item ${s?'sel':''}" data-id="${p.id}">
+  <span class="cbox">${s?'✓':''}</span>
+  <span class="thumb" style="background:${p.color}">${esc([...nm][0])}</span>
+  <span class="info"><div class="nm">${esc(nm)}${p.edited?`<span class="edtag">${t('edited')}</span>`:''}</div>
+   <div class="meta">${p.sites.map(x=>`<span class="s ${x.toLowerCase()}">${x}</span>`).join('')}<span>${p.id}</span>${p.opts?`<span>· ${t('opts',{n:p.opts.length})}</span>`:''}</div>
+   <div class="bot"><span class="pill ${p.status}">${t('st_'+p.status)}</span>${stockPill(p)}<span class="price">${won(p.price)}</span></div></span></button>`;
+}
+function render(){
+ renderChips();
+ $('#sc-prod').classList.toggle('selmode',st.selMode);
+ $('#lbar').innerHTML=`<span>${st.q?t('qpre',{q:esc(st.q)}):''}${t('count',{n:fmt(st.count),raw:st.count})}</span><span class="r"><button id="sortBtn">${D('sorts')[st.sort]} ⌄</button>${st.selMode?'':`<button class="selbtn" id="selOn">${t('sel')}</button>`}</span>`;
+ $('#sortBtn').onclick=()=>{st.sort=(st.sort+1)%D('sorts').length;reset()};
+ const so=$('#selOn');if(so)so.onclick=()=>{st.selMode=true;render()};
+ const Ls=$('#list');
+ if(!st.count&&!st.loading){Ls.innerHTML=`<div class="empty"><b>${t('empty_t')}</b>${t('empty_d')}</div>`}
+ else{
+  let html=(st.f==='need'&&!st.q)?`<div class="needdesc">${t('need_desc')}</div>`:'';
+  html+=st.items.map(itemHTML).join('');
+  if(st.loading)html+='<div class="sk"></div><div class="sk"></div><div class="sk"></div>';
+  else if(st.items.length<st.count)html+=`<div class="foot">${t('more',{a:fmt(st.items.length),b:fmt(st.count)})}</div>`;
+  if(st.items.length>=60&&st.items.length<st.count&&!st.loading)html+=`<div class="hint" style="margin:0 4px 8px">${t('toomany')}</div>`;
+  Ls.innerHTML=html;
+ }
+ const n=st.selAll?st.count:st.sel.size;
+ $('#selTxt').innerHTML=st.selAll?t('selAllDone',{n:fmt(st.count)}):t('selN',{n});
+ $('#selAll').textContent=st.selAll?t('selClear'):t('selAllBtn',{n:shortN(st.count)});
+ $('#actbar').classList.toggle('on',st.selMode);$('#tabbar').style.display=st.selMode?'none':'flex';
+ ['#aStop','#aResume','#aStock'].forEach(b=>$(b).disabled=!n);
+}
+$('#list').addEventListener('scroll',e=>{const el=e.target;if(el.scrollTop+el.clientHeight>el.scrollHeight-200)loadMore()});
+$('#list').addEventListener('click',e=>{const it=e.target.closest('.item');if(!it)return;const p=cache.get(it.dataset.id);
+ if(it._lp){it._lp=false;return}
+ if(st.selMode){if(st.selAll){st.selAll=false;st.sel=new Set(st.items.map(x=>x.id))}st.sel.has(p.id)?st.sel.delete(p.id):st.sel.add(p.id);render();return}
+ openDetail(p)});
+let pressT;$('#list').addEventListener('pointerdown',e=>{const it=e.target.closest('.item');if(!it||st.selMode)return;pressT=setTimeout(()=>{st.selMode=true;st.sel.add(it.dataset.id);render()},500)});
+$('#list').addEventListener('pointerup',()=>clearTimeout(pressT));$('#list').addEventListener('pointerleave',()=>clearTimeout(pressT));
+$('#chips').onclick=e=>{const c=e.target.closest('.chip');if(!c)return;st.f=c.dataset.f;reset();$('#list').scrollTop=0};
+$('#selExit').onclick=()=>{st.selMode=false;st.sel=new Set();st.selAll=false;render()};
+$('#selAll').onclick=()=>{st.selAll=!st.selAll;st.sel=new Set();render()};
+
+/* ---------- search ---------- */
+let qT;
+$('#q').addEventListener('input',e=>{const v=e.target.value;$('#sbox').classList.toggle('has',!!v);clearTimeout(qT);if(!v){st.q='';showRecent(true);reset();return}showRecent(false);qT=setTimeout(()=>{st.q=v.trim();reset()},300)});
+$('#q').addEventListener('focus',()=>{if(!$('#q').value)showRecent(true)});
+$('#q').addEventListener('keydown',e=>{if(e.key==='Enter'){const v=e.target.value.trim();if(v){recent[LANG]=[v,...recent[LANG].filter(x=>x!==v)].slice(0,6)}e.target.blur();showRecent(false)}});
+$('#q').addEventListener('blur',()=>setTimeout(()=>showRecent(false),150));
+$('#qclr').onclick=e=>{e.preventDefault();$('#q').value='';$('#sbox').classList.remove('has');st.q='';reset();$('#q').focus()};
+function showRecent(on){
+ const R=$('#recentPane');R.style.display=on?'block':'none';$('#list').style.display=on?'none':'block';
+ if(!on)return;
+ R.innerHTML=`<div class="recent"><h5>${t('recent')}</h5><div class="tags">${recent[LANG].map(r=>`<button data-r="${esc(r)}">${esc(r)}</button>`).join('')}</div><div class="hint">${t('hint')}</div></div>`;
+ R.querySelectorAll('[data-r]').forEach(b=>b.onmousedown=e=>{e.preventDefault();$('#q').value=b.dataset.r;$('#sbox').classList.add('has');st.q=b.dataset.r;showRecent(false);$('#q').blur();reset()});
+}
+
+/* ---------- sheet ---------- */
+function openSheet(html,foot){$('#sbody').innerHTML=html;$('#sfoot').innerHTML=foot;$('#sfoot').style.display=foot?'flex':'none';$('#dim').classList.add('on');$('#sheet').classList.add('on')}
+function closeSheet(){$('#dim').classList.remove('on');$('#sheet').classList.remove('on');sheetFn=null}
+$('#dim').onclick=closeSheet;
+let draft=null,cur=null,errNote=null;
+function openDetail(p){cur=p;errNote=null;draft=JSON.parse(JSON.stringify({status:p.status,stock:p.stock,opts:p.opts}));renderDetail();$('#sbody').scrollTop=0}
+function changeCount(){
+ let c=draft.status!==cur.status?1:0;
+ if(cur.opts)cur.opts.forEach((o,i)=>{if(draft.opts[i].stock!==o.stock)c++});else if(draft.stock!==cur.stock)c++;
+ return c;
+}
+function renderDetail(){
+ sheetFn=renderDetail;
+ const p=cur,ch=changeCount(),nm=pname(p);
+ const dTotal=draft.opts?draft.opts.reduce((a,o)=>a+o.stock,0):draft.stock;
+ const stockUI=p.opts?`<div class="sec">${t('sec_optstock')} <button id="allOut">${t('allOut')}</button></div>${draft.opts.map((o,i)=>`<div class="orow ${o.stock!==p.opts[i].stock?'chg':''}"><div class="on1"><b>${optLabel(o.k)}</b><span class="${o.stock===0?'z':''}">${o.stock===0?t('pill_out'):t('pill_stock',{n:fmt(o.stock)})}</span></div>
+   ${o.stock>0?`<button class="soldbtn" data-out="${i}">${t('soldbtn')}</button>`:''}<div class="step"><button data-d="${i}" data-v="-1" aria-label="${t('dec')}">−</button><input inputmode="numeric" type="number" data-i="${i}" value="${o.stock}" aria-label="${esc(t('stockOf',{o:optLabel(o.k)}))}"><button data-d="${i}" data-v="1" aria-label="${t('inc')}">+</button></div></div>`).join('')}`
+  :`<div class="sec">${t('sec_stock')}</div><div class="step big"><button data-d="s" data-v="-1" aria-label="${t('dec')}">−</button><input inputmode="numeric" type="number" data-i="s" value="${draft.stock}" aria-label="${t('stockAria')}"><button data-d="s" data-v="1" aria-label="${t('inc')}">+</button></div>
+   <div class="quick"><button data-q="0">${t('q0')}</button><button data-q="+10">+10</button><button data-q="+50">+50</button><button data-q="+100">+100</button></div>`;
+ openSheet(`${errNote?`<div class="errbox">${t('err_banner',{b:fmt(errNote)})}</div>`:''}
+  <div class="ph"><span class="thumb" style="background:${p.color}">${esc([...nm][0])}</span><div><div class="nm">${esc(nm)}</div><div class="meta">${p.sites.join('·')} ${p.id} · ${p.code} · ${won(p.price)}</div></div></div>
+  <div class="sec">${t('sec_status')}</div>
+  <div class="segc"><button class="${draft.status==='on'?'on':''}" data-st="on">${t('st_on')}</button><button class="${draft.status==='stop'?'on stopc':''}" data-st="stop">${t('st_stop')}</button></div>
+  ${draft.status==='on'&&dTotal===0?`<div class="warnbox">${t('zero_warn')}</div>`:''}
+  ${stockUI}
+  ${p.sites.length>1&&ch?`<div class="sitenote">${t('both_sites')}</div>`:''}`,
+  `<button id="cClose">${t('close')}</button><button class="pri" id="cSave" ${ch?'':'disabled'}>${ch?t('save_n',{n:ch}):t('no_change')}</button>`);
+ const B=$('#sbody');
+ B.querySelectorAll('[data-st]').forEach(b=>b.onclick=()=>{draft.status=b.dataset.st;renderDetail()});
+ B.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{const i=b.dataset.d,v=+b.dataset.v;if(i==='s')draft.stock=Math.max(0,draft.stock+v);else draft.opts[i].stock=Math.max(0,draft.opts[i].stock+v);renderDetail()});
+ B.querySelectorAll('input[data-i]').forEach(inp=>{inp.onchange=()=>{const v=Math.max(0,Math.min(99999,parseInt(inp.value||'0',10)||0));if(inp.dataset.i==='s')draft.stock=v;else draft.opts[inp.dataset.i].stock=v;renderDetail()};inp.onfocus=()=>inp.select()});
+ B.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{const q=b.dataset.q;draft.stock=q==='0'?0:draft.stock+parseInt(q,10);renderDetail()});
+ B.querySelectorAll('[data-out]').forEach(b=>b.onclick=()=>{draft.opts[b.dataset.out].stock=0;renderDetail()});
+ const ao=$('#allOut');if(ao)ao.onclick=()=>{draft.opts.forEach(o=>o.stock=0);renderDetail()};
+ $('#cClose').onclick=closeSheet;
+ $('#cSave').onclick=doSave;
+}
+function errSheet(a,b){
+ sheetFn=()=>errSheet(a,b);
+ openSheet(`<h3>${t('err_t')}</h3><p class="desc">${t('err_d',{a:fmt(a),b:fmt(b)})}</p>`,
+  `<button id="eClose">${t('close')}</button><button class="pri" id="eRetry">${t('err_btn')}</button>`);
+ $('#eClose').onclick=closeSheet;
+ $('#eRetry').onclick=()=>{errNote=b;renderDetail()};
+}
+function doSave(){
+ const p=cur;
+ /* 데모용: 4900876189는 첫 저장 때 주문이 들어와 재고가 바뀐 상황을 보여줘요 */
+ if(p.failOnce&&!p.opts){p.failOnce=false;const a=p.stock,b=Math.max(0,p.stock-2);p.stock=b;errSheet(a,b);return}
+ const before=JSON.parse(JSON.stringify({status:p.status,stock:p.stock,opts:p.opts,edited:p.edited}));
+ p.status=draft.status;p.stock=draft.stock;p.opts=draft.opts;p.edited=true;closeSheet();render();
+ showToast(t('saved'),()=>{Object.assign(p,before);render();showToast(t('undone'))});
+}
+function showToast(m,undo){$('#toastMsg').textContent=m;undoFn=undo||null;$('#toastUndo').style.display=undo?'block':'none';const el=$('#toast');el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),undo?5000:2400)}
+$('#toastUndo').onclick=()=>{$('#toast').classList.remove('on');if(undoFn){const f=undoFn;undoFn=null;f()}};
+
+/* ---------- bulk ---------- */
+const lab=l=>t('lab_'+l.k,{v:l.v});
+function bulkStatus(s){
+ sheetFn=()=>bulkStatus(s);
+ const n=st.selAll?st.count:st.sel.size,stop=s==='stop';
+ openSheet(`<h3>${t(stop?'b_stop_t':'b_resume_t',{n:fmt(n)})}</h3>
+  <p class="desc">${t(stop?'b_stop_d':'b_resume_d')}</p>
+  ${st.selAll?`<div class="warnbox" style="margin-top:0">${t('b_all_warn')}</div>`:''}`,
+  `<button id="bCancel">${t('cancel')}</button><button class="pri" id="bOk">${t(stop?'b_stop_ok':'b_resume_ok')}</button>`);
+ $('#bCancel').onclick=closeSheet;
+ $('#bOk').onclick=()=>{closeSheet();runBulk(p=>p.status=s,{k:stop?'stop':'resume'})};
+}
+function bulkStock(){
+ const n=st.selAll?st.count:st.sel.size;let mode='set',val='';
+ const draw=()=>{
+  sheetFn=()=>{const el=$('#bv');if(el)val=el.value;draw()};
+  openSheet(`<h3>${t('bs_t',{n:fmt(n)})}</h3><p class="desc">${t('bs_d')}</p>
+  <div class="segc"><button class="${mode==='set'?'on':''}" data-m="set">${t('bs_set')}</button><button class="${mode==='add'?'on':''}" data-m="add">${t('bs_add')}</button></div>
+  <div class="sec">${t(mode==='set'?'bs_set_l':'bs_add_l')}</div>
+  <div class="step big" style="padding:0 14px"><input id="bv" inputmode="numeric" type="number" placeholder="0" value="${esc(val)}" style="width:100%;text-align:left"><span style="color:var(--sub)">${t('unit')}</span></div>
+  ${mode==='set'?`<div class="quick"><button data-qv="0">${t('bs_q0')}</button><button data-qv="10">${t('bs_q10')}</button><button data-qv="100">${t('bs_q100')}</button></div>`:''}
+  ${st.selAll?`<div class="warnbox">${t('b_all_warn')}</div>`:''}`,
+  `<button id="bCancel">${t('cancel')}</button><button class="pri" id="bOk">${t('apply')}</button>`);
+  $('#sbody').querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{mode=b.dataset.m;val=$('#bv').value;draw()});
+  $('#sbody').querySelectorAll('[data-qv]').forEach(b=>b.onclick=()=>{$('#bv').value=b.dataset.qv});
+  $('#bCancel').onclick=closeSheet;
+  $('#bOk').onclick=()=>{const v=parseInt($('#bv').value,10);if(isNaN(v)){$('#bv').focus();return}closeSheet();
+   const f=x=>mode==='set'?Math.max(0,v):Math.max(0,x+v);
+   runBulk(p=>{if(p.opts)p.opts.forEach(o=>o.stock=f(o.stock));else p.stock=f(p.stock)},mode==='set'?{k:'set',v:fmt(Math.max(0,v))}:{k:'add',v:(v>0?'+':'')+v})};
+ };draw();
+}
+function runBulk(fn,label){
+ if(st.selAll){
+  const n=st.count;const job={kind:'job',n,label,pct:5,time:'t_now'};notis.unshift(job);renderNoti();
+  st.items.forEach(p=>{fn(p);p.edited=true});st.selMode=false;st.selAll=false;render();
+  showToast(t('bulk_start',{n:fmt(n)}));
+  const iv=setInterval(()=>{job.pct+=18;if(job.pct>=100){clearInterval(iv);const fail=Math.round(n*0.004);job.kind='done';job.ok=n-fail;job.fail=fail;delete job.pct;job.new=true;newNoti++;showToast(t('bulk_done'))}renderNoti()},700);
+  return;
+ }
+ const ts=st.items.filter(p=>st.sel.has(p.id)),snap=ts.map(p=>[p,JSON.parse(JSON.stringify({status:p.status,stock:p.stock,opts:p.opts,edited:p.edited}))]);
+ ts.forEach(p=>{fn(p);p.edited=true});st.selMode=false;st.sel=new Set();render();
+ showToast(t('done_n',{n:ts.length,label:lab(label)}),()=>{snap.forEach(([p,b])=>Object.assign(p,b));render();showToast(t('undone'))});
+}
+$('#aStop').onclick=()=>bulkStatus('stop');$('#aResume').onclick=()=>bulkStatus('on');$('#aStock').onclick=bulkStock;
+
+/* ---------- tabs / alerts ---------- */
+$('#tabbar').onclick=e=>{const b=e.target.closest('button');if(!b)return;go(b.dataset.sc)};
+function go(sc){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id==='sc-'+sc));document.querySelectorAll('#tabbar button').forEach(b=>b.classList.toggle('on',b.dataset.sc===sc));if(sc==='noti'){newNoti=0;renderNoti();setTimeout(()=>notis.forEach(n=>n.new=false),1500)}}
+function renderNoti(){
+ $('#nlist').innerHTML=notis.map((n,i)=>{
+  if(n.kind==='stock')return `<button class="nitem" data-ni="${i}"><b>${t('nt_stock')}</b>${t('nm_stock',{n:fmt(n.n)})} <span class="go">${t('n_go')}</span><br><span>${t(n.time)}</span></button>`;
+  if(n.kind==='job')return `<div class="nitem"><b>${t('nt_job')}</b>${t('nm_job',{n:fmt(n.n),label:lab(n.label)})}<br><span>${t(n.time)}</span><div class="progress"><i style="width:${Math.min(100,n.pct)}%"></i></div></div>`;
+  return `<div class="nitem ${n.new?'new':''}"><b>${t('nt_done')}</b>${t('nm_done',{label:lab(n.label),a:fmt(n.ok),b:fmt(n.fail)})}${n.fail?`<br>${t('nm_fail')}`:''}<br><span>${t(n.time)}</span></div>`;
+ }).join('');
+ $('#nlist').querySelectorAll('[data-ni]').forEach(b=>b.onclick=()=>{st.f='need';st.q='';$('#q').value='';$('#sbox').classList.remove('has');go('prod');reset()});
+ const d=$('#ndot');d.style.display=newNoti?'block':'none';d.textContent=newNoti;
+}
+
+/* ---------- chat ---------- */
+const alertP=makeProduct('4901215508');Object.assign(alertP,{nk:'nike',opts:[{k:'bk260',stock:2},{k:'bk265',stock:0},{k:'bk270',stock:7},{k:'wh260',stock:14}],stock:null,status:'on'});
+const p2=makeProduct('4900876189');Object.assign(p2,{nk:'coke',opts:null,stock:640,status:'on',failOnce:true});
+const AVA=['#e64980','#1098ad','#7048e8','#5c940d'],UNREAD=[1,0,2,0];
+function renderChat(){
+ $('#chatlist').innerHTML=`<div class="alertcard"><div class="h">${t('al_h')}</div><b>${t('al_b',{p:esc(pname(alertP)),o:optLabel('bk265')})}</b><button id="goFix">${t('al_btn')}</button></div>`+
+  D('chats').map((r,i)=>`<button class="crow"><span class="ava" style="background:${AVA[i]}">${[...r[0]][0]}</span><span class="c"><b>${r[0]}</b><div>${r[1]}</div></span><span class="t">${r[2]}${UNREAD[i]?`<br><i>${UNREAD[i]}</i>`:''}</span></button>`).join('');
+ $('#goFix').onclick=()=>{go('prod');openDetail(alertP)};
+}
+
+/* ---------- notes & language ---------- */
+function renderNotes(){
+ $('#notes').innerHTML=`<h2>${t('notes_h')}</h2><p>${t('notes_p')}</p><ol>${D('notes_li').map(x=>`<li>${x}</li>`).join('')}</ol><div class="try">${t('notes_try')}</div>`;
+}
+function applyLang(l){
+ LANG=l;
+ document.documentElement.lang={ko:'ko',zh:'zh-CN',en:'en'}[l];
+ document.title=t('title');
+ document.querySelectorAll('#langbar button').forEach(b=>b.classList.toggle('on',b.dataset.lang===l));
+ document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=t(el.dataset.i18n));
+ document.querySelectorAll('[data-i18n-ph]').forEach(el=>el.placeholder=t(el.dataset.i18nPh));
+ document.querySelectorAll('[data-i18n-aria]').forEach(el=>el.setAttribute('aria-label',t(el.dataset.i18nAria)));
+ $('#sc-prod').setAttribute('aria-label',t('h_prod'));$('#sc-chat').setAttribute('aria-label',t('h_chat'));$('#sc-noti').setAttribute('aria-label',t('h_noti'));
+ $('#toast').classList.remove('on');
+ renderNotes();render();renderChat();renderNoti();
+ if($('#recentPane').style.display==='block')showRecent(true);
+ if(sheetFn&&$('#sheet').classList.contains('on'))sheetFn();
+}
+$('#langbar').onclick=e=>{const b=e.target.closest('[data-lang]');if(b&&b.dataset.lang!==LANG)applyLang(b.dataset.lang)};
+
+applyLang('ko');reset();
+</script>
+</body>
+</html>
